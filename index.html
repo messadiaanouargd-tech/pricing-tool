@@ -603,7 +603,26 @@
 
   </style>
 
-  <!-- ===================== FINAL VERSION - NO BADGE - 24H ===================== -->
+  <!-- ===================== GOOGLE ANALYTICS 4 ===================== -->
+  <!-- 
+    خطوات التفعيل:
+    1. اذهب إلى: https://analytics.google.com/
+    2. أنشئ حساب جديد أو استخدم حساب موجود
+    3. أنشئ Property جديد
+    4. اختر "Web" كنوع البيانات
+    5. سيعطيك Measurement ID (مثل: G-FLY2GHLT0X)
+    6. استبدل "G-FLY2GHLT0X" بالـ ID الخاص بك
+  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FLY2GHLT0X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-FLY2GHLT0X');
+  </script>
+  <!-- ============================================================== -->
+
+  <!-- ===================== FINAL VERSION - 24H WITH ANALYTICS ===================== -->
   <script>
     (function() {
       const TRIAL_DURATION = 24 * 60 * 60 * 1000; // 24 hours
@@ -632,6 +651,14 @@
         const licenseData = { key: key, activatedAt: Date.now() };
         localStorage.setItem(LICENSE_STORAGE, JSON.stringify(licenseData));
         setCookie(LICENSE_STORAGE, JSON.stringify(licenseData), 3650);
+
+        // Track activation event in Google Analytics
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'license_activated', {
+            'event_category': 'License',
+            'event_label': 'License Activated Successfully'
+          });
+        }
       }
 
       function checkLicense() {
@@ -671,6 +698,15 @@
           const visitTime = currentTime.toString();
           setCookie(COOKIE_NAME, visitTime, 365);
           localStorage.setItem(STORAGE_NAME, visitTime);
+
+          // Track trial start in Google Analytics
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'trial_started', {
+              'event_category': 'Trial',
+              'event_label': 'New Trial Started'
+            });
+          }
+
           return { isExpired: false, timeLeft: TRIAL_DURATION };
         }
 
@@ -730,6 +766,14 @@
       }
 
       function showIncognitoBlockScreen() {
+        // Track incognito attempt
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'incognito_blocked', {
+            'event_category': 'Security',
+            'event_label': 'Incognito Mode Blocked'
+          });
+        }
+
         const overlay = document.createElement('div');
         overlay.style.cssText = `
           position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -894,6 +938,14 @@
             msg.textContent = '✅ تم التفعيل!';
             setTimeout(() => location.reload(), 1500);
           } else {
+            // Track failed activation
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'license_failed', {
+                'event_category': 'License',
+                'event_label': 'Invalid License Key Entered'
+              });
+            }
+
             msg.style.color = '#fca5a5';
             msg.textContent = '❌ كود خاطئ';
             input.style.borderColor = 'rgba(239, 68, 68, 0.8)';
@@ -912,6 +964,14 @@
       // شاشة انتهاء الفترة
       function showExpiredScreen() {
         document.getElementById('trialHeader')?.remove();
+
+        // Track trial expiration
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'trial_expired', {
+            'event_category': 'Trial',
+            'event_label': 'Trial Period Expired'
+          });
+        }
 
         const header = document.createElement('div');
         header.style.cssText = `
@@ -1013,6 +1073,14 @@
 
         // معالج الواتساب
         header.querySelector('.whatsapp-btn').addEventListener('click', () => {
+          // Track WhatsApp click
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'whatsapp_clicked', {
+              'event_category': 'Conversion',
+              'event_label': 'WhatsApp Purchase Button Clicked'
+            });
+          }
+
           const msg = encodeURIComponent(`مرحباً! أريد شراء أداة COD Pricing Tool مدى الحياة بسعر ${PRICE}`);
           window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
         });
@@ -1036,6 +1104,14 @@
             msgDiv.textContent = '✅ تم التفعيل بنجاح! جاري إعادة التحميل...';
             setTimeout(() => location.reload(), 1500);
           } else {
+            // Track failed activation
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'license_failed', {
+                'event_category': 'License',
+                'event_label': 'Invalid License Key After Expiry'
+              });
+            }
+
             msgDiv.style.color = '#fca5a5';
             msgDiv.textContent = '❌ الكود الذي أدخلته غير صحيح';
             input.style.borderColor = 'rgba(239, 68, 68, 0.8)';
@@ -1062,10 +1138,9 @@
           return;
         }
 
-        // فحص الترخيص - التفعيل المباشر بدون شارة
+        // فحص الترخيص
         if (checkLicense()) {
-          console.log('✅ النسخة الكاملة مفعّلة - لا يوجد هيدر');
-          // لا نفعل شيء - الأداة تعمل بشكل طبيعي بدون أي إضافات
+          console.log('✅ النسخة الكاملة مفعّلة');
           return;
         }
 
