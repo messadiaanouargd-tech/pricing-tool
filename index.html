@@ -603,7 +603,7 @@
 
   </style>
 
-  <!-- ===================== PERFECT FINAL VERSION - 24H ===================== -->
+  <!-- ===================== FINAL VERSION - NO BADGE - 24H ===================== -->
   <script>
     (function() {
       const TRIAL_DURATION = 24 * 60 * 60 * 1000; // 24 hours
@@ -755,7 +755,7 @@
         document.body.appendChild(overlay);
       }
 
-      // هيدر الفترة التجريبية - متناسق مع التصميم
+      // هيدر الفترة التجريبية
       function createTrialHeader() {
         const header = document.createElement('div');
         header.id = 'trialHeader';
@@ -909,7 +909,7 @@
         });
       }
 
-      // شاشة انتهاء الفترة - محسّنة
+      // شاشة انتهاء الفترة
       function showExpiredScreen() {
         document.getElementById('trialHeader')?.remove();
 
@@ -1047,28 +1047,6 @@
         });
       }
 
-      // شارة النسخة الكاملة - لا تتحرك مع السكرول
-      function showFullVersionBadge() {
-        const badge = document.createElement('div');
-        badge.style.cssText = `
-          position: fixed;
-          top: 15px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: linear-gradient(135deg, #22c55e, #16a34a);
-          color: white;
-          padding: 8px 20px;
-          border-radius: 20px;
-          font-size: 13px;
-          font-weight: 700;
-          z-index: 99999;
-          box-shadow: 0 4px 16px rgba(34, 197, 94, 0.5);
-          pointer-events: none;
-        `;
-        badge.innerHTML = '✨ النسخة الكاملة';
-        document.body.appendChild(badge);
-      }
-
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {
@@ -1084,9 +1062,10 @@
           return;
         }
 
-        // فحص الترخيص
+        // فحص الترخيص - التفعيل المباشر بدون شارة
         if (checkLicense()) {
-          showFullVersionBadge();
+          console.log('✅ النسخة الكاملة مفعّلة - لا يوجد هيدر');
+          // لا نفعل شيء - الأداة تعمل بشكل طبيعي بدون أي إضافات
           return;
         }
 
