@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - COD Pricing Tool</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6', darkbg: '#0f172a' } } } }
+    </script>
+</head>
+<body class="bg-darkbg text-white flex items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md p-8 space-y-6 bg-slate-800 rounded-xl shadow-2xl border border-slate-700">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-primary">تسجيل الدخول</h2>
+            <p class="text-slate-400 mt-2">تابع العمل على أداتك الاحترافية</p>
+        </div>
+        
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium mb-2">البريد الإلكتروني</label>
+                <input type="email" id="email" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-white transition">
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2">كلمة المرور</label>
+                <input type="password" id="password" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-white transition">
+            </div>
+            <button type="submit" class="w-full py-3 bg-primary hover:bg-blue-600 rounded-lg font-bold transition-all transform hover:scale-[1.02] active:scale-[0.98]">دخول</button>
+        </form>
+        
+        <div class="text-center space-y-2">
+            <p class="text-sm text-slate-400">ليس لديك حساب؟ <a href="signup.html" class="text-primary hover:underline font-semibold">أنشئ حساباً جديداً</a></p>
+            <p id="errorMsg" class="text-red-500 text-sm font-semibold hidden"></p>
+            <p id="loadingMsg" class="text-yellow-400 text-sm font-semibold hidden">جاري تسجيل الدخول...</p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBoDXsELYXl440Wb3bd6xir0sMbj-6LSIA",
+            authDomain: "cod-pricing.firebaseapp.com",
+            projectId: "cod-pricing",
+            storageBucket: "cod-pricing.firebasestorage.app",
+            messagingSenderId: "815665273956",
+            appId: "1:815665273956:web:6a496b1d28da2aa0b25371",
+            measurementId: "G-7XLMBDYNXG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => { if (user) window.location.href = "index.html"; });
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const loadingMsg = document.getElementById('loadingMsg');
+
+            errorMsg.classList.add('hidden'); loadingMsg.classList.remove('hidden');
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = "index.html";
+            } catch (error) {
+                loadingMsg.classList.add('hidden'); errorMsg.classList.remove('hidden');
+                errorMsg.textContent = "خطأ في البريد أو كلمة المرور";
+            }
+        });
+    </script>
+</body>
+</html>
