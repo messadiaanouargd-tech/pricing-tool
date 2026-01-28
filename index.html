@@ -2416,6 +2416,153 @@
     });
 </script>
 <!-- ================= نهاية كود الشات بوت ================= -->
+<!-- ======================= كود إصلاح وإظهار الشات بوت ======================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. تنظيف أي كود شات بوت قديم (إذا وجد) لمنع التكرار
+    const oldChat = document.getElementById('chatWidget');
+    const oldBtn = document.querySelector('button[onclick="toggleChat()"]');
+    if (oldChat) oldChat.remove();
+    if (oldBtn) oldBtn.remove();
+
+    // 2. إنشاء حاوية الشات الجديدة (فوق كل شيء)
+    const container = document.createElement('div');
+    container.id = 'fixed-chatbot-container';
+    container.innerHTML = `
+        <!-- زر الشات العائم -->
+        <button id="newChatBtn" style="
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 2147483647; /* أعلى طبقة ممكنة */
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            <svg width="30" height="30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+        </button>
+
+        <!-- نافذة الشات -->
+        <div id="newChatWindow" style="
+            display: none;
+            position: fixed;
+            bottom: 95px;
+            right: 25px;
+            width: 350px;
+            height: 500px;
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 20px;
+            z-index: 2147483647;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            flex-direction: column;
+            overflow: hidden;
+            font-family: 'Tajawal', sans-serif;
+        ">
+            <!-- الهيدر -->
+            <div style="padding: 15px; background: linear-gradient(to right, #2563eb, #1e40af); color: white; display: flex; justify-content: space-between; align-items: center;">
+                <div style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                    <span style="background:#4ade80; width:8px; height:8px; border-radius:50%; display:block;"></span>
+                    المساعد الذكي
+                </div>
+                <button id="closeChat" style="background:none; border:none; color:white; font-size: 20px; cursor:pointer;">&times;</button>
+            </div>
+
+            <!-- الرسائل -->
+            <div id="chatMsgs" style="flex: 1; padding: 15px; overflow-y: auto; background: #0f172a; display: flex; flex-direction: column; gap: 10px;">
+                <div style="background: #1e293b; color: #e2e8f0; padding: 10px 15px; border-radius: 15px 15px 2px 15px; align-self: flex-start; max-width: 85%; font-size: 14px; border: 1px solid rgba(255,255,255,0.05);">
+                    مرحباً! 👋<br>أنا هنا لمساعدتك في استخدام الأداة.
+                </div>
+            </div>
+
+            <!-- الإدخال -->
+            <form id="chatFormInput" style="padding: 12px; background: #1e293b; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 8px;">
+                <input type="text" id="chatInput" placeholder="اكتب سؤالك..." style="flex: 1; background: #0f172a; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; outline: none;">
+                <button type="submit" style="background: #2563eb; color: white; border: none; padding: 0 15px; border-radius: 10px; cursor: pointer; font-weight: bold;">➤</button>
+            </form>
+        </div>
+    `;
+    document.body.appendChild(container);
+
+    // 3. تفعيل الأزرار
+    const btn = document.getElementById('newChatBtn');
+    const win = document.getElementById('newChatWindow');
+    const close = document.getElementById('closeChat');
+    const form = document.getElementById('chatFormInput');
+    const input = document.getElementById('chatInput');
+    const msgs = document.getElementById('chatMsgs');
+
+    function toggle() {
+        win.style.display = (win.style.display === 'none') ? 'flex' : 'none';
+        if (win.style.display === 'flex') input.focus();
+    }
+
+    btn.onclick = toggle;
+    close.onclick = toggle;
+
+    // 4. إرسال الرسالة
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        const txt = input.value.trim();
+        if (!txt) return;
+
+        // إضافة رسالة المستخدم
+        const userDiv = document.createElement('div');
+        userDiv.style.cssText = "background: #2563eb; color: white; padding: 10px 15px; border-radius: 15px 15px 15px 2px; align-self: flex-end; max-width: 85%; font-size: 14px; margin-bottom: 5px;";
+        userDiv.textContent = txt;
+        msgs.appendChild(userDiv);
+        msgs.scrollTop = msgs.scrollHeight;
+        input.value = '';
+        input.disabled = true;
+
+        // مؤشر التحميل
+        const loading = document.createElement('div');
+        loading.id = 'loading-dots';
+        loading.style.cssText = "color: #94a3b8; font-size: 12px; margin-right: 10px;";
+        loading.textContent = "جاري الكتابة...";
+        msgs.appendChild(loading);
+        msgs.scrollTop = msgs.scrollHeight;
+
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: txt })
+            });
+            const data = await res.json();
+            
+            loading.remove();
+            
+            // رد البوت
+            const botDiv = document.createElement('div');
+            botDiv.style.cssText = "background: #1e293b; color: #e2e8f0; padding: 10px 15px; border-radius: 15px 15px 2px 15px; align-self: flex-start; max-width: 85%; font-size: 14px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 5px;";
+            botDiv.innerHTML = data.reply || "حدث خطأ غير متوقع.";
+            msgs.appendChild(botDiv);
+            msgs.scrollTop = msgs.scrollHeight;
+
+        } catch (err) {
+            loading.remove();
+            const errDiv = document.createElement('div');
+            errDiv.style.cssText = "color: #ef4444; font-size: 12px; text-align: center; margin: 5px 0;";
+            errDiv.textContent = "فشل الاتصال بالخادم";
+            msgs.appendChild(errDiv);
+        } finally {
+            input.disabled = false;
+            input.focus();
+        }
+    };
+});
+</script>
+<!-- ======================= نهاية كود الإصلاح ======================= -->
 
 </body>
 </html>
