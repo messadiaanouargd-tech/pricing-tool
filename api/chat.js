@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // إعدادات CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -14,7 +13,7 @@ export default async function handler(req, res) {
   }
 
   const { message } = req.body;
-  const apiKey = process.env.GROQ_API_KEY; // لاحظ تغيير اسم المتغير
+  const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
     return res.status(500).json({ reply: "مفتاح Groq API مفقود" });
@@ -28,11 +27,12 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama3-8b-8192", // موديل سريع جداً ومجاني ويدعم العربية
+        // التعديل هنا: استخدام الموديل الأحدث والأقوى والمتاح حالياً
+        model: "llama-3.3-70b-versatile", 
         messages: [
           {
             role: "system",
-            content: "أنت مساعد خبير في التجارة الإلكترونية (COD) في الجزائر. أجب باللهجة الجزائرية أو العربية المبسطة. العملة DZD. كن مختصراً ومفيداً."
+            content: "أنت مساعد خبير في التجارة الإلكترونية (COD) في الجزائر. أجب باللهجة الجزائرية أو العربية المبسطة. العملة DZD."
           },
           {
             role: "user",
@@ -56,6 +56,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error("Groq API Error:", error);
-    return res.status(500).json({ reply: `خطأ في الاتصال: ${error.message}` });
+    return res.status(500).json({ reply: `خطأ: ${error.message}` });
   }
 }
