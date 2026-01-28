@@ -1,10 +1,7 @@
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export default async function handler(req, res) {
+  // 1. التحقق من طريقة الطلب
   if (req.method !== 'POST') {
     return res.status(405).json({ reply: "طريقة الإرسال غير صحيحة (يجب أن تكون POST)." });
   }
@@ -16,26 +13,32 @@ export default async function handler(req, res) {
   }
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // أو gpt-4 إذا كان متاحاً في حسابك
-      messages: [
-        { 
-          role: "system", 
-          content: "أنت مساعد ذكي لأداة تسعير منتجات التجارة الإلكترونية (COD) في الجزائر. أجب باختصار وباللغة العربية. عملتك هي الدينار الجزائري." 
-        },
-        { role: "user", content: message },
-      ],
-    });
+    // 2. الاتصال بـ Google Gemini
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    // استخراج الرد وإرساله
-    const reply = completion.choices[0].message.content;
-    return res.status(200).json({ reply });
+    // 3. تحديد سياق المحادثة (System Prompt)
+    const prompt = `
+      أنت مساعد ذكي ومحترف لأداة تسمى "COD Pricing Tool".
+      دورك هو مساعدة التجار الجزائريين في حساب تسعير منتجاتهم وتوقع الأرباح.
+      أجب دائماً باللغة العربية، وكن مختصراً ومباشراً.
+      العملة المستخدمة هي الدينار الجزائري (DZD).
+      
+      سؤال المستخدم هو: ${message}
+    `;
+
+    // 4. إرسال الرسالة واستقبال الرد
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
+
+    // 5. إرسال الرد للواجهة الأمامية
+    return res.status(200).json({ reply: text });
 
   } catch (error) {
-    console.error("OpenAI Error:", error);
-    // إرجاع رسالة الخطأ لتظهر في الشات بدلاً من "خطأ غير متوقع"
+    console.error("Gemini Error:", error);
     return res.status(500).json({ 
-      reply: "عذراً، حدثت مشكلة في الاتصال بـ OpenAI. تأكد من صحة المفتاح (API Key) في إعدادات Vercel." 
+      reply: "حدث خطأ أثناء الاتصال بـ Google Gemini. يرجى المحاولة لاحقاً." 
     });
   }
 }
