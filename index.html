@@ -1159,6 +1159,38 @@
 </head>
 <!-- ===================== PART 2 / 7 ===================== -->
 <body>
+  <!-- START: كود حماية فايربيس -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBoDXsELYXl440Wb3bd6xir0sMbj-6LSIA",
+        authDomain: "cod-pricing.firebaseapp.com",
+        projectId: "cod-pricing",
+        storageBucket: "cod-pricing.firebasestorage.app",
+        messagingSenderId: "815665273956",
+        appId: "1:815665273956:web:6a496b1d28da2aa0b25371",
+        measurementId: "G-7XLMBDYNXG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // التحقق: إذا لم يكن مسجلاً، اطرده لصفحة الدخول
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = "login.html";
+        } else {
+            console.log("Logged in as:", user.email);
+        }
+    });
+
+    // دالة لتسجيل الخروج (يمكنك استدعاؤها بزر)
+    window.logout = () => signOut(auth).then(() => window.location.href = "login.html");
+</script>
+<!-- END: كود حماية فايربيس -->
+
   <div class="min-h-screen p-4">
     <div class="w-full max-w-screen-2xl mx-auto">
 
