@@ -6,17 +6,7 @@
     <title>إنشاء حساب - COD Pricing Tool</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { 
-                extend: { 
-                    colors: { 
-                        primary: '#3b82f6', 
-                        darkbg: '#0f172a' 
-                    } 
-                } 
-            } 
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6', darkbg: '#0f172a' } } } }
     </script>
 </head>
 <body class="bg-darkbg text-white flex items-center justify-center min-h-screen p-4">
@@ -30,24 +20,17 @@
         <form id="signupForm" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium mb-2">البريد الإلكتروني</label>
-                <input type="email" id="email" required 
-                    class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none text-white transition">
+                <input type="email" id="email" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none text-white transition">
             </div>
             <div>
                 <label class="block text-sm font-medium mb-2">كلمة المرور (6 أحرف على الأقل)</label>
-                <input type="password" id="password" required minlength="6"
-                    class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none text-white transition">
+                <input type="password" id="password" required minlength="6" class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none text-white transition">
             </div>
-            <button type="submit" 
-                class="w-full py-3 bg-green-600 hover:bg-green-700 rounded-lg font-bold transition-all transform hover:scale-[1.02] active:scale-[0.98]">
-                تسجيل جديد
-            </button>
+            <button type="submit" class="w-full py-3 bg-green-600 hover:bg-green-700 rounded-lg font-bold transition-all transform hover:scale-[1.02] active:scale-[0.98]">تسجيل جديد</button>
         </form>
         
         <div class="text-center space-y-2">
-            <p class="text-sm text-slate-400">
-                لديك حساب؟ <a href="login.html" class="text-primary hover:underline font-semibold">سجل الدخول</a>
-            </p>
+            <p class="text-sm text-slate-400">لديك حساب؟ <a href="login.html" class="text-primary hover:underline font-semibold">سجل الدخول</a></p>
             <p id="errorMsg" class="text-red-500 text-sm font-semibold hidden"></p>
             <p id="successMsg" class="text-green-400 text-sm font-semibold hidden"></p>
             <p id="loadingMsg" class="text-yellow-400 text-sm font-semibold hidden">جاري إنشاء الحساب...</p>
@@ -56,9 +39,8 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, sendEmailVerification, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
-        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyBoDXsELYXl440Wb3bd6xir0sMbj-6LSIA",
             authDomain: "cod-pricing.firebaseapp.com",
@@ -72,12 +54,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        // التحقق من حالة الدخول - إذا كان مسجلاً بالفعل نوجهه للرئيسية
-        onAuthStateChanged(auth, (user) => {
-            if (user && user.emailVerified) {
-                window.location.href = "index.html";
-            }
-        });
+        onAuthStateChanged(auth, (user) => { if (user) window.location.href = "index.html"; });
 
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -87,44 +64,17 @@
             const successMsg = document.getElementById('successMsg');
             const loadingMsg = document.getElementById('loadingMsg');
             
-            errorMsg.classList.add('hidden');
-            successMsg.classList.add('hidden');
-            loadingMsg.classList.remove('hidden');
+            errorMsg.classList.add('hidden'); successMsg.classList.add('hidden'); loadingMsg.classList.remove('hidden');
             
             try {
-                // 1. إنشاء الحساب
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-
-                // 2. إرسال رابط التفعيل
-                await sendEmailVerification(user);
-
-                // 3. تسجيل الخروج فوراً لمنع الدخول قبل التفعيل
-                await signOut(auth);
-
-                loadingMsg.classList.add('hidden');
-                successMsg.textContent = "تم إنشاء الحساب! تم إرسال رابط تفعيل إلى بريدك. يرجى التفعيل ثم تسجيل الدخول.";
-                successMsg.classList.remove('hidden');
-                
-                // التوجيه لصفحة الدخول بعد 5 ثواني
-                setTimeout(() => {
-                    window.location.href = "login.html";
-                }, 5000);
-                
+                await createUserWithEmailAndPassword(auth, email, password);
+                loadingMsg.classList.add('hidden'); successMsg.textContent = "تم بنجاح! جاري الدخول..."; successMsg.classList.remove('hidden');
+                setTimeout(() => { window.location.href = "index.html"; }, 1000);
             } catch (error) {
-                loadingMsg.classList.add('hidden');
-                errorMsg.classList.remove('hidden');
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMsg.textContent = "هذا البريد الإلكتروني مسجل مسبقاً";
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMsg.textContent = "البريد الإلكتروني غير صالح";
-                } else if (error.code === 'auth/weak-password') {
-                    errorMsg.textContent = "كلمة المرور ضعيفة (6 أحرف على الأقل)";
-                } else {
-                    errorMsg.textContent = "حدث خطأ: " + error.message;
-                }
-                console.error("Signup error:", error);
+                loadingMsg.classList.add('hidden'); errorMsg.classList.remove('hidden');
+                if (error.code === 'auth/email-already-in-use') errorMsg.textContent = "البريد مسجل مسبقاً";
+                else if (error.code === 'auth/weak-password') errorMsg.textContent = "كلمة المرور ضعيفة";
+                else errorMsg.textContent = "خطأ: " + error.message;
             }
         });
     </script>
