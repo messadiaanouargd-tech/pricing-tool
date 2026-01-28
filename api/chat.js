@@ -1,24 +1,16 @@
 export default async function handler(req, res) {
-  // إعدادات CORS
+  // CORS
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+  res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   const { message } = req.body;
   const apiKey = process.env.GROQ_API_KEY;
 
-  if (!apiKey) {
-    return res.status(500).json({ reply: "مفتاح Groq API مفقود" });
-  }
+  if (!apiKey) return res.status(500).json({ reply: "مفتاح Groq API مفقود" });
 
   try {
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -28,17 +20,10 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        // هذا هو الموديل الجديد الموصى به في الوثيقة التي أرسلتها
-        model: "llama-3.3-70b-versatile", 
+        model: "llama-3.3-70b-versatile", // تأكد أن هذا السطر مكتوب هكذا تماماً
         messages: [
-          {
-            role: "system",
-            content: "أنت مساعد خبير في التجارة الإلكترونية (COD) في الجزائر. أجب باللهجة الجزائرية أو العربية المبسطة. العملة DZD. كن مفيداً ومختصراً."
-          },
-          {
-            role: "user",
-            content: message
-          }
+          { role: "system", content: "أنت مساعد خبير باللهجة الجزائرية." },
+          { role: "user", content: message }
         ],
         temperature: 0.7,
         max_tokens: 1024
@@ -47,17 +32,14 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
         const errData = await response.json();
-        console.error("Groq API Error Details:", errData);
-        throw new Error(errData.error?.message || response.statusText);
+        // هذه الرسالة ستثبت لنا أن الكود جديد
+        throw new Error("حدث خطأ في النسخة الجديدة: " + (errData.error?.message || response.statusText));
     }
 
     const data = await response.json();
-    const replyText = data.choices[0].message.content;
-
-    return res.status(200).json({ reply: replyText });
+    return res.status(200).json({ reply: data.choices[0].message.content });
 
   } catch (error) {
-    console.error("Server Error:", error);
-    return res.status(500).json({ reply: `خطأ: ${error.message}` });
+    return res.status(500).json({ reply: error.message });
   }
 }
