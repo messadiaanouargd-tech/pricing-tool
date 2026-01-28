@@ -27,12 +27,12 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        // التعديل هنا: استخدام الموديل الأحدث والأقوى والمتاح حالياً
+        // هذا هو الموديل الجديد والشغال 100%
         model: "llama-3.3-70b-versatile", 
         messages: [
           {
             role: "system",
-            content: "أنت مساعد خبير في التجارة الإلكترونية (COD) في الجزائر. أجب باللهجة الجزائرية أو العربية المبسطة. العملة DZD."
+            content: "أنت مساعد خبير في التجارة الإلكترونية (COD) في الجزائر. أجب باللهجة الجزائرية. العملة DZD."
           },
           {
             role: "user",
@@ -46,6 +46,8 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
         const errData = await response.json();
+        // طباعة الخطأ في الكونسول للمساعدة في التشخيص
+        console.error("Groq Error Details:", errData);
         throw new Error(errData.error?.message || response.statusText);
     }
 
