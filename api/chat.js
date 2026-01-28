@@ -15,8 +15,9 @@ export default async function handler(req, res) {
     }
 
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    // استخدام موديل gemini-pro المستقر
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    
+    // الحل النهائي: استخدام موديل Flash المتاح عالمياً
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const result = await model.generateContent(`
       أنت مساعد خبير في التجارة الإلكترونية الجزائرية (COD).
