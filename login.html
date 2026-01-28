@@ -6,7 +6,17 @@
     <title>تسجيل الدخول - COD Pricing Tool</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#3b82f6', darkbg: '#0f172a' } } } }
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#3b82f6', 
+                        darkbg: '#0f172a' 
+                    } 
+                } 
+            } 
+        }
     </script>
 </head>
 <body class="bg-darkbg text-white flex items-center justify-center min-h-screen p-4">
@@ -20,17 +30,29 @@
         <form id="loginForm" class="space-y-4">
             <div>
                 <label class="block text-sm font-medium mb-2">البريد الإلكتروني</label>
-                <input type="email" id="email" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-white transition">
+                <input type="email" id="email" required 
+                    class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-white transition">
             </div>
             <div>
-                <label class="block text-sm font-medium mb-2">كلمة المرور</label>
-                <input type="password" id="password" required class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-white transition">
+                <div class="flex justify-between items-center mb-2">
+                    <label class="block text-sm font-medium">كلمة المرور</label>
+                    <button type="button" onclick="resetPassword()" class="text-xs text-primary hover:text-blue-400 hover:underline">
+                        نسيت كلمة المرور؟
+                    </button>
+                </div>
+                <input type="password" id="password" required 
+                    class="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:outline-none text-white transition">
             </div>
-            <button type="submit" class="w-full py-3 bg-primary hover:bg-blue-600 rounded-lg font-bold transition-all transform hover:scale-[1.02] active:scale-[0.98]">دخول</button>
+            <button type="submit" 
+                class="w-full py-3 bg-primary hover:bg-blue-600 rounded-lg font-bold transition-all transform hover:scale-[1.02] active:scale-[0.98]">
+                دخول
+            </button>
         </form>
         
         <div class="text-center space-y-2">
-            <p class="text-sm text-slate-400">ليس لديك حساب؟ <a href="signup.html" class="text-primary hover:underline font-semibold">أنشئ حساباً جديداً</a></p>
+            <p class="text-sm text-slate-400">
+                ليس لديك حساب؟ <a href="signup.html" class="text-primary hover:underline font-semibold">أنشئ حساباً جديداً</a>
+            </p>
             <p id="errorMsg" class="text-red-500 text-sm font-semibold hidden"></p>
             <p id="loadingMsg" class="text-yellow-400 text-sm font-semibold hidden">جاري تسجيل الدخول...</p>
         </div>
@@ -38,8 +60,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
 
+        // إعدادات Firebase الخاصة بك
         const firebaseConfig = {
             apiKey: "AIzaSyBoDXsELYXl440Wb3bd6xir0sMbj-6LSIA",
             authDomain: "cod-pricing.firebaseapp.com",
@@ -53,8 +76,31 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
 
-        onAuthStateChanged(auth, (user) => { if (user) window.location.href = "index.html"; });
+        // التحقق من حالة الدخول
+        onAuthStateChanged(auth, (user) => {
+            // إذا كان المستخدم مسجلاً ومفعلاً حسابه، نوجهه للأداة
+            if (user && user.emailVerified) {
+                window.location.href = "index.html";
+            }
+        });
 
+        // دالة استعادة كلمة المرور
+        window.resetPassword = async function() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert("يرجى كتابة بريدك الإلكتروني أولاً في الحقل المخصص");
+                return;
+            }
+            try {
+                await sendPasswordResetEmail(auth, email);
+                alert("تم إرسال رابط استعادة كلمة المرور إلى بريدك: " + email);
+            } catch (error) {
+                alert("خطأ: تأكد أن البريد صحيح ومسجل لدينا.");
+                console.error(error);
+            }
+        }
+
+        // معالجة نموذج تسجيل الدخول (الجزء المعدل)
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
@@ -62,14 +108,40 @@
             const errorMsg = document.getElementById('errorMsg');
             const loadingMsg = document.getElementById('loadingMsg');
 
-            errorMsg.classList.add('hidden'); loadingMsg.classList.remove('hidden');
+            errorMsg.classList.add('hidden');
+            loadingMsg.classList.remove('hidden');
 
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                window.location.href = "index.html";
+                // محاولة تسجيل الدخول
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // التحقق هل البريد مفعل؟
+                if (user.emailVerified) {
+                    // ✅ مفعل -> اذهب للأداة
+                    window.location.href = "index.html";
+                } else {
+                    // ❌ غير مفعل -> تسجيل خروج وإظهار خطأ
+                    await signOut(auth);
+                    loadingMsg.classList.add('hidden');
+                    errorMsg.textContent = "يرجى تفعيل حسابك أولاً من الرابط المرسل لبريدك الإلكتروني.";
+                    errorMsg.classList.remove('hidden');
+                }
+
             } catch (error) {
-                loadingMsg.classList.add('hidden'); errorMsg.classList.remove('hidden');
-                errorMsg.textContent = "خطأ في البريد أو كلمة المرور";
+                loadingMsg.classList.add('hidden');
+                errorMsg.classList.remove('hidden');
+                
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                    errorMsg.textContent = "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg.textContent = "البريد الإلكتروني غير صالح";
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMsg.textContent = "محاولات كثيرة جداً، حاول لاحقاً";
+                } else {
+                    errorMsg.textContent = "حدث خطأ: " + error.message;
+                }
+                console.error("Login error:", error);
             }
         });
     </script>
