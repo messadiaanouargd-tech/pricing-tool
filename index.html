@@ -2565,4 +2565,142 @@ document.addEventListener("DOMContentLoaded", function() {
 <!-- ======================= نهاية كود الإصلاح ======================= -->
 
 </body>
+  <!-- ======================= FINAL CHATBOT FIX (Gemini) ======================= -->
+<script>
+    // هذا الكود مصمم ليعمل تلقائياً عند تحميل الصفحة
+    // ويقوم باستبدال أي شات بوت قديم بالنسخة الجديدة المتوافقة مع Gemini
+    
+    document.addEventListener("DOMContentLoaded", function() {
+        console.log("Starting Chatbot Fix...");
+
+        // 1. حذف أي واجهة شات قديمة (بالبحث عن الـ ID المحتملة)
+        const oldIds = ['chatWidget', 'fixed-chatbot-container', 'chatbot-container', 'force-chatbot-container'];
+        oldIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.remove();
+        });
+
+        // 2. حذف أي أزرار شات قديمة عائمة
+        const oldBtns = document.querySelectorAll('button[onclick="toggleChat()"]');
+        oldBtns.forEach(btn => btn.remove());
+
+        // 3. إنشاء الواجهة الجديدة (Gemini Ready)
+        const container = document.createElement('div');
+        container.id = 'fixed-chatbot-container';
+        container.style.cssText = "position: fixed; z-index: 2147483647; font-family: 'Tajawal', sans-serif;";
+        
+        container.innerHTML = `
+            <!-- زر الشات -->
+            <button id="geminiChatBtn" style="
+                position: fixed; bottom: 25px; right: 25px;
+                width: 65px; height: 65px; border-radius: 50%;
+                background: linear-gradient(135deg, #2563eb, #1e40af);
+                box-shadow: 0 8px 30px rgba(37,99,235,0.5);
+                border: 2px solid rgba(255,255,255,0.2);
+                color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
+                transition: transform 0.2s; z-index: 2147483647;
+            " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                <svg width="34" height="34" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                </svg>
+            </button>
+    
+            <!-- نافذة الشات -->
+            <div id="geminiChatWindow" style="
+                display: none; position: fixed; bottom: 100px; right: 25px;
+                width: 360px; height: 550px; background: #0f172a;
+                border: 1px solid rgba(255,255,255,0.1); border-radius: 24px;
+                z-index: 2147483647; box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+                flex-direction: column; overflow: hidden;
+            ">
+                <!-- الرأس -->
+                <div style="padding: 18px; background: linear-gradient(to right, #2563eb, #1e3a8a); color: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                    <div style="font-weight: 800; display: flex; align-items: center; gap: 10px; font-size: 16px;">
+                        <span style="background:#4ade80; width:10px; height:10px; border-radius:50%; box-shadow: 0 0 10px #4ade80;"></span>
+                        المساعد الذكي (Gemini)
+                    </div>
+                    <button id="closeGeminiChat" style="background:none; border:none; color:white; font-size: 26px; cursor:pointer; line-height: 1;">&times;</button>
+                </div>
+    
+                <!-- الرسائل -->
+                <div id="geminiMessages" style="flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background: #0f172a;">
+                    <div style="background: #1e293b; color: #e2e8f0; padding: 14px; border-radius: 18px 18px 4px 18px; align-self: flex-start; max-width: 85%; font-size: 15px; line-height: 1.5; border: 1px solid rgba(255,255,255,0.05);">
+                        مرحباً! 👋 أنا جاهز للإجابة على أسئلتك.
+                    </div>
+                </div>
+    
+                <!-- الإدخال -->
+                <form id="geminiForm" style="padding: 15px; background: #1e293b; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px;">
+                    <input type="text" id="geminiInput" placeholder="اكتب سؤالك هنا..." style="flex: 1; background: #0f172a; border: 1px solid #334155; color: white; padding: 12px 16px; border-radius: 12px; outline: none; font-size: 15px;">
+                    <button type="submit" style="background: #2563eb; color: white; border: none; padding: 0 20px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 18px;">➤</button>
+                </form>
+            </div>
+        `;
+        document.body.appendChild(container);
+    
+        // 4. تشغيل المنطق (Logic)
+        const btn = document.getElementById('geminiChatBtn');
+        const win = document.getElementById('geminiChatWindow');
+        const close = document.getElementById('closeGeminiChat');
+        const form = document.getElementById('geminiForm');
+        const input = document.getElementById('geminiInput');
+        const msgs = document.getElementById('geminiMessages');
+    
+        function toggle() {
+            if (win.style.display === 'none') {
+                win.style.display = 'flex';
+                input.focus();
+            } else {
+                win.style.display = 'none';
+            }
+        }
+        btn.onclick = toggle;
+        close.onclick = toggle;
+    
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const txt = input.value.trim();
+            if (!txt) return;
+    
+            // إضافة رسالة المستخدم
+            msgs.innerHTML += `<div style="background: #2563eb; color: white; padding: 12px 16px; border-radius: 18px 18px 18px 4px; align-self: flex-end; max-width: 85%; font-size: 15px; line-height: 1.5;">${txt}</div>`;
+            msgs.scrollTop = msgs.scrollHeight;
+            input.value = '';
+            input.disabled = true;
+    
+            // إضافة مؤشر التحميل
+            const loadId = 'loading-' + Date.now();
+            msgs.innerHTML += `<div id="${loadId}" style="color: #94a3b8; font-size: 13px; margin-right: 15px; margin-bottom: 5px;">جاري الكتابة...</div>`;
+            msgs.scrollTop = msgs.scrollHeight;
+    
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: txt })
+                });
+    
+                const data = await res.json();
+                document.getElementById(loadId).remove();
+    
+                if (res.ok) {
+                    msgs.innerHTML += `<div style="background: #1e293b; color: #e2e8f0; padding: 14px; border-radius: 18px 18px 4px 18px; align-self: flex-start; max-width: 85%; font-size: 15px; line-height: 1.5; border: 1px solid rgba(255,255,255,0.05);">${data.reply}</div>`;
+                } else {
+                    // عرض الخطأ بوضوح
+                    msgs.innerHTML += `<div style="background: rgba(220,38,38,0.15); color: #fca5a5; padding: 12px; border-radius: 12px; font-size: 13px; text-align: center; border: 1px solid rgba(239,68,68,0.3);">⚠️ خطأ من السيرفر: ${data.reply}</div>`;
+                }
+    
+            } catch (err) {
+                document.getElementById(loadId)?.remove();
+                msgs.innerHTML += `<div style="color: #ef4444; font-size: 13px; text-align: center;">❌ فشل الاتصال: ${err.message}</div>`;
+            } finally {
+                input.disabled = false;
+                input.focus();
+                msgs.scrollTop = msgs.scrollHeight;
+            }
+        };
+    });
+</script>
+<!-- ======================= END FINAL CHATBOT FIX ======================= -->
+
 </html>
