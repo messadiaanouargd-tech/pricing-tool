@@ -1,60 +1,59 @@
-// استيراد المكتبة
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 export default async function handler(req, res) {
-    // 1. ضبط إعدادات CORS للسماح للمتصفح بالاتصال
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-    res.setHeader(
-        'Access-Control-Allow-Headers',
-        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-    );
+  // 1. إعدادات السماح (CORS) - ضرورية جداً
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
 
-    // التعامل مع طلب الفحص المسبق (Preflight)
-    if (req.method === 'OPTIONS') {
-        res.status(200).end();
-        return;
+  // التعامل مع طلب الفحص المسبق
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+
+  try {
+    const { message } = req.body;
+    const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+        return res.status(500).json({ reply: "مفتاح API غير موجود في إعدادات Vercel" });
     }
 
-    // التأكد أن الطلب هو POST
-    if (req.method !== 'POST') {
-        return res.status(405).json({ reply: "Method Not Allowed" });
+    // 2. الرابط المباشر (بدون مكتبات) - نستخدم gemini-1.5-flash
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    // 3. الاتصال المباشر
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{ 
+            text: `أنت مساعد ذكي لأداة COD Pricing Tool الجزائرية. أجب بإيجاز وباللهجة الجزائرية. السؤال: ${message}` 
+          }]
+        }]
+      })
+    });
+
+    // 4. فحص الأخطاء القادمة من جوجل
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || response.statusText);
     }
 
-    try {
-        // 2. استلام الرسالة
-        const { message } = req.body;
-        if (!message) {
-            throw new Error("الرسالة فارغة");
-        }
+    // 5. استخراج الرد
+    const data = await response.json();
+    const replyText = data.candidates[0].content.parts[0].text;
 
-        // 3. التحقق من المفتاح
-        const apiKey = process.env.GEMINI_API_KEY;
-        if (!apiKey) {
-            throw new Error("مفتاح API غير موجود في إعدادات Vercel");
-        }
+    return res.status(200).json({ reply: replyText });
 
-        // 4. إعداد الاتصال بـ Gemini
-        const genAI = new GoogleGenerativeAI(apiKey);
-        
-        // استخدام موديل gemini-1.5-flash (الأسرع والأرخص والمدعوم حالياً)
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
-        // 5. إرسال السؤال
-        const prompt = `أنت مساعد ذكي ومحترف لأداة تسمى "COD Pricing Tool". أجب المستخدم باللهجة الجزائرية أو العربية البسيطة. العملة هي DZD. سؤال المستخدم: ${message}`;
-        
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        const text = response.text();
-
-        // 6. إرجاع الرد
-        return res.status(200).json({ reply: text });
-
-    } catch (error) {
-        console.error("Server Error:", error);
-        return res.status(500).json({ 
-            reply: `خطأ: ${error.message}` 
-        });
-    }
+  } catch (error) {
+    console.error("Direct API Error:", error);
+    return res.status(500).json({ reply: `خطأ في الاتصال: ${error.message}` });
+  }
 }
