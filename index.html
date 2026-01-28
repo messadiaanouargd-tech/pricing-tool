@@ -2312,5 +2312,110 @@
       }
     }
   </script>
+  <!-- ================= بداية كود الشات بوت (المُصحح) ================= -->
+<div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999999;">
+    
+    <!-- زر الشات -->
+    <button onclick="toggleChat()" style="
+        background: #2563eb; 
+        color: white; 
+        width: 60px; 
+        height: 60px; 
+        border-radius: 50%; 
+        border: none; 
+        cursor: pointer; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        transition: transform 0.2s;
+    " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+        </svg>
+    </button>
+
+    <!-- نافذة الشات -->
+    <div id="chatWidget" style="
+        display: none; 
+        position: absolute; 
+        bottom: 80px; 
+        right: 0; 
+        width: 350px; 
+        height: 500px; 
+        background: #1e293b; 
+        border-radius: 15px; 
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+        border: 1px solid rgba(255,255,255,0.1);
+        flex-direction: column;
+        overflow: hidden;
+    ">
+        <!-- الرأس -->
+        <div style="background: #2563eb; padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-weight: bold;">المساعد الذكي 🤖</span>
+            <button onclick="toggleChat()" style="background:none; border:none; color:white; font-size: 20px; cursor:pointer;">&times;</button>
+        </div>
+
+        <!-- الرسائل -->
+        <div id="chatMessages" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+            <div style="background: #334155; color: white; padding: 10px; border-radius: 10px 10px 0 10px; align-self: flex-start; max-width: 85%;">
+                مرحبا! أنا هنا لمساعدتك في استخدام الأداة. اسألني أي شيء!
+            </div>
+        </div>
+
+        <!-- الإدخال -->
+        <form id="chatForm" style="padding: 10px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px;">
+            <input type="text" id="userMessage" placeholder="اكتب سؤالك..." style="flex: 1; padding: 10px; border-radius: 8px; border: none; background: #0f172a; color: white;">
+            <button type="submit" style="background: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer;">➤</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleChat() {
+        const widget = document.getElementById('chatWidget');
+        if (widget.style.display === 'none') {
+            widget.style.display = 'flex';
+        } else {
+            widget.style.display = 'none';
+        }
+    }
+
+    document.getElementById('chatForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const input = document.getElementById('userMessage');
+        const text = input.value.trim();
+        if (!text) return;
+
+        // إضافة رسالة المستخدم
+        const msgs = document.getElementById('chatMessages');
+        msgs.innerHTML += `<div style="background: #2563eb; color: white; padding: 10px; border-radius: 10px 10px 10px 0; align-self: flex-end; max-width: 85%; margin-bottom: 10px;">${text}</div>`;
+        input.value = '';
+        msgs.scrollTop = msgs.scrollHeight;
+
+        // إضافة "جاري الكتابة..."
+        const loadingId = 'loading-' + Date.now();
+        msgs.innerHTML += `<div id="${loadingId}" style="color: #94a3b8; font-size: 12px; margin-bottom: 10px;">جاري التفكير...</div>`;
+        msgs.scrollTop = msgs.scrollHeight;
+
+        try {
+            const res = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+            const data = await res.json();
+            document.getElementById(loadingId).remove();
+            
+            msgs.innerHTML += `<div style="background: #334155; color: white; padding: 10px; border-radius: 10px 10px 0 10px; align-self: flex-start; max-width: 85%; margin-bottom: 10px;">${data.reply || 'حدث خطأ'}</div>`;
+            msgs.scrollTop = msgs.scrollHeight;
+        } catch (err) {
+            document.getElementById(loadingId).remove();
+            msgs.innerHTML += `<div style="color: red; font-size: 12px;">فشل الاتصال بالخادم</div>`;
+        }
+    });
+</script>
+<!-- ================= نهاية كود الشات بوت ================= -->
+
 </body>
 </html>
