@@ -14,67 +14,48 @@ export default async function handler(req, res) {
   }
 
   const { message } = req.body;
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY; // لاحظ تغيير اسم المتغير
 
   if (!apiKey) {
-    return res.status(500).json({ reply: "مفتاح API غير موجود" });
+    return res.status(500).json({ reply: "مفتاح Groq API مفقود" });
   }
 
-  // قائمة الموديلات التي سنجربها بالترتيب
-  const modelsToTry = [
-    "gemini-1.5-flash", // الأسرع
-    "gemini-pro",       // الأكثر شيوعاً
-    "gemini-1.5-pro",   // الأقوى
-    "gemini-1.0-pro"    // النسخة القديمة المستقرة
-  ];
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "llama3-8b-8192", // موديل سريع جداً ومجاني ويدعم العربية
+        messages: [
+          {
+            role: "system",
+            content: "أنت مساعد خبير في التجارة الإلكترونية (COD) في الجزائر. أجب باللهجة الجزائرية أو العربية المبسطة. العملة DZD. كن مختصراً ومفيداً."
+          },
+          {
+            role: "user",
+            content: message
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 1024
+      })
+    });
 
-  let lastError = null;
-
-  // حلقة تكرارية تجرب الموديلات واحداً تلو الآخر
-  for (const model of modelsToTry) {
-    try {
-      console.log(`Trying model: ${model}...`);
-      
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ 
-              text: `أنت مساعد خبير في التجارة الإلكترونية (COD) في الجزائر. العملة DZD. أجب باختصار. السؤال: ${message}` 
-            }]
-          }]
-        })
-      });
-
-      if (!response.ok) {
+    if (!response.ok) {
         const errData = await response.json();
         throw new Error(errData.error?.message || response.statusText);
-      }
-
-      const data = await response.json();
-      
-      if (!data.candidates || data.candidates.length === 0) {
-        throw new Error("لا يوجد رد من النموذج");
-      }
-
-      const replyText = data.candidates[0].content.parts[0].text;
-      
-      // إذا نجحنا، نرسل الرد ونوقف المحاولات
-      return res.status(200).json({ reply: replyText });
-
-    } catch (error) {
-      console.error(`Failed with ${model}:`, error.message);
-      lastError = error.message;
-      // نستمر للموديل التالي في القائمة
-      continue;
     }
-  }
 
-  // إذا فشلت كل الموديلات
-  return res.status(500).json({ 
-    reply: `عذراً، حدث خطأ في جميع محاولات الاتصال. (آخر خطأ: ${lastError})` 
-  });
+    const data = await response.json();
+    const replyText = data.choices[0].message.content;
+
+    return res.status(200).json({ reply: replyText });
+
+  } catch (error) {
+    console.error("Groq API Error:", error);
+    return res.status(500).json({ reply: `خطأ في الاتصال: ${error.message}` });
+  }
 }
