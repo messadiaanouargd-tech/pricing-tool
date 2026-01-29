@@ -1,4 +1,3 @@
-<!-- ===================== PART 1 / 7 ===================== -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -7,205 +6,108 @@
   <meta name="theme-color" content="#070812" />
   <title>PRO • COD Pricing Tool</title>
 
-  <!-- Tailwind -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Chart.js + PDF libs -->
+  <!-- Chart.js & PDF Libs -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Fonts -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
 
   <style>
-    :root{
-      --bg0:#070812;
-      --bg1:#060713;
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.66);
-      --stroke:rgba(255,255,255,.12);
-      --glass:rgba(255,255,255,.06);
-      --glass2:rgba(255,255,255,.10);
-      --brand1:#8b5cf6;
-      --brand2:#22d3ee;
-      --brand3:#60a5fa;
-      --good:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-      --shadow:0 24px 70px rgba(0,0,0,.45);
-    }
-    html,body{height:100%}
-    body{
-      margin:0;
-      color:var(--text);
-      background:
-        radial-gradient(1200px 700px at 70% 10%, rgba(139,92,246,.18), transparent 60%),
-        radial-gradient(1000px 600px at 10% 35%, rgba(34,211,238,.14), transparent 55%),
-        radial-gradient(900px 700px at 50% 100%, rgba(96,165,250,.12), transparent 60%),
-        linear-gradient(180deg,var(--bg0),var(--bg1));
-      font-family:Tajawal,Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-    }
-    .glass{
-      background:linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border:1px solid var(--stroke);
-      box-shadow:var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-    .glass-strong{
-      background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-      border:1px solid rgba(255,255,255,.16);
-      box-shadow:0 26px 90px rgba(0,0,0,.52);
-      backdrop-filter: blur(18px);
-    }
-    .soft-border{position:relative}
-    .soft-border:before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      border-radius:18px;
-      padding:1px;
-      background:linear-gradient(135deg, rgba(139,92,246,.55), rgba(34,211,238,.35), rgba(96,165,250,.45));
-      -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor;
-      mask-composite:exclude;
-      opacity:.55;
-      pointer-events:none;
-    }
-    .gradient-text{
-      background:linear-gradient(135deg,var(--brand1),var(--brand2),var(--brand3));
-      -webkit-background-clip:text;background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
-    .premium-input{
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.14);
-      color:var(--text);
-      outline:none;
-      transition:.18s ease;
-    }
-    .premium-input:focus{
-      border-color:rgba(139,92,246,.65);
-      box-shadow:0 0 0 4px rgba(139,92,246,.18);
-      background:rgba(255,255,255,.08);
-    }
-    .btn{
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.08);
-      transition:.2s ease;
-    }
-    .btn:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}
-    .btn.active{
-      background:linear-gradient(135deg, rgba(139,92,246,.95), rgba(34,211,238,.45));
-      border-color:rgba(139,92,246,.65);
-      box-shadow:0 14px 45px rgba(139,92,246,.22);
-    }
-    .btn-gradient{
-      border:1px solid rgba(255,255,255,.18);
-      background:linear-gradient(135deg, rgba(139,92,246,.92), rgba(34,211,238,.45));
-      border-radius:16px;
-      font-weight:900;
-      transition:.25s ease;
-    }
-    .btn-gradient:hover{
-      transform:translateY(-2px);
-      box-shadow:0 30px 90px rgba(34,211,238,.18), 0 26px 80px rgba(139,92,246,.16);
-    }
-    .tab-button{
-      border:1px solid transparent;
-      color:rgba(255,255,255,.62);
-      padding:10px 16px;
-      border-radius:14px;
-      transition:.2s ease;
-      white-space:nowrap;
-    }
-    .tab-button:hover{
-      color:rgba(255,255,255,.92);
-      background:rgba(255,255,255,.06);
-      border-color:rgba(255,255,255,.10);
-    }
-    .tab-button.active{
-      color:rgba(255,255,255,.95);
-      background:rgba(255,255,255,.10);
-      border-color:rgba(139,92,246,.45);
-      box-shadow:0 14px 45px rgba(139,92,246,.18);
-    }
-    .tab-content{display:none}
-    .tab-content.active{display:block}
-    .stat-card{
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;
-      padding:22px;
-      transition:.25s ease;
-      backdrop-filter: blur(12px);
-    }
-    .stat-card:hover{
-      transform:translateY(-3px);
-      border-color:rgba(139,92,246,.35);
-      background:rgba(255,255,255,.08);
-      box-shadow:0 22px 70px rgba(0,0,0,.35);
-    }
-    .chart-frame{
-      border-radius:18px;
-      overflow:hidden;
-      background:linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 26px 90px rgba(0,0,0,.50);
-    }
-    .chart-inner{padding:14px}
-    .chart-container{position:relative;height:320px}
-    .no-print{}
-    @media print{
-      .no-print{display:none !important;}
-      body{background:#fff !important;color:#000 !important;}
-    }
-    /* Scenario buttons */
-    .scenario-btn{
-      background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(14px);
-      transition: .25s ease;
-      box-shadow:
-        0 18px 60px rgba(0,0,0,.25),
-        0 0 0 1px rgba(255,255,255,.06),
-        0 0 22px rgba(139,92,246,.14),
-        0 0 18px rgba(34,211,238,.10);
-    }
-    .scenario-btn:hover{
-      transform: translateY(-2px);
-      border-color: rgba(139,92,246,.45);
-      box-shadow:
-        0 26px 90px rgba(0,0,0,.32),
-        0 0 0 1px rgba(255,255,255,.08),
-        0 0 34px rgba(139,92,246,.22),
-        0 0 26px rgba(34,211,238,.16);
-    }
-    .scenario-btn:active{
-      transform: translateY(0px);
-    }
-
-    /* تكبير الخطوط في كل الأداة */
-    body { font-size: 16px; }
-    .premium-input, input, select { font-size: 16px !important; }
-    label { font-size: 15px !important; }
-    .stat-card { font-size: 16px; }
-    h1, h2, h3, h4 { font-size: 1.1em !important; }
+    /* 1. أنماط الأداة الأصلية */
+    :root{ --bg0:#070812; --bg1:#060713; --text:rgba(255,255,255,.92); --brand1:#8b5cf6; --brand2:#22d3ee; --brand3:#60a5fa; --stroke:rgba(255,255,255,.12); --glass:rgba(255,255,255,.06); --glass2:rgba(255,255,255,.10); --muted:rgba(255,255,255,.66); }
+    body{ margin:0; color:var(--text); background:linear-gradient(180deg,var(--bg0),var(--bg1)); font-family:Tajawal,Inter,sans-serif; overflow-x:hidden; }
+    .glass{ background:linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border:1px solid var(--stroke); backdrop-filter:blur(16px); }
+    .glass-strong{ background:linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.05)); border:1px solid rgba(255,255,255,.16); backdrop-filter:blur(18px); }
+    .premium-input{ background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14); color:var(--text); outline:none; transition:.18s ease; }
+    .premium-input:focus{ border-color:rgba(139,92,246,.65); box-shadow:0 0 0 4px rgba(139,92,246,.18); background:rgba(255,255,255,.08); }
+    .btn-gradient{ border:1px solid rgba(255,255,255,.18); background:linear-gradient(135deg, rgba(139,92,246,.92), rgba(34,211,238,.45)); border-radius:16px; font-weight:900; transition:.25s ease; }
+    .btn-gradient:hover{ transform:translateY(-2px); box-shadow:0 30px 90px rgba(34,211,238,.18), 0 26px 80px rgba(139,92,246,.16); }
+    .gradient-text{ background:linear-gradient(135deg,var(--brand1),var(--brand2),var(--brand3)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+    .scenario-btn{ background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.04)); border: 1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px); transition: .25s ease; }
+    .scenario-btn:hover{ transform: translateY(-2px); border-color: rgba(139,92,246,.45); }
+    .tab-button.active{ color:rgba(255,255,255,.95); background:rgba(255,255,255,.10); border-color:rgba(139,92,246,.45); }
+    .tab-content{ display:none; } .tab-content.active{ display:block; }
+    
+    /* 2. أنماط شاشة القفل (Authentication Overlay) */
+    #authOverlay { position: fixed; inset: 0; background: #0f172a; z-index: 10000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(20px); }
+    .auth-box { width: 100%; max-width: 400px; padding: 2.5rem; background: rgba(30, 41, 59, 0.9); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    .auth-input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; outline: none; }
+    .auth-input:focus { border-color: #3b82f6; }
+    .hidden { display: none !important; }
+    
+    /* 3. أنماط الشات بوت */
+    #chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+    #chatWindow { display: none; position: absolute; bottom: 80px; right: 0; width: 350px; height: 500px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; font-family: 'Tajawal', sans-serif; border: 1px solid rgba(0,0,0,0.1); }
+    .msg { padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; }
+    .bot-msg { background: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px; }
+    .user-msg { background: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
   </style>
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FLY2GHLT0X"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-FLY2GHLT0X');
-  </script>
 </head>
 <body class="p-3 md:p-6 lg:p-8">
+
+<!-- ===================== 1. نظام الحماية (AUTH OVERLAY) ===================== -->
+<div id="authOverlay">
+    <div class="auth-box">
+        <h1 class="text-3xl font-bold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">COD Tool PRO</h1>
+        <p class="text-gray-400 text-sm mb-6">سجل الدخول للوصول إلى الأداة</p>
+
+        <!-- تسجيل الدخول -->
+        <div id="loginForm">
+            <button onclick="googleLogin()" class="w-full py-3 mb-4 bg-white text-slate-900 hover:bg-gray-100 rounded-xl font-bold flex items-center justify-center gap-2 transition">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5"> الدخول بحساب Google
+            </button>
+            
+            <div class="relative flex py-2 items-center mb-4">
+                <div class="flex-grow border-t border-gray-600"></div>
+                <span class="flex-shrink mx-4 text-gray-500 text-xs">أو بالبريد الإلكتروني</span>
+                <div class="flex-grow border-t border-gray-600"></div>
+            </div>
+
+            <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" class="auth-input">
+            <input type="password" id="loginPass" placeholder="كلمة المرور" class="auth-input">
+            
+            <button onclick="emailLogin()" class="w-full py-3 mb-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 rounded-xl font-bold text-white transition shadow-lg shadow-blue-500/30">دخول</button>
+            
+            <div class="flex justify-between text-xs text-gray-400 mt-4 px-1">
+                <a href="#" onclick="showReset()" class="hover:text-white transition">نسيت كلمة السر؟</a>
+                <a href="#" onclick="showSignup()" class="hover:text-blue-400 transition font-bold">إنشاء حساب جديد</a>
+            </div>
+        </div>
+
+        <!-- إنشاء حساب -->
+        <div id="signupForm" class="hidden">
+            <h3 class="text-white font-bold mb-4">إنشاء حساب جديد ✨</h3>
+            <input type="email" id="signupEmail" placeholder="البريد الإلكتروني" class="auth-input">
+            <input type="password" id="signupPass" placeholder="كلمة المرور (6 أحرف على الأقل)" class="auth-input">
+            <button onclick="emailSignup()" class="w-full py-3 mb-3 bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 rounded-xl font-bold text-white transition shadow-lg shadow-emerald-500/30">إنشاء حساب</button>
+            <button onclick="showLogin()" class="text-sm text-gray-400 hover:text-white mt-2">الرجوع لتسجيل الدخول</button>
+        </div>
+
+        <!-- استعادة كلمة السر -->
+        <div id="resetForm" class="hidden">
+            <h3 class="text-white font-bold mb-2">استعادة كلمة السر 🔒</h3>
+            <p class="text-gray-400 text-xs mb-4">أدخل بريدك الإلكتروني لنرسل لك رابط إعادة التعيين.</p>
+            <input type="email" id="resetEmail" placeholder="name@example.com" class="auth-input">
+            <button onclick="resetPassword()" class="w-full py-3 mb-3 bg-purple-600 hover:bg-purple-500 rounded-xl font-bold text-white transition">إرسال الرابط</button>
+            <button onclick="showLogin()" class="text-sm text-gray-400 hover:text-white mt-2">الرجوع</button>
+        </div>
+
+        <div id="authMsg" class="mt-4 text-red-400 text-sm hidden bg-red-500/10 py-2 rounded border border-red-500/20"></div>
+    </div>
+</div>
+
+<!-- ===================== 2. الأداة الأصلية (محتوى محمي) ===================== -->
+<!-- زر تسجيل الخروج -->
+<div class="max-w-7xl mx-auto mb-4 flex justify-end no-print">
+    <button onclick="logout()" class="px-4 py-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg text-xs font-bold border border-red-500/20 transition flex items-center gap-2">
+        <span>تسجيل خروج</span> 🚪
+    </button>
+</div>
 
 <!-- Navbar -->
 <div class="max-w-7xl mx-auto mb-8 flex justify-between items-center glass px-6 py-4 rounded-2xl no-print">
@@ -498,7 +400,7 @@
   <span>✅</span> <span id="successText" class="font-bold text-sm">Saved Successfully</span>
 </div>
 
-<!-- ===================== CHAT BOT WIDGET ===================== -->
+<!-- ===================== 3. الشات بوت ===================== -->
 <div id="chat-widget" class="no-print" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
     <div id="chatWindow" style="display: none; position: absolute; bottom: 80px; right: 0; width: 350px; height: 500px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; font-family: 'Tajawal', sans-serif; border: 1px solid rgba(0,0,0,0.1);">
         <div class="chat-header" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
@@ -521,9 +423,74 @@
     <button id="chat-toggle-btn" onclick="toggleChat()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; transition: transform 0.2s;">💬</button>
 </div>
 
-<!-- ===================== JAVASCRIPT LOGIC ===================== -->
+<!-- ===================== 4. سكريبتات الحماية + الشات + الأداة ===================== -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBoDXsELYXl440Wb3bd6xir0sMbj-6LSIA",
+      authDomain: "cod-pricing.firebaseapp.com",
+      projectId: "cod-pricing",
+      storageBucket: "cod-pricing.firebasestorage.app",
+      messagingSenderId: "815665273956",
+      appId: "1:815665273956:web:6a496b1d28da2aa0b25371"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    // مراقبة الدخول
+    onAuthStateChanged(auth, (user) => {
+        const overlay = document.getElementById('authOverlay');
+        if (user) { overlay.classList.add('hidden'); } 
+        else { overlay.classList.remove('hidden'); }
+    });
+
+    // دوال الحماية (تصديرها لـ window لتعمل مع onclick)
+    window.emailLogin = async () => {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPass').value;
+        try { await signInWithEmailAndPassword(auth, email, pass); } catch(e) { showError(e.code); }
+    };
+
+    window.emailSignup = async () => {
+        const email = document.getElementById('signupEmail').value;
+        const pass = document.getElementById('signupPass').value;
+        try { await createUserWithEmailAndPassword(auth, email, pass); } catch(e) { showError(e.code); }
+    };
+
+    window.googleLogin = async () => {
+        try { await signInWithPopup(auth, googleProvider); } catch(e) { showError(e.code); }
+    };
+
+    window.resetPassword = async () => {
+        const email = document.getElementById('resetEmail').value;
+        if(!email) return showError('no-email');
+        try { await sendPasswordResetEmail(auth, email); alert("تم إرسال رابط إعادة التعيين لبريدك!"); showLogin(); } catch(e) { showError(e.code); }
+    };
+
+    window.logout = () => signOut(auth);
+
+    window.showSignup = () => { document.getElementById('loginForm').classList.add('hidden'); document.getElementById('signupForm').classList.remove('hidden'); clearError(); };
+    window.showLogin = () => { document.getElementById('signupForm').classList.add('hidden'); document.getElementById('resetForm').classList.add('hidden'); document.getElementById('loginForm').classList.remove('hidden'); clearError(); };
+    window.showReset = () => { document.getElementById('loginForm').classList.add('hidden'); document.getElementById('resetForm').classList.remove('hidden'); clearError(); };
+
+    function showError(code) {
+        const msg = document.getElementById('authMsg'); msg.classList.remove('hidden');
+        if(code === 'auth/invalid-email') msg.textContent = "البريد غير صحيح";
+        else if(code === 'auth/user-not-found') msg.textContent = "المستخدم غير موجود";
+        else if(code === 'auth/wrong-password') msg.textContent = "كلمة المرور خاطئة";
+        else if(code === 'auth/email-already-in-use') msg.textContent = "البريد مسجل مسبقاً";
+        else if(code === 'auth/weak-password') msg.textContent = "كلمة المرور ضعيفة";
+        else msg.textContent = "حدث خطأ: " + code;
+    }
+    function clearError() { document.getElementById('authMsg').classList.add('hidden'); }
+</script>
+
 <script>
-    // --- 1. CONFIG & DATA ---
+    // --- منطق الأداة الأصلية (بدون تغيير) ---
     let currentLang = 'ar';
     let currentCurrency = 'DZD';
     let calculationResults = {};
@@ -694,8 +661,6 @@
         document.querySelectorAll(".currency-label").forEach(el => {
             el.textContent = currentCurrency;
         });
-        
-        // Update buttons state
         ['ar','fr','en'].forEach(l => {
             const btn = document.getElementById('btn-'+l);
             if(l === currentLang) {
@@ -724,7 +689,6 @@
         event.target.classList.add('active');
     }
 
-    // --- 2. LOGIC ---
     function loadScenario(id) {
         const scenarios = {
             1: { p: 3900, w: 1200, c: 70, d: 65, a: 400 },
@@ -748,73 +712,49 @@
     }
 
     function calculateMetrics() {
-        // Get Values
         const finalPrice = parseFloat(document.getElementById("finalPrice").value) || 0;
         const wholesale = parseFloat(document.getElementById("wholesalePrice").value) || 0;
         const confirmRate = parseFloat(document.getElementById("confirmRate").value) || 0;
         const deliveryRate = parseFloat(document.getElementById("deliveryRate").value) || 0;
-        const cpo = parseFloat(document.getElementById("costPerOrder").value) || 0; // Cost per Lead/Order
+        const cpo = parseFloat(document.getElementById("costPerOrder").value) || 0;
         
         const deliveryCost = parseFloat(document.getElementById("deliveryCost").value) || 0;
         const returnCost = parseFloat(document.getElementById("returnCost").value) || 0;
         const additionalCosts = parseFloat(document.getElementById("additionalCosts").value) || 0;
         const dailyAdSpend = parseFloat(document.getElementById("dailyAdSpend").value) || 0;
 
-        // Daily Calculations
-        // 1. Total Leads/Orders from Ads
         const totalOrders = cpo > 0 ? (dailyAdSpend / cpo) : 0;
-        
-        // 2. Confirmed Orders
         const confirmedOrders = totalOrders * (confirmRate / 100);
-        
-        // 3. Delivered Orders (Sales)
         const deliveredOrders = confirmedOrders * (deliveryRate / 100);
-        
-        // 4. Returned Orders (Confirmed but not delivered)
-        // Usually Returns = Confirmed - Delivered. Or Shipped - Delivered.
-        // Let's assume Confirmed are all shipped.
         const returnedOrders = confirmedOrders - deliveredOrders;
 
-        // Financials (Daily)
         const revenue = deliveredOrders * finalPrice;
-        
-        // Costs
-        const costGoods = deliveredOrders * wholesale; // COGS for sold items only? Or shipped? Usually sold. 
-        // But what about returned items? Do we lose the item? No, usually just delivery fee.
-        // Let's assume we don't lose the item on return, just pay return fee.
-        
+        const costGoods = deliveredOrders * wholesale;
         const costAds = dailyAdSpend;
         const costDelivery = deliveredOrders * deliveryCost;
         const costReturn = returnedOrders * returnCost;
-        const costExtra = deliveredOrders * additionalCosts; // Extras usually per sold unit
+        const costExtra = deliveredOrders * additionalCosts;
 
         const totalDailyCosts = costGoods + costAds + costDelivery + costReturn + costExtra;
-        
         const dailyNetProfit = revenue - totalDailyCosts;
         const profitPerUnit = deliveredOrders > 0 ? (dailyNetProfit / deliveredOrders) : 0;
-
         const investment = totalDailyCosts;
         const roi = investment > 0 ? (dailyNetProfit / investment) * 100 : 0;
 
-        // Store Results
         calculationResults = {
             revenue, totalDailyCosts, dailyNetProfit, roi, deliveredOrders, returnedOrders,
             wholesale, dailyAd: costAds, additionalCostsValue: additionalCosts, 
-            returnCost, returnRate: (returnedOrders/confirmedOrders)*100, exchange: 1
+            returnCost, returnRate: (returnedOrders/confirmedOrders)*100
         };
 
-        // Update UI
         document.getElementById("netProfit").textContent = profitPerUnit.toFixed(0);
         document.getElementById("roi").textContent = roi.toFixed(1) + "%";
         document.getElementById("roi").className = `text-3xl font-black mb-1 ${roi>=0?'text-cyan-400':'text-red-400'}`;
-        
         document.getElementById("profitMargin").textContent = ((dailyNetProfit/revenue)*100).toFixed(1) + "% Margin";
         document.getElementById("profitMargin").className = `text-xs font-medium inline-block px-2 py-0.5 rounded ${dailyNetProfit>=0?'text-emerald-400 bg-emerald-500/10':'text-red-400 bg-red-500/10'}`;
-
         document.getElementById("deliveredOrders").textContent = deliveredOrders.toFixed(1);
         document.getElementById("returnedOrders").textContent = returnedOrders.toFixed(1) + " " + t("returnedOrders");
 
-        // Monthly
         document.getElementById("monthlyProfit").textContent = (dailyNetProfit * 30).toLocaleString();
         document.getElementById("monthlyRevenue").textContent = (revenue * 30).toLocaleString();
         document.getElementById("monthlyCost").textContent = (totalDailyCosts * 30).toLocaleString();
@@ -823,39 +763,29 @@
 
         updateCharts();
         generateInsights();
-        
-        // Trigger discount calc if visible
         calculateDiscount();
     }
 
     function generateInsights() {
         const list = document.getElementById("insightsList");
         list.innerHTML = "";
-        
         const addInsight = (txt, colorClass) => {
             const div = document.createElement("div");
             div.className = `p-3 rounded-xl border ${colorClass} text-xs font-bold`;
             div.textContent = txt;
             list.appendChild(div);
         };
-
         if(calculationResults.roi < 15) addInsight("⚠️ " + t("insight_roi_bad"), "border-red-500/30 bg-red-500/10 text-red-300");
         else if(calculationResults.roi > 50) addInsight("🚀 " + t("insight_roi_good"), "border-emerald-500/30 bg-emerald-500/10 text-emerald-300");
-
         if(calculationResults.returnRate > 30) addInsight("📦 " + t("insight_ret_high", {rr: calculationResults.returnRate.toFixed(0)}), "border-orange-500/30 bg-orange-500/10 text-orange-300");
     }
 
     function calculateDiscount() {
         const discount = parseInt(document.getElementById("discountSlider").value);
         document.getElementById("discountPercent").textContent = discount;
-
-        // Use calculationResults.calculatedFinalPrice (which is the input price really)
         const basePrice = parseFloat(document.getElementById("finalPrice").value) || 0;
         if(basePrice === 0) return;
-        
-        // Base Profit per unit (approx)
         const currentProfit = parseFloat(document.getElementById("netProfit").textContent) || 0;
-
         const priceDrop = basePrice * (discount / 100);
         const newPrice = basePrice - priceDrop;
         const newProfit = currentProfit - priceDrop;
@@ -864,30 +794,21 @@
         document.getElementById("discountedProfit").textContent = newProfit.toFixed(0);
         document.getElementById("discountedProfit").className = `text-xl font-bold ${newProfit>=0?'text-emerald-400':'text-red-400'}`;
 
-        // Table
         const table = document.getElementById("discountTable");
         table.innerHTML = "";
-        
         [5, 10, 15, 20].forEach(d => {
             const p = basePrice * (1 - (d / 100));
             const prof = currentProfit - (basePrice - p);
             const row = document.createElement("div");
             row.className = "flex justify-between p-2 rounded bg-[var(--glass)] items-center";
-            row.innerHTML = `
-                <div class="font-bold text-white">-${d}%</div>
-                <div class="text-[var(--muted)]">${p.toFixed(0)}</div>
-                <div class="font-bold ${prof > 0 ? 'text-emerald-300' : 'text-red-300'}">${prof.toFixed(0)}</div>
-            `;
+            row.innerHTML = `<div class="font-bold text-white">-${d}%</div><div class="text-[var(--muted)]">${p.toFixed(0)}</div><div class="font-bold ${prof > 0 ? 'text-emerald-300' : 'text-red-300'}">${prof.toFixed(0)}</div>`;
             table.appendChild(row);
         });
     }
 
-    // Charts
     let costPieChart, profitBarChart, monthlyLineChart;
-
     function updateCharts() {
         if(!calculationResults.revenue) return;
-        
         const r = calculationResults;
         const ctx1 = document.getElementById('costPieChart');
         const ctx2 = document.getElementById('profitBarChart');
@@ -901,94 +822,29 @@
         Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
         Chart.defaults.font.family = 'Tajawal';
 
-        // 1. Cost Breakdown
         const totalWholesale = r.wholesale * r.deliveredOrders;
         const totalAds = r.dailyAd; 
         const totalExtra = r.additionalCostsValue * r.deliveredOrders;
         const totalReturn = r.returnedOrders * r.returnCost;
         const totalDel = r.deliveredOrders * parseFloat(document.getElementById("deliveryCost").value||0);
         
-        costPieChart = new Chart(ctx1, {
-            type: 'doughnut',
-            data: {
-                labels: [t('wholesaleLine'), t('adsLine'), t('extraLine'), t('returnedOrders'), 'Delivery'],
-                datasets: [{
-                    data: [totalWholesale, totalAds, totalExtra, totalReturn, totalDel],
-                    backgroundColor: ['#8b5cf6', '#22d3ee', '#f59e0b', '#ef4444', '#10b981'],
-                    borderWidth: 0
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: {font:{size:10}} } } }
-        });
-
-        // 2. Profit vs Revenue
-        profitBarChart = new Chart(ctx2, {
-            type: 'bar',
-            data: {
-                labels: [t('revenue'), t('totalCost'), t('netProfit')],
-                datasets: [{
-                    label: 'Daily Values',
-                    data: [r.revenue, r.totalDailyCosts, r.dailyNetProfit],
-                    backgroundColor: ['#3b82f6', '#ef4444', '#10b981'],
-                    borderRadius: 6
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-        });
-
-        // 3. Monthly Projection Line
+        costPieChart = new Chart(ctx1, { type: 'doughnut', data: { labels: [t('wholesaleLine'), t('adsLine'), t('extraLine'), t('returnedOrders'), 'Delivery'], datasets: [{ data: [totalWholesale, totalAds, totalExtra, totalReturn, totalDel], backgroundColor: ['#8b5cf6', '#22d3ee', '#f59e0b', '#ef4444', '#10b981'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: {font:{size:10}} } } } });
+        profitBarChart = new Chart(ctx2, { type: 'bar', data: { labels: [t('revenue'), t('totalCost'), t('netProfit')], datasets: [{ label: 'Daily Values', data: [r.revenue, r.totalDailyCosts, r.dailyNetProfit], backgroundColor: ['#3b82f6', '#ef4444', '#10b981'], borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
         const days = Array.from({length: 30}, (_, i) => i + 1);
         const profitData = days.map(d => r.dailyNetProfit * d);
-        
-        monthlyLineChart = new Chart(ctx3, {
-            type: 'line',
-            data: {
-                labels: days,
-                datasets: [{
-                    label: t('monthlyProfit'),
-                    data: profitData,
-                    borderColor: '#22d3ee',
-                    backgroundColor: 'rgba(34,211,238,0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 0
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}}, scales:{x:{display:false}} }
-        });
+        monthlyLineChart = new Chart(ctx3, { type: 'line', data: { labels: days, datasets: [{ label: t('monthlyProfit'), data: profitData, borderColor: '#22d3ee', backgroundColor: 'rgba(34,211,238,0.1)', fill: true, tension: 0.4, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins:{legend:{display:false}}, scales:{x:{display:false}} } });
     }
 
-    function showSuccessMessage(message){
-        const el = document.getElementById("successMessage");
-        document.getElementById("successText").textContent = message;
-        el.classList.remove("hidden");
-        setTimeout(() => el.classList.add("hidden"), 3000);
-    }
-
+    function showSuccessMessage(message){ const el = document.getElementById("successMessage"); document.getElementById("successText").textContent = message; el.classList.remove("hidden"); setTimeout(() => el.classList.add("hidden"), 3000); }
     function saveData(){
-        const data = {
-            productName: document.getElementById("productName").value,
-            finalPrice: document.getElementById("finalPrice").value,
-            wholesalePrice: document.getElementById("wholesalePrice").value,
-            confirmRate: document.getElementById("confirmRate").value,
-            deliveryRate: document.getElementById("deliveryRate").value,
-            costPerOrder: document.getElementById("costPerOrder").value,
-            deliveryCost: document.getElementById("deliveryCost").value,
-            returnCost: document.getElementById("returnCost").value,
-            additionalCosts: document.getElementById("additionalCosts").value,
-            dailyAdSpend: document.getElementById("dailyAdSpend").value,
-            lang: currentLang,
-            curr: currentCurrency
-        };
+        const data = { productName: document.getElementById("productName").value, finalPrice: document.getElementById("finalPrice").value, wholesalePrice: document.getElementById("wholesalePrice").value, confirmRate: document.getElementById("confirmRate").value, deliveryRate: document.getElementById("deliveryRate").value, costPerOrder: document.getElementById("costPerOrder").value, deliveryCost: document.getElementById("deliveryCost").value, returnCost: document.getElementById("returnCost").value, additionalCosts: document.getElementById("additionalCosts").value, dailyAdSpend: document.getElementById("dailyAdSpend").value, lang: currentLang, curr: currentCurrency };
         localStorage.setItem("codPricingData_v4", JSON.stringify(data));
         showSuccessMessage(t("msg_saved"));
     }
-
     function loadData(){
         const saved = localStorage.getItem("codPricingData_v4");
         if (!saved){ showSuccessMessage(t("msg_no_saved")); return; }
         const data = JSON.parse(saved);
-        
         document.getElementById("productName").value = data.productName || "";
         document.getElementById("finalPrice").value = data.finalPrice || "";
         document.getElementById("wholesalePrice").value = data.wholesalePrice || "";
@@ -999,89 +855,53 @@
         document.getElementById("returnCost").value = data.returnCost || "";
         document.getElementById("additionalCosts").value = data.additionalCosts || "";
         document.getElementById("dailyAdSpend").value = data.dailyAdSpend || "";
-        
         if(data.lang) setLang(data.lang);
         if(data.curr) setCurrency(data.curr);
-        
         showSuccessMessage(t("msg_loaded"));
         calculateMetrics();
     }
-
-    function generatePDF() {
-        window.print(); 
-        // Or use jsPDF if needed, but window.print with @media print is cleaner for now.
-    }
-
-    // Init
+    function generatePDF() { window.print(); }
     updateUI();
-    
-    // ===================== CHAT BOT FUNCTIONS =====================
+
+    // --- سكريبت الشات بوت ---
     function toggleChat() {
         const win = document.getElementById('chatWindow');
-        if (!win) return;
         const isHidden = win.style.display === 'none' || win.style.display === '';
         win.style.display = isHidden ? 'flex' : 'none';
         if (isHidden) setTimeout(() => document.getElementById('chatInput')?.focus(), 100);
     }
-
-    function handleEnter(e) {
-        if (e.key === 'Enter') sendMessage();
-    }
-
+    function handleEnter(e) { if (e.key === 'Enter') sendMessage(); }
     async function sendMessage() {
         const input = document.getElementById('chatInput');
         const body = document.getElementById('chatBody');
-        
-        if (!input || !body) return;
         const txt = input.value.trim();
         if (!txt) return;
 
-        // User Msg
-        const userDiv = document.createElement('div');
-        userDiv.className = 'msg user-msg';
-        userDiv.style.cssText = "padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; background: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 2px;";
-        userDiv.textContent = txt;
-        body.appendChild(userDiv);
-        
+        body.innerHTML += `<div class="msg user-msg">${txt}</div>`;
         input.value = '';
         body.scrollTop = body.scrollHeight;
 
-        // Bot Loading
         const botDiv = document.createElement('div');
         botDiv.className = 'msg bot-msg';
-        botDiv.style.cssText = "padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; background: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px;";
         botDiv.textContent = "✍️...";
         body.appendChild(botDiv);
         body.scrollTop = body.scrollHeight;
 
         try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: txt })
-            });
-
+            const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: txt }) });
             if (!response.ok) throw new Error("Server Error");
-
-            // Streaming
             botDiv.textContent = "";
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
-
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
-                const chunk = decoder.decode(value, { stream: true });
-                botDiv.textContent += chunk;
+                botDiv.textContent += decoder.decode(value, { stream: true });
                 body.scrollTop = body.scrollHeight;
             }
-
-        } catch (error) {
-            console.error(error);
-            botDiv.innerHTML = "<span style='color:red'>خطأ في الاتصال. حاول مرة أخرى.</span>";
-        }
+        } catch (error) { botDiv.textContent = "حدث خطأ في الاتصال."; }
     }
-</script>
+  </script>
 
 </body>
 </html>
