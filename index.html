@@ -163,31 +163,32 @@
       .no-print{display:none !important;}
       body{background:#fff !important;color:#000 !important;}
     }
-    /* Scenario buttons */
-    .scenario-btn{
-      background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      border: 1px solid rgba(255,255,255,.14);
-      backdrop-filter: blur(14px);
-      transition: .25s ease;
-      box-shadow:
-        0 18px 60px rgba(0,0,0,.25),
-        0 0 0 1px rgba(255,255,255,.06),
-        0 0 22px rgba(139,92,246,.14),
-        0 0 18px rgba(34,211,238,.10);
-    }
-    .scenario-btn:hover{
-      transform: translateY(-2px);
-      border-color: rgba(139,92,246,.45);
-      box-shadow:
-        0 26px 90px rgba(0,0,0,.32),
-        0 0 0 1px rgba(255,255,255,.08),
-        0 0 34px rgba(139,92,246,.22),
-        0 0 26px rgba(34,211,238,.16);
-    }
-    .scenario-btn:active{
-      transform: translateY(0px);
-    }
+/* Scenario buttons */
+.scenario-btn{
+  background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.14);
+  backdrop-filter: blur(14px);
+  transition: .25s ease;
+  box-shadow:
+    0 18px 60px rgba(0,0,0,.25),
+    0 0 0 1px rgba(255,255,255,.06),
+    0 0 22px rgba(139,92,246,.14),
+    0 0 18px rgba(34,211,238,.10);
+}
+.scenario-btn:hover{
+  transform: translateY(-2px);
+  border-color: rgba(139,92,246,.45);
+  box-shadow:
+    0 26px 90px rgba(0,0,0,.32),
+    0 0 0 1px rgba(255,255,255,.08),
+    0 0 34px rgba(139,92,246,.22),
+    0 0 26px rgba(34,211,238,.16);
+}
+.scenario-btn:active{
+  transform: translateY(0px);
+}
 
+  
     /* تكبير الخطوط في كل الأداة */
     body {
       font-size: 16px;
@@ -204,15 +205,420 @@
     h1, h2, h3, h4 {
       font-size: 1.1em !important;
     }
+
+  
+/* ===================== تصميم البطاقات التحفيزية الجديد مع الكرات الملونة ===================== */
+.motivation-section-wrapper {
+  position: relative;
+  padding: 4rem 0;
+  overflow: hidden;
+}
+
+.motivation-container {
+  margin: 2rem auto;
+  max-width: 1100px;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 5;
+}
+
+.motivation-card {
+  background: linear-gradient(135deg, 
+    rgba(255,255,255,.15) 0%, 
+    rgba(255,255,255,.08) 50%,
+    rgba(255,255,255,.12) 100%);
+  border: 2px solid rgba(255,255,255,.25);
+  border-radius: 32px;
+  padding: 3rem 2.5rem;
+  position: relative;
+  overflow: visible;
+  backdrop-filter: blur(30px) saturate(180%);
+  box-shadow: 
+    0 20px 60px rgba(0,0,0,.4),
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 -1px 0 rgba(0,0,0,.2);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 340px;
+  opacity: 0;
+  transform: translateY(30px) scale(0.96);
+  animation: slideInCard 0.8s ease forwards;
+}
+
+@keyframes slideInCard {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.motivation-card::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 32px;
+  background: var(--card-gradient);
+  opacity: 0;
+  filter: blur(20px);
+  transition: opacity 0.5s ease;
+  z-index: -1;
+}
+
+.motivation-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  border-color: rgba(255,255,255,.4);
+  box-shadow: 
+    0 35px 90px rgba(0,0,0,.5),
+    0 0 100px var(--card-glow),
+    inset 0 2px 0 rgba(255,255,255,.4);
+}
+
+.motivation-card:hover::after {
+  opacity: 0.6;
+}
+
+/* الكرات الملونة المتدرجة */
+.gradient-sphere {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.7;
+  animation: floatSphere 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes floatSphere {
+  0%, 100% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: translate(20px, -20px) scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+.motivation-card .sphere-1 {
+  width: 280px;
+  height: 280px;
+  background: var(--sphere-gradient-1);
+  top: -80px;
+  right: -80px;
+  animation-delay: 0s;
+}
+
+.motivation-card .sphere-2 {
+  width: 200px;
+  height: 200px;
+  background: var(--sphere-gradient-2);
+  bottom: -60px;
+  left: -60px;
+  animation-delay: 1s;
+}
+
+.motivation-card .sphere-3 {
+  width: 140px;
+  height: 140px;
+  background: var(--sphere-gradient-3);
+  top: 50%;
+  left: -40px;
+  animation-delay: 2s;
+}
+
+/* ألوان مختلفة للبطاقات */
+.motivation-card.card-1 {
+  --card-gradient: linear-gradient(135deg, rgba(147,51,234,.9), rgba(219,39,119,.7));
+  --card-glow: rgba(147,51,234,.5);
+  --sphere-gradient-1: radial-gradient(circle, rgba(147,51,234,.8), rgba(219,39,119,.6));
+  --sphere-gradient-2: radial-gradient(circle, rgba(236,72,153,.7), rgba(147,51,234,.5));
+  --sphere-gradient-3: radial-gradient(circle, rgba(59,130,246,.6), rgba(147,51,234,.4));
+}
+
+.motivation-card.card-2 {
+  --card-gradient: linear-gradient(135deg, rgba(6,182,212,.9), rgba(59,130,246,.8));
+  --card-glow: rgba(6,182,212,.5);
+  --sphere-gradient-1: radial-gradient(circle, rgba(6,182,212,.8), rgba(34,211,238,.6));
+  --sphere-gradient-2: radial-gradient(circle, rgba(59,130,246,.7), rgba(6,182,212,.5));
+  --sphere-gradient-3: radial-gradient(circle, rgba(147,51,234,.6), rgba(59,130,246,.4));
+}
+
+.motivation-card.card-3 {
+  --card-gradient: linear-gradient(135deg, rgba(16,185,129,.9), rgba(5,150,105,.8));
+  --card-glow: rgba(16,185,129,.5);
+  --sphere-gradient-1: radial-gradient(circle, rgba(16,185,129,.8), rgba(34,197,94,.6));
+  --sphere-gradient-2: radial-gradient(circle, rgba(52,211,153,.7), rgba(16,185,129,.5));
+  --sphere-gradient-3: radial-gradient(circle, rgba(34,211,238,.6), rgba(16,185,129,.4));
+}
+
+.motivation-card.card-4 {
+  --card-gradient: linear-gradient(135deg, rgba(245,158,11,.9), rgba(251,191,36,.8));
+  --card-glow: rgba(245,158,11,.5);
+  --sphere-gradient-1: radial-gradient(circle, rgba(245,158,11,.8), rgba(251,146,60,.6));
+  --sphere-gradient-2: radial-gradient(circle, rgba(251,191,36,.7), rgba(245,158,11,.5));
+  --sphere-gradient-3: radial-gradient(circle, rgba(251,146,60,.6), rgba(245,158,11,.4));
+}
+
+.motivation-card.card-5 {
+  --card-gradient: linear-gradient(135deg, rgba(236,72,153,.9), rgba(219,39,119,.8));
+  --card-glow: rgba(236,72,153,.5);
+  --sphere-gradient-1: radial-gradient(circle, rgba(236,72,153,.8), rgba(219,39,119,.6));
+  --sphere-gradient-2: radial-gradient(circle, rgba(244,114,182,.7), rgba(236,72,153,.5));
+  --sphere-gradient-3: radial-gradient(circle, rgba(147,51,234,.6), rgba(236,72,153,.4));
+}
+
+.card-number {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(255,255,255,.25), rgba(255,255,255,.1));
+  border: 2px solid rgba(255,255,255,.3);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.5rem;
+  box-shadow: 
+    0 10px 30px rgba(0,0,0,.3),
+    inset 0 1px 0 rgba(255,255,255,.4);
+  animation: floatNumber 3s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes floatNumber {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(5deg); }
+}
+
+.card-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.8rem;
+  background: linear-gradient(135deg, rgba(255,255,255,.2), rgba(255,255,255,.1));
+  border: 2px solid rgba(255,255,255,.25);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 15px 40px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.3);
+  animation: rotateIcon 5s ease-in-out infinite;
+  position: relative;
+  z-index: 2;
+}
+
+@keyframes rotateIcon {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-5deg) scale(1.05); }
+  75% { transform: rotate(5deg) scale(1.05); }
+}
+
+.card-title {
+  font-size: 1.85rem;
+  font-weight: 900;
+  margin-bottom: 1.2rem;
+  color: rgba(255,255,255,.98);
+  line-height: 1.3;
+  text-shadow: 
+    0 2px 10px rgba(0,0,0,.3),
+    0 0 30px var(--card-glow);
+  position: relative;
+  z-index: 2;
+}
+
+.card-description {
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: rgba(255,255,255,.9);
+  font-weight: 500;
+  text-shadow: 0 1px 3px rgba(0,0,0,.2);
+  position: relative;
+  z-index: 2;
+}
+
+.card-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.7rem;
+  margin-top: 2.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  border: 2px solid rgba(255,255,255,.3);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(5px);
+}
+
+.dot:hover {
+  background: rgba(255,255,255,.5);
+  transform: scale(1.3);
+  box-shadow: 0 0 20px rgba(255,255,255,.4);
+}
+
+.dot.active {
+  background: linear-gradient(135deg, var(--brand1), var(--brand2));
+  border-color: rgba(255,255,255,.6);
+  transform: scale(1.4);
+  box-shadow: 0 0 25px rgba(139,92,246,.7);
+}
+
+/* خلفية ديناميكية للقسم */
+.motivation-bg-sphere {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.15;
+  pointer-events: none;
+  animation: rotateBg 20s linear infinite;
+}
+
+@keyframes rotateBg {
+  0% { transform: rotate(0deg) translateX(50px); }
+  100% { transform: rotate(360deg) translateX(50px); }
+}
+
+.motivation-bg-sphere.bg-1 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(139,92,246,.5), transparent);
+  top: -150px;
+  right: 10%;
+}
+
+.motivation-bg-sphere.bg-2 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(34,211,238,.5), transparent);
+  bottom: -100px;
+  left: 5%;
+  animation-delay: -10s;
+}
+
+/* تصميم متجاوب للهواتف */
+@media (max-width: 768px) {
+  .motivation-card {
+    padding: 2rem 1.8rem;
+    border-radius: 24px;
+    min-height: 300px;
+  }
+
+  .card-number {
+    width: 50px;
+    height: 50px;
+    font-size: 1.25rem;
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .card-icon {
+    width: 70px;
+    height: 70px;
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-description {
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .motivation-card .sphere-1 {
+    width: 200px;
+    height: 200px;
+    top: -60px;
+    right: -60px;
+  }
+
+  .motivation-card .sphere-2 {
+    width: 150px;
+    height: 150px;
+    bottom: -50px;
+    left: -50px;
+  }
+
+  .motivation-card .sphere-3 {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* تأثيرات لمعان محسنة */
+.sparkle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 15px white;
+  animation: sparkleEnhanced 2.5s ease-in-out infinite;
+  z-index: 3;
+}
+
+@keyframes sparkleEnhanced {
+  0%, 100% { 
+    opacity: 0; 
+    transform: scale(0) rotate(0deg); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.5) rotate(180deg); 
+  }
+}
+
+.motivation-card .sparkle:nth-child(1) {
+  top: 25%;
+  left: 20%;
+  animation-delay: 0s;
+}
+
+.motivation-card .sparkle:nth-child(2) {
+  top: 65%;
+  right: 15%;
+  animation-delay: 0.8s;
+}
+
+.motivation-card .sparkle:nth-child(3) {
+  bottom: 20%;
+  left: 35%;
+  animation-delay: 1.6s;
+}
+
   </style>
 
   <!-- ===================== GOOGLE ANALYTICS 4 ===================== -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-FLY2GHLT0X"></script>
+  <!-- 
+    خطوات التفعيل:
+    1. اذهب إلى: https://analytics.google.com/
+    2. أنشئ حساب جديد أو استخدم حساب موجود
+    3. أنشئ Property جديد
+    4. اختر "Web" كنوع البيانات
+    5. سيعطيك Measurement ID (مثل: G-XXXXXXXXXX)
+    6. استبدل "G-XXXXXXXXXX" بالـ ID الخاص بك
+  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', 'G-FLY2GHLT0X');
+    gtag('config', 'G-XXXXXXXXXX');
   </script>
   <!-- ============================================================== -->
 
@@ -226,6 +632,8 @@
       const COOKIE_NAME = 'pricingToolFirstUse';
       const STORAGE_NAME = 'pricingToolStartTime';
       const LICENSE_STORAGE = 'pricingToolLicense';
+
+      // أكواد التفعيل
       const VALID_LICENSE_KEYS = [
         'CODPRO-8X2K-9M4L-7N6P',
         'CODGLD-5Q3R-1W8T-4Y9Z',
@@ -244,6 +652,7 @@
         localStorage.setItem(LICENSE_STORAGE, JSON.stringify(licenseData));
         setCookie(LICENSE_STORAGE, JSON.stringify(licenseData), 3650);
 
+        // Track activation event in Google Analytics
         if (typeof gtag !== 'undefined') {
           gtag('event', 'license_activated', {
             'event_category': 'License',
@@ -290,6 +699,7 @@
           setCookie(COOKIE_NAME, visitTime, 365);
           localStorage.setItem(STORAGE_NAME, visitTime);
 
+          // Track trial start in Google Analytics
           if (typeof gtag !== 'undefined') {
             gtag('event', 'trial_started', {
               'event_category': 'Trial',
@@ -356,6 +766,7 @@
       }
 
       function showIncognitoBlockScreen() {
+        // Track incognito attempt
         if (typeof gtag !== 'undefined') {
           gtag('event', 'incognito_blocked', {
             'event_category': 'Security',
@@ -388,6 +799,7 @@
         document.body.appendChild(overlay);
       }
 
+      // هيدر الفترة التجريبية
       function createTrialHeader() {
         const header = document.createElement('div');
         header.id = 'trialHeader';
@@ -485,6 +897,7 @@
         document.body.appendChild(header);
         document.body.style.paddingTop = '80px';
 
+        // تحديث المؤقت
         setInterval(() => {
           const s = checkTrialStatus();
           if (s.isExpired) {
@@ -495,6 +908,7 @@
           document.getElementById('timerDisplay').innerHTML = `${h}h ${m}m`;
         }, 60000);
 
+        // معالج التفعيل
         const btn = header.querySelector('.license-btn');
         const input = header.querySelector('.license-input');
         const msg = document.getElementById('licenseMsg');
@@ -524,6 +938,7 @@
             msg.textContent = '✅ تم التفعيل!';
             setTimeout(() => location.reload(), 1500);
           } else {
+            // Track failed activation
             if (typeof gtag !== 'undefined') {
               gtag('event', 'license_failed', {
                 'event_category': 'License',
@@ -546,9 +961,11 @@
         });
       }
 
+      // شاشة انتهاء الفترة
       function showExpiredScreen() {
         document.getElementById('trialHeader')?.remove();
 
+        // Track trial expiration
         if (typeof gtag !== 'undefined') {
           gtag('event', 'trial_expired', {
             'event_category': 'Trial',
@@ -585,10 +1002,6 @@
                 انتهت الفترة التجريبية
               </h2>
             </div>
-            <p style="font-size: 15px; color: rgba(255, 255, 255, 0.8); margin-bottom: 20px; line-height: 1.6;">
-              لقد استمتعت بتجربة الأداة لمدة 24 ساعة. <br>
-              للاستمرار في تحقيق الأرباح واستخدام الأداة مدى الحياة، يرجى شراء النسخة الكاملة.
-            </p>
 
             <button class="whatsapp-btn" style="
               width: 100%;
@@ -658,7 +1071,9 @@
         document.body.appendChild(header);
         document.body.style.paddingTop = '280px';
 
+        // معالج الواتساب
         header.querySelector('.whatsapp-btn').addEventListener('click', () => {
+          // Track WhatsApp click
           if (typeof gtag !== 'undefined') {
             gtag('event', 'whatsapp_clicked', {
               'event_category': 'Conversion',
@@ -670,6 +1085,7 @@
           window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
         });
 
+        // معالج التفعيل
         const btn = header.querySelector('.license-btn');
         const input = header.querySelector('.license-input');
         const msgDiv = header.querySelector('#licenseMsg');
@@ -688,6 +1104,7 @@
             msgDiv.textContent = '✅ تم التفعيل بنجاح! جاري إعادة التحميل...';
             setTimeout(() => location.reload(), 1500);
           } else {
+            // Track failed activation
             if (typeof gtag !== 'undefined') {
               gtag('event', 'license_failed', {
                 'event_category': 'License',
@@ -713,6 +1130,7 @@
       }
 
       async function init() {
+        // فحص التصفح المخفي
         const isIncognito = await isIncognitoMode();
         if (isIncognito) {
           disableToolCompletely();
@@ -720,11 +1138,13 @@
           return;
         }
 
+        // فحص الترخيص
         if (checkLicense()) {
           console.log('✅ النسخة الكاملة مفعّلة');
           return;
         }
 
+        // الفترة التجريبية
         const status = checkTrialStatus();
 
         if (status.isExpired) {
@@ -737,45 +1157,15 @@
     })();
   </script>
 </head>
-  
+<!-- ===================== PART 2 / 7 ===================== -->
 <body>
-  <!-- START: كود حماية فايربيس -->
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyBoDXsELYXl440Wb3bd6xir0sMbj-6LSIA",
-        authDomain: "cod-pricing.firebaseapp.com",
-        projectId: "cod-pricing",
-        storageBucket: "cod-pricing.firebasestorage.app",
-        messagingSenderId: "815665273956",
-        appId: "1:815665273956:web:6a496b1d28da2aa0b25371",
-        measurementId: "G-7XLMBDYNXG"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            window.location.href = "login.html";
-        } else {
-            console.log("Logged in as:", user.email);
-        }
-    });
-
-    window.logout = () => signOut(auth).then(() => window.location.href = "login.html");
-</script>
-<!-- END: كود حماية فايربيس -->
-
   <div class="min-h-screen p-4">
     <div class="w-full max-w-screen-2xl mx-auto">
 
-      <!-- Header -->
+      <!-- Header (fixed LTR to prevent icon flipping) -->
       <div id="appHeader" dir="ltr" class="glass soft-border rounded-2xl p-4 mb-6 no-print">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          
+
           <div class="flex items-center justify-between md:justify-start gap-4">
             <div class="flex items-center gap-3">
               <span class="text-xl font-black gradient-text">Made By Anouar</span>
@@ -785,16 +1175,19 @@
               </span>
             </div>
 
+            <!-- Social (mobile) -->
             <div dir="ltr" class="flex items-center gap-2 md:hidden">
-              <a href="https://www.instagram.com/digitalverse" target="_blank" class="text-white/70 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <a href="https://www.instagram.com/digitalverse" target="_blank" class="text-white/70 hover:text-white transition-colors" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
               </a>
-              <a href="https://t.me/digitalverse12" target="_blank" class="text-white/70 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <a href="https://t.me/digitalverse12" target="_blank" class="text-white/70 hover:text-white transition-colors" aria-label="Telegram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>
@@ -802,35 +1195,48 @@
             </div>
           </div>
 
+          <!-- Currency + Language -->
           <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between md:justify-end">
+            <!-- Currency -->
             <div class="glass rounded-xl p-2 flex items-center gap-2">
-              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm active" data-currency="DZD" onclick="changeCurrency('DZD')">DZD</button>
-              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm" data-currency="MAD" onclick="changeCurrency('MAD')">MAD</button>
-              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm" data-currency="TND" onclick="changeCurrency('TND')">TND</button>
+              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm active"
+                      data-currency="DZD" onclick="changeCurrency('DZD')">DZD</button>
+              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm"
+                      data-currency="MAD" onclick="changeCurrency('MAD')">MAD</button>
+              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm"
+                      data-currency="TND" onclick="changeCurrency('TND')">TND</button>
             </div>
 
+            <!-- Language -->
             <div class="glass rounded-xl p-2 flex items-center gap-2">
-              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm active" data-lang="ar" onclick="changeLanguage('ar')">AR</button>
-              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm" data-lang="en" onclick="changeLanguage('en')">EN</button>
-              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm" data-lang="fr" onclick="changeLanguage('fr')">FR</button>
+              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm active"
+                      data-lang="ar" onclick="changeLanguage('ar')">AR</button>
+              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm"
+                      data-lang="en" onclick="changeLanguage('en')">EN</button>
+              <button class="btn px-3 py-2 rounded-lg font-extrabold text-sm"
+                      data-lang="fr" onclick="changeLanguage('fr')">FR</button>
             </div>
 
+            <!-- Social (desktop) -->
             <div dir="ltr" class="hidden md:flex items-center gap-3">
-              <a href="https://www.instagram.com/digitalverse" target="_blank" class="text-white/70 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <a href="https://www.instagram.com/digitalverse" target="_blank" class="text-white/70 hover:text-white transition-colors" aria-label="Instagram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
                 </svg>
               </a>
-              <a href="https://t.me/digitalverse12" target="_blank" class="text-white/70 hover:text-white transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <a href="https://t.me/digitalverse12" target="_blank" class="text-white/70 hover:text-white transition-colors" aria-label="Telegram">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                 </svg>
               </a>
             </div>
           </div>
+
         </div>
 
         <div class="mt-3 text-xs text-white/70">
@@ -840,14 +1246,16 @@
           <span class="text-white/50" data-i18n="fxHintNote">يمكنك تغيير سعر الصرف من خانة “سعر الصرف” وسيُحفظ تلقائياً.</span>
         </div>
       </div>
-
+<!-- ===================== PART 3 / 7 ===================== -->
       <!-- Success Message -->
       <div id="successMessage" class="hidden mb-6 glass rounded-xl p-4 no-print">
         <div class="flex items-center justify-between">
           <span id="successText" class="font-semibold">OK</span>
-          <button onclick="hideSuccessMessage()" class="text-white/60 hover:text-white transition-colors">
+          <button onclick="hideSuccessMessage()" class="text-white/60 hover:text-white transition-colors" aria-label="Close">
             <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clip-rule="evenodd"></path>
             </svg>
           </button>
         </div>
@@ -855,6 +1263,8 @@
 
       <!-- Main Card -->
       <div class="glass-strong rounded-3xl overflow-hidden">
+
+        <!-- Hero -->
         <div class="relative p-8 text-center">
           <div class="absolute inset-0" style="background:linear-gradient(90deg, rgba(139,92,246,.18), rgba(34,211,238,.10), rgba(96,165,250,.12));"></div>
           <div class="relative">
@@ -879,29 +1289,49 @@
           </div>
         </div>
 
-        <!-- Scenario Buttons -->
-        <div class="p-6 border-b border-white10 no-print">
-          <div class="flex flex-wrap gap-3 justify-center">
-            <button onclick="applyScenario(1)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">🧱 سيناريو 01</button>
-            <button onclick="applyScenario(2)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">🟠 سيناريو 02</button>
-            <button onclick="applyScenario(3)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">🔷 سيناريو 03</button>
-            <button onclick="applyScenario(4)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">🚀 سيناريو 04</button>
-          </div>
-          <div class="mt-3 text-center text-xs text-white60">اضغط على سيناريو لتعبئة القيم تلقائياً (ثم يمكنك تعديل أي رقم يدويًا).</div>
-        </div>
+        <!-- ===================== Scenario Buttons (REPLACE Action Buttons) ===================== -->
+<div class="p-6 border-b border-white10 no-print">
+  <div class="flex flex-wrap gap-3 justify-center">
+    <button onclick="applyScenario(1)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+      🧱 سيناريو 01
+    </button>
 
+    <button onclick="applyScenario(2)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+      🟠 سيناريو 02
+    </button>
+
+    <button onclick="applyScenario(3)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+      🔷 سيناريو 03
+    </button>
+
+    <button onclick="applyScenario(4)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+      🚀 سيناريو 04
+    </button>
+  </div>
+
+  <div class="mt-3 text-center text-xs text-white60">
+    اضغط على سيناريو لتعبئة القيم تلقائياً (ثم يمكنك تعديل أي رقم يدويًا).
+  </div>
+</div>
+<!-- ===================== END Scenario Buttons ===================== -->
+
+<!-- ===================== PART 4 / 7 ===================== -->
         <!-- Tab: Calculator -->
         <div id="tab-calculator" class="tab-content active p-6">
           <div class="grid lg:grid-cols-2 gap-8">
+
             <!-- Inputs -->
             <div class="space-y-6">
               <div class="flex items-center gap-3 mb-2">
                 <h2 class="text-2xl font-bold gradient-text" data-i18n="inputsTitle">الإدخالات</h2>
               </div>
+
               <div>
                 <label class="block text-sm font-semibold mb-2 text-white" data-i18n="lbl_productName">اسم المنتج</label>
-                <input type="text" id="productName" class="w-full px-4 py-3 rounded-xl premium-input" data-i18n-placeholder="ph_productName" placeholder="مثال: ساعة ذكية" />
+                <input type="text" id="productName" class="w-full px-4 py-3 rounded-xl premium-input"
+                       data-i18n-placeholder="ph_productName" placeholder="مثال: ساعة ذكية" />
               </div>
+
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-semibold mb-2 text-white" data-i18n="lbl_wholesale">سعر الشراء بالجملة (USD)</label>
@@ -912,6 +1342,7 @@
                   <input type="number" id="exchangeRate" class="w-full px-4 py-3 rounded-xl premium-input" value="248" oninput="onExchangeInput()" />
                 </div>
               </div>
+
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-semibold mb-2 text-white" data-i18n="lbl_confirm">نسبة التأكيد (%)</label>
@@ -922,6 +1353,7 @@
                   <input type="number" id="deliveryRate" class="w-full px-4 py-3 rounded-xl premium-input" placeholder="80" oninput="calculate()" />
                 </div>
               </div>
+
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-semibold mb-2 text-white" data-i18n="lbl_dailyBudget">الميزانية اليومية (USD)</label>
@@ -932,6 +1364,7 @@
                   <input type="number" id="costPerOrder" class="w-full px-4 py-3 rounded-xl premium-input" placeholder="2.5" oninput="calculate()" />
                 </div>
               </div>
+
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-semibold mb-2 text-white" data-i18n="lbl_extra">تكاليف إضافية (دج)</label>
@@ -942,15 +1375,18 @@
                   <input type="number" id="returnCost" class="w-full px-4 py-3 rounded-xl premium-input" placeholder="300" oninput="calculate()" />
                 </div>
               </div>
+
               <div class="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label class="block text-sm font-semibold mb-2 text-white" data-i18n="lbl_finalPrice">السعر النهائي (دج)</label>
-                  <input type="number" id="finalPrice" class="w-full px-4 py-3 rounded-xl premium-input" placeholder="..." oninput="onFinalPriceChange()" />
+                  <input type="number" id="finalPrice" class="w-full px-4 py-3 rounded-xl premium-input"
+                         placeholder="..." oninput="onFinalPriceChange()" />
                   <div class="text-center text-xs text-white/60 mt-1" data-i18n="hint_finalPrice">إذا كتبت السعر النهائي يتم حساب الربح تلقائياً</div>
                 </div>
                 <div>
                   <label class="block text-sm font-semibold mb-2 text-white" data-i18n="lbl_profitMargin">الربح (دج)</label>
-                  <input type="number" id="profitMarginInput" class="w-full px-4 py-3 rounded-xl premium-input" placeholder="800" oninput="onProfitMarginChange()" />
+                  <input type="number" id="profitMarginInput" class="w-full px-4 py-3 rounded-xl premium-input"
+                         placeholder="800" oninput="onProfitMarginChange()" />
                   <div class="text-center text-xs text-white/60 mt-1" data-i18n="hint_profit">إذا كتبت الربح يتم اقتراح السعر النهائي تلقائياً</div>
                 </div>
               </div>
@@ -958,6 +1394,7 @@
 
             <!-- Results -->
             <div class="space-y-6">
+
               <div id="lossWarning" class="hidden stat-card border-2" style="border-color:rgba(239,68,68,.45);">
                 <div class="font-bold text-lg" data-i18n="lossWarning">تحذير: أنت في خسارة</div>
                 <div class="text-white/70 text-sm mt-1" data-i18n="lossHint">راجع السعر أو التكاليف قبل إطلاق الحملات.</div>
@@ -974,6 +1411,7 @@
                     <span class="font-semibold text-white" data-i18n="returnRate">نسبة الإرجاع:</span>
                     <span id="returnRate" class="font-bold text-orange-300">0</span>
                   </div>
+
                   <div id="returnCostRow" class="hidden flex justify-between pt-3 border-t border-white/10">
                     <span class="font-semibold text-white" data-i18n="returnCostDaily">تكلفة الإرجاع اليومية:</span>
                     <span id="totalReturnCost" class="font-bold text-red-300">0</span>
@@ -1007,6 +1445,7 @@
                 <div class="text-sm text-white/80 mb-2" data-i18n="suggestedFinalPrice">السعر النهائي المقترح</div>
                 <div id="finalPriceDisplay" class="text-5xl md:text-6xl font-black gradient-text mb-3">0</div>
                 <div class="text-sm text-white/60 mb-5" data-i18n="currencyNote">بالدينار (DZD) حسب سعر الصرف الحالي</div>
+
                 <div class="space-y-3 pt-5 border-t border-white/10">
                   <div class="flex justify-between items-center">
                     <span class="text-white/70" data-i18n="profitMargin">هامش الربح:</span>
@@ -1041,17 +1480,21 @@
                   </div>
                 </div>
               </div>
+
             </div>
+
           </div>
         </div>
-
+<!-- ===================== PART 5 / 7 ===================== -->
         <!-- Tab: Monthly -->
         <div id="tab-monthly" class="tab-content p-6">
           <div class="max-w-5xl mx-auto space-y-8">
+
             <div class="text-center mb-8">
               <h2 class="text-4xl font-black mb-3 gradient-text" data-i18n="monthlyTitle">توقعات الربح الشهري</h2>
               <p class="text-white/70 text-lg" data-i18n="monthlyHint">حساب تقريبي على 30 يوم بناءً على قيمك الحالية</p>
             </div>
+
             <div class="grid md:grid-cols-3 gap-6">
               <div class="stat-card text-center">
                 <div class="text-sm text-white/70 mb-2" data-i18n="monthlyRevenue">الإيرادات الشهرية</div>
@@ -1066,6 +1509,7 @@
                 <div id="monthlyProfit" class="text-5xl font-black text-purple-300">0</div>
               </div>
             </div>
+
             <div class="stat-card">
               <h3 class="text-2xl font-bold mb-6 gradient-text" data-i18n="monthlyDetails">تفاصيل الشهر</h3>
               <div class="space-y-4">
@@ -1085,26 +1529,32 @@
                   <span class="text-white/70" data-i18n="monthlyReturnCost">تكلفة الإرجاع الشهرية</span>
                   <span id="monthlyReturnCost" class="font-bold text-xl text-orange-300">0</span>
                 </div>
-                <div class="flex justify-between items-center glass rounded-xl p-4 font-bold border-t-2" style="border-color:rgba(139,92,246,.35);">
+
+                <div class="flex justify-between items-center glass rounded-xl p-4 font-bold border-t-2"
+                     style="border-color:rgba(139,92,246,.35);">
                   <span class="text-lg" data-i18n="monthlyROI">ROI</span>
                   <span id="monthlyROI" class="text-3xl gradient-text">0</span>
                 </div>
               </div>
             </div>
+
             <div class="stat-card">
               <h3 class="text-2xl font-bold mb-6 gradient-text" data-i18n="monthlyInsightsTitle">نصائح ذكية</h3>
               <div id="monthlyInsights" class="space-y-3"></div>
             </div>
+
           </div>
         </div>
 
         <!-- Tab: Discounts -->
         <div id="tab-discounts" class="tab-content p-6">
           <div class="max-w-5xl mx-auto space-y-8">
+
             <div class="text-center mb-8">
               <h2 class="text-4xl font-black mb-3 gradient-text" data-i18n="discountsTitle">حاسبة العروض والخصومات</h2>
               <p class="text-white/70 text-lg" data-i18n="discountsHint">اختر نسبة الخصم وشاهد تأثيرها على الربح</p>
             </div>
+
             <div class="stat-card">
               <h3 class="text-xl font-bold mb-6" data-i18n="discountSliderTitle">نسبة الخصم</h3>
               <input type="range" id="discountSlider" min="0" max="50" value="0" step="5" class="w-full mb-6" oninput="calculateDiscount()" />
@@ -1113,6 +1563,7 @@
                 <span class="text-3xl text-white/60 font-bold">%</span>
               </div>
             </div>
+
             <div class="grid md:grid-cols-2 gap-6">
               <div class="stat-card text-center">
                 <div class="text-sm text-white/70 mb-2" data-i18n="discountedPriceTitle">السعر بعد الخصم</div>
@@ -1123,20 +1574,24 @@
                 <div id="discountedProfit" class="text-5xl font-black">0</div>
               </div>
             </div>
+
             <div class="stat-card">
               <h3 class="text-2xl font-bold mb-6 gradient-text" data-i18n="discountsTableTitle">جدول الخصومات المقترحة</h3>
               <div id="discountTable" class="space-y-3"></div>
             </div>
+
           </div>
         </div>
 
         <!-- Tab: Charts -->
         <div id="tab-charts" class="tab-content p-6">
           <div class="max-w-7xl mx-auto space-y-8">
+
             <div class="text-center mb-8">
               <h2 class="text-4xl font-black mb-3 gradient-text" data-i18n="chartsTitle">الرسوم البيانية والتحليل</h2>
               <p class="text-white/70 text-lg" data-i18n="chartsHint">تحديث الرسوم يتم تلقائياً عند فتح التبويب</p>
             </div>
+
             <div class="grid lg:grid-cols-2 gap-8">
               <div class="stat-card">
                 <h3 class="text-xl font-bold mb-6 text-center gradient-text" data-i18n="chart_cost_breakdown">توزيع التكاليف</h3>
@@ -1146,6 +1601,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="stat-card">
                 <h3 class="text-xl font-bold mb-6 text-center gradient-text" data-i18n="chart_profit_overview">مقارنة الأرباح</h3>
                 <div class="chart-frame">
@@ -1154,6 +1610,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="stat-card lg:col-span-2">
                 <h3 class="text-xl font-bold mb-6 text-center gradient-text" data-i18n="chart_daily_profit">توقع الربح اليومي (30 يوم)</h3>
                 <div class="chart-frame">
@@ -1162,6 +1619,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="stat-card">
                 <h3 class="text-xl font-bold mb-6 text-center gradient-text" data-i18n="chart_orders">توزيع الطلبات</h3>
                 <div class="chart-frame">
@@ -1170,6 +1628,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="stat-card">
                 <h3 class="text-xl font-bold mb-6 text-center gradient-text" data-i18n="chart_roi">ROI</h3>
                 <div class="chart-frame">
@@ -1179,1205 +1638,1589 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
-        <div class="flex flex-col md:flex-row gap-4 justify-center py-8 no-print">
-          <button class="btn px-6 py-3 rounded-xl font-bold flex items-center gap-2" onclick="saveData()">
-            💾 <span data-i18n="btn_save">حفظ البيانات</span>
-          </button>
-          <button class="btn px-6 py-3 rounded-xl font-bold flex items-center gap-2" onclick="loadData()">
-            📂 <span data-i18n="btn_load">استرجاع</span>
-          </button>
-          <button class="btn-gradient px-6 py-3 rounded-xl flex items-center gap-2" onclick="exportToPDF()">
-            📄 <span data-i18n="btn_pdf">تصدير PDF</span>
-          </button>
-          <button class="btn px-6 py-3 rounded-xl font-bold flex items-center gap-2 text-red-300" onclick="resetAll()">
-            🗑️ <span data-i18n="btn_reset">مسح الكل</span>
-          </button>
-          <button class="btn px-6 py-3 rounded-xl font-bold flex items-center gap-2 text-sky-300" onclick="loadExample()">
-            💡 <span data-i18n="btn_example">مثال توضيحي</span>
-          </button>
-        </div>
 
-      </div>
+        <!-- ===================== قسم البطاقات التحفيزية مع الكرات الملونة ===================== -->
+        <div class="motivation-section-wrapper">
+          <!-- كرات الخلفية المتحركة -->
+          <div class="motivation-bg-sphere bg-1"></div>
+          <div class="motivation-bg-sphere bg-2"></div>
 
-      <div class="text-center mt-12 mb-8 opacity-60 text-sm no-print">
-        <div class="font-bold text-white mb-1" data-i18n="footerTitle">PRO • COD Pricing Tool</div>
-        <div data-i18n="footerSub">v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- زر الشات العائم -->
-  <button id="geminiChatBtn" style="
-            position: fixed; bottom: 25px; right: 25px; z-index: 2147483647;
-            width: 60px; height: 60px; border-radius: 50%;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            box-shadow: 0 10px 30px rgba(37,99,235,0.4);
-            border: 2px solid rgba(255,255,255,0.2);
-            color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s;
-        " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-            </svg>
-  </button>
-
-  <div id="geminiChatWindow" style="
-            display: none; position: fixed; bottom: 95px; right: 25px;
-            width: 350px; height: 500px; background: #0f172a;
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
-            z-index: 2147483647; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-            flex-direction: column; overflow: hidden; font-family: 'Tajawal', sans-serif;
-        ">
-            <div style="padding: 15px; background: linear-gradient(to right, #3b82f6, #1d4ed8); color: white; display: flex; justify-content: space-between; align-items: center;">
-                <div style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 18px;">✨</span> المساعد الذكي
-                </div>
-                <button id="closeGeminiChat" style="background:none; border:none; color:white; font-size: 24px; cursor:pointer;">&times;</button>
+          <div class="p-6 lg:p-10">
+            <div class="max-w-4xl mx-auto mb-10 text-center">
+              <h2 class="text-4xl lg:text-5xl font-black mb-4 gradient-text">🚀 حفـــــز نجاحــــــك اليومــــــي 🎯</h2>
+              <p class="text-xl text-white/80 font-medium">عبارات ملهمة لتحفيزك على النجاح في عالم التجارة الإلكترونية</p>
             </div>
 
-            <div id="geminiMessages" style="flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #0f172a;">
-                <div style="background: #1e293b; color: #e2e8f0; padding: 12px; border-radius: 12px 12px 2px 12px; align-self: flex-start; max-width: 85%; font-size: 14px; border: 1px solid rgba(255,255,255,0.05);">
-                    مرحباً! 👋 أنا أعمل الآن بمحرك Google Gemini المتطور. كيف أساعدك؟
-                </div>
+            <div class="motivation-container">
+              <!-- البطاقة 1 - بنفسجية -->
+              <div class="motivation-card card-1 active">
+                <div class="gradient-sphere sphere-1"></div>
+                <div class="gradient-sphere sphere-2"></div>
+                <div class="gradient-sphere sphere-3"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="card-number">1</div>
+                <div class="card-icon">🚀</div>
+                <h3 class="card-title">كل إمبراطورية تجارية بدأت بخطوة أولى</h3>
+                <p class="card-description">
+                  لا تستهن ببداياتك الصغيرة، فأكبر المتاجر الإلكترونية اليوم كانت يومًا ما مجرد فكرة في عقل شخص مثلك تمامًا. رحلة الألف ميل تبدأ بخطوة واحدة.
+                </p>
+              </div>
+
+              <!-- البطاقة 2 - سماوية -->
+              <div class="motivation-card card-2" style="display: none;">
+                <div class="gradient-sphere sphere-1"></div>
+                <div class="gradient-sphere sphere-2"></div>
+                <div class="gradient-sphere sphere-3"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="card-number">2</div>
+                <div class="card-icon">💡</div>
+                <h3 class="card-title">الفشل ليس نهاية الطريق، بل هو معلمك الأفضل</h3>
+                <p class="card-description">
+                  كل عملية بيع فاشلة، وكل إعلان لم ينجح، يعلمك شيئًا جديدًا يقربك من النجاح الحقيقي. البيانات التي تجمعها من تجاربك هي كنزك الحقيقي.
+                </p>
+              </div>
+
+              <!-- البطاقة 3 - خضراء -->
+              <div class="motivation-card card-3" style="display: none;">
+                <div class="gradient-sphere sphere-1"></div>
+                <div class="gradient-sphere sphere-2"></div>
+                <div class="gradient-sphere sphere-3"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="card-number">3</div>
+                <div class="card-icon">⚡</div>
+                <h3 class="card-title">السوق الرقمي لا ينام، وفرصتك دائمًا موجودة</h3>
+                <p class="card-description">
+                  ميزة التجارة الإلكترونية أنها متاحة 24/7 على مدار الساعة. عملاؤك المحتملون موجودون الآن يبحثون عن حلول يمكنك أنت تقديمها لهم.
+                </p>
+              </div>
+
+              <!-- البطاقة 4 - ذهبية -->
+              <div class="motivation-card card-4" style="display: none;">
+                <div class="gradient-sphere sphere-1"></div>
+                <div class="gradient-sphere sphere-2"></div>
+                <div class="gradient-sphere sphere-3"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="card-number">4</div>
+                <div class="card-icon">📚</div>
+                <h3 class="card-title">استثمر في التعلم قبل الربح</h3>
+                <p class="card-description">
+                  الأشهر الأولى هي مدرستك الحقيقية، تعلم من منافسيك، من عملائك، من أخطائك. المعرفة التي تكتسبها الآن ستضاعف أرباحك مستقبلاً.
+                </p>
+              </div>
+
+              <!-- البطاقة 5 - وردية -->
+              <div class="motivation-card card-5" style="display: none;">
+                <div class="gradient-sphere sphere-1"></div>
+                <div class="gradient-sphere sphere-2"></div>
+                <div class="gradient-sphere sphere-3"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="card-number">5</div>
+                <div class="card-icon">⭐</div>
+                <h3 class="card-title">ابدأ قبل أن تكون جاهزًا تمامًا</h3>
+                <p class="card-description">
+                  الكمال وهم يعطلك عن الانطلاق والتقدم. أطلق متجرك، جرّب منتجك، وطوّر في الطريق. العمل الفعلي يعلمك أكثر من التخطيط النظري.
+                </p>
+              </div>
+
+              <!-- نقاط التنقل -->
+              <div class="card-dots">
+                <div class="dot active" onclick="showMotivationCard(0)"></div>
+                <div class="dot" onclick="showMotivationCard(1)"></div>
+                <div class="dot" onclick="showMotivationCard(2)"></div>
+                <div class="dot" onclick="showMotivationCard(3)"></div>
+                <div class="dot" onclick="showMotivationCard(4)"></div>
+              </div>
             </div>
-
-            <form id="geminiForm" style="padding: 12px; background: #1e293b; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 8px;">
-                <input type="text" id="geminiInput" placeholder="اكتب سؤالك..." style="flex: 1; background: #0f172a; border: 1px solid #334155; color: white; padding: 10px; border-radius: 10px; outline: none;">
-                <button type="submit" style="background: #3b82f6; color: white; border: none; padding: 0 15px; border-radius: 10px; cursor: pointer;">➤</button>
-            </form>
-  </div>
-
-  <script>
-    // ================== CHATBOT LOGIC ==================
-    const btn = document.getElementById('geminiChatBtn');
-    const win = document.getElementById('geminiChatWindow');
-    const close = document.getElementById('closeGeminiChat');
-    const form = document.getElementById('geminiForm');
-    const input = document.getElementById('geminiInput');
-    const msgs = document.getElementById('geminiMessages');
-
-    function toggle() {
-        win.style.display = (win.style.display === 'none') ? 'flex' : 'none';
-        if (win.style.display === 'flex') input.focus();
-    }
-    btn.onclick = toggle;
-    close.onclick = toggle;
-
-    form.onsubmit = async (e) => {
-        e.preventDefault();
-        const txt = input.value.trim();
-        if (!txt) return;
-
-        // رسالة المستخدم
-        msgs.innerHTML += `<div style="background: #3b82f6; color: white; padding: 10px 15px; border-radius: 15px 15px 15px 2px; align-self: flex-end; max-width: 85%; font-size: 14px;">${txt}</div>`;
-        msgs.scrollTop = msgs.scrollHeight;
-        input.value = '';
-        input.disabled = true;
-
-        // Loading
-        const loadId = 'loading-' + Date.now();
-        msgs.innerHTML += `<div id="${loadId}" style="color: #94a3b8; font-size: 12px; margin-right: 10px;">جاري التفكير...</div>`;
-        msgs.scrollTop = msgs.scrollHeight;
-
-        try {
-            const res = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: txt })
-            });
-
-            const data = await res.json();
-            document.getElementById(loadId).remove();
-
-            if (res.ok) {
-                msgs.innerHTML += `<div style="background: #1e293b; color: #e2e8f0; padding: 10px 15px; border-radius: 15px 15px 2px 15px; align-self: flex-start; max-width: 85%; font-size: 14px; border: 1px solid rgba(255,255,255,0.05);">${data.reply}</div>`;
-            } else {
-                msgs.innerHTML += `<div style="background: rgba(220,38,38,0.2); color: #fca5a5; padding: 10px; border-radius: 10px; font-size: 12px; text-align: center;">خطأ: ${data.reply}</div>`;
-            }
-
-        } catch (err) {
-            document.getElementById(loadId)?.remove();
-            msgs.innerHTML += `<div style="color: #ef4444; font-size: 12px; text-align: center;">فشل الاتصال: ${err.message}</div>`;
-        } finally {
-            input.disabled = false;
-            input.focus();
-            msgs.scrollTop = msgs.scrollHeight;
-        }
-    };
-
-    // ================== MAIN TOOL LOGIC ==================
-    let currentCurrency = "DZD";
-    let currentLang = "ar";
-    let isEditingMargin = false;
-    let isEditingPrice = false;
-    let calculationResults = {};
-
-    const fxRates = { DZD: 248, MAD: 10, TND: 3.1 };
-    
-    // Translations object (content omitted for brevity, same as before)
-    const translations = {
-      ar: {
-        fxPrefix: "سعر الصرف افتراضي (USD → العملة): ",
-        fxHintNote: "يمكنك تغيير سعر الصرف من خانة “سعر الصرف” وسيُحفظ تلقائياً.",
-        heroTitle: "أداة تسعير المنتجات",
-        heroTag: "أداة احترافية لحساب تسعير المنتجات في التجارة الإلكترونية بالجزائر",
-        heroSub1: "توقع أرباحك ومصاريفك على مدار 30 يوم",
-        heroSub2: "احسب الخصم الأمثل دون خسارة أرباحك",
-        heroSub3: "تصور بياناتك بشكل مرئي وسهل الفهم",
-        tab_calculator: "حاسبة التسعير",
-        tab_monthly: "توقعات شهرية",
-        tab_discounts: "حاسبة الخصومات",
-        tab_charts: "الرسوم البيانية",
-        btn_save: "حفظ البيانات",
-        btn_load: "استرجاع",
-        btn_pdf: "تصدير PDF",
-        btn_reset: "مسح الكل",
-        btn_example: "مثال توضيحي",
-        inputsTitle: "الإدخالات",
-        lbl_productName: "اسم المنتج",
-        ph_productName: "مثال: ساعة ذكية",
-        lbl_wholesale: "سعر الشراء بالجملة (USD)",
-        lbl_exchange: "سعر الصرف",
-        lbl_confirm: "نسبة التأكيد (%)",
-        lbl_delivery: "نسبة التوصيل (%)",
-        lbl_dailyBudget: "الميزانية اليومية (USD)",
-        lbl_cpo: "التكلفة لكل طلب (USD)",
-        lbl_extra: "تكاليف إضافية (دج)",
-        lbl_returnCost: "تكلفة الإرجاع لكل طلب (دج)",
-        lbl_finalPrice: "السعر النهائي (دج)",
-        lbl_profitMargin: "الربح (دج)",
-        hint_finalPrice: "إذا كتبت السعر النهائي يتم حساب الربح تلقائياً",
-        hint_profit: "إذا كتبت الربح يتم اقتراح السعر النهائي تلقائياً",
-        lossWarning: "تحذير: أنت في خسارة",
-        lossHint: "راجع السعر أو التكاليف قبل إطلاق الحملات.",
-        sec_orders: "إجمالي الطلبات المتوقعة:",
-        dailyOrders: "الطلبات اليومية:",
-        confirmedOrders: "الطلبات المؤكدة:",
-        deliveredOrders: "الطلبات المستلمة:",
-        returnedOrders: "الطلبات المرتجعة:",
-        returnRate: "نسبة الإرجاع:",
-        returnCostDaily: "تكلفة الإرجاع اليومية:",
-        sec_marketing: "تحليل تكاليف التسويق",
-        cpo: "التكلفة لكل طلب:",
-        finalCpo: "التكلفة الفعلية:",
-        finalCpoDzd: "التكلفة الفعلية (DZD):",
-        sec_costDetails: "تفاصيل التكلفة",
-        wholesaleLine: "سعر الجملة:",
-        adsLine: "تكلفة الإعلانات:",
-        extraLine: "تكاليف إضافية:",
-        totalCost: "التكلفة الإجمالية:",
-        suggestedFinalPrice: "السعر النهائي المقترح",
-        currencyNote: "بالدينار (DZD) حسب سعر الصرف الحالي",
-        profitMargin: "هامش الربح:",
-        netProfit: "الربح الصافي:",
-        sec_dailyProfit: "تحليل الربح اليومي",
-        profitFormula: "المعادلة:",
-        sec_roi: "العائد على الاستثمار",
-        revenue: "الإيرادات اليومية:",
-        dailyCosts: "التكاليف اليومية:",
-        roi: "ROI",
-        monthlyTitle: "توقعات الربح الشهري",
-        monthlyHint: "حساب تقريبي على 30 يوم بناءً على قيمك الحالية",
-        monthlyRevenue: "الإيرادات الشهرية",
-        monthlyCosts: "التكاليف الشهرية",
-        monthlyProfit: "الربح الصافي الشهري",
-        monthlyDetails: "تفاصيل الشهر",
-        monthlyOrders: "الطلبات الشهرية",
-        monthlyDelivered: "الطلبات المستلمة",
-        monthlyReturned: "الطلبات المرتجعة",
-        monthlyReturnCost: "تكلفة الإرجاع الشهرية",
-        monthlyROI: "ROI",
-        monthlyInsightsTitle: "نصائح ذكية",
-        discountsTitle: "حاسبة العروض والخصومات",
-        discountsHint: "اختر نسبة الخصم وشاهد تأثيرها على الربح",
-        discountSliderTitle: "نسبة الخصم",
-        discountedPriceTitle: "السعر بعد الخصم",
-        discountedProfitTitle: "الربح بعد الخصم",
-        discountsTableTitle: "جدول الخصومات المقترحة",
-        chartsTitle: "الرسوم البيانية والتحليل",
-        chartsHint: "تحديث الرسوم يتم تلقائياً عند فتح التبويب",
-        chart_cost_breakdown: "توزيع التكاليف",
-        chart_profit_overview: "مقارنة الأرباح",
-        chart_daily_profit: "توقع الربح اليومي (30 يوم)",
-        chart_orders: "توزيع الطلبات",
-        chart_roi: "ROI",
-        footerTitle: "PRO • COD Pricing Tool",
-        footerSub: "v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts",
-        msg_pdf_generating: "جاري إنشاء ملف PDF...",
-        msg_pdf_done: "تم تصدير PDF بنجاح!",
-        msg_pdf_error: "حدث خطأ أثناء إنشاء PDF",
-        msg_saved: "تم حفظ البيانات بنجاح!",
-        msg_no_saved: "لا توجد بيانات محفوظة سابقاً!",
-        msg_loaded: "تم استرجاع البيانات بنجاح!",
-        msg_reset: "تم مسح جميع البيانات!",
-        msg_example: "تم تحميل المثال التوضيحي!",
-        confirm_reset: "هل أنت متأكد من مسح جميع البيانات؟",
-        insight_profit_high: "ربح شهري ممتاز.",
-        insight_profit_mid: "ربح جيد. حاول زيادة حجم المبيعات.",
-        insight_profit_low: "الربح منخفض. راجع التكاليف.",
-        insight_profit_neg: "أنت في خسارة. عدّل السعر أو قلّل التكاليف.",
-        insight_roi_high: "ROI ممتاز ({roi}%).",
-        insight_roi_mid: "ROI جيد ({roi}%).",
-        insight_roi_low: "ROI منخفض ({roi}%).",
-        insight_ret_high: "نسبة الإرجاع عالية ({rr}%).",
-        insight_ret_low: "نسبة الإرجاع منخفضة ({rr}%).",
-        status_loss: "خسارة",
-        status_low: "منخفض",
-        status_ok: "مقبول",
-        status_good: "جيد",
-        cur_dzd: "دج"
-      },
-      en: {
-        fxPrefix: "Default rate (USD → currency): ",
-        fxHintNote: "You can change the exchange rate in the “Exchange rate” field and it will be saved automatically.",
-        heroTitle: "Product Pricing Tool",
-        heroTag: "Pro COD pricing tool for e-commerce in Algeria",
-        heroSub1: "Forecast profits and costs over 30 days",
-        heroSub2: "Find the best discount without losing profit",
-        heroSub3: "Visualize your data clearly",
-        tab_calculator: "Calculator",
-        tab_monthly: "Monthly",
-        tab_discounts: "Discounts",
-        tab_charts: "Charts",
-        btn_save: "Save",
-        btn_load: "Load",
-        btn_pdf: "PDF",
-        btn_reset: "Reset",
-        btn_example: "Example",
-        inputsTitle: "Inputs",
-        lbl_productName: "Product name",
-        ph_productName: "Example: Smart watch",
-        lbl_wholesale: "Wholesale price (DZD)",
-        lbl_exchange: "Exchange rate",
-        lbl_confirm: "Confirmation rate (%)",
-        lbl_delivery: "Delivery rate (%)",
-        lbl_dailyBudget: "Daily budget (USD)",
-        lbl_cpo: "Cost per order (USD)",
-        lbl_extra: "Additional costs (DZD)",
-        lbl_returnCost: "Return cost per order (DZD)",
-        lbl_finalPrice: "Final price (DZD)",
-        lbl_profitMargin: "Profit (DZD)",
-        hint_finalPrice: "If you enter final price, profit will be calculated automatically",
-        hint_profit: "If you enter profit, final price will be suggested automatically",
-        lossWarning: "Warning: You are losing money",
-        lossHint: "Review price or costs before scaling ads.",
-        sec_orders: "Expected total orders:",
-        dailyOrders: "Daily orders:",
-        confirmedOrders: "Confirmed orders:",
-        deliveredOrders: "Delivered orders:",
-        returnedOrders: "Returned orders:",
-        returnRate: "Return rate:",
-        returnCostDaily: "Daily return cost:",
-        sec_marketing: "Marketing cost analysis",
-        cpo: "Cost per order:",
-        finalCpo: "Real cost per order:",
-        finalCpoDzd: "Real cost (DZD):",
-        sec_costDetails: "Cost details",
-        wholesaleLine: "Wholesale:",
-        adsLine: "Ads cost:",
-        extraLine: "Extra costs:",
-        totalCost: "Total cost:",
-        suggestedFinalPrice: "Suggested final price",
-        currencyNote: "In DZD based on current exchange rate",
-        profitMargin: "Profit margin:",
-        netProfit: "Net profit:",
-        sec_dailyProfit: "Daily profit analysis",
-        profitFormula: "Formula:",
-        sec_roi: "Return on investment",
-        revenue: "Daily revenue:",
-        dailyCosts: "Daily costs:",
-        roi: "ROI",
-        monthlyTitle: "Monthly profit forecast",
-        monthlyHint: "30-day estimate based on your inputs",
-        monthlyRevenue: "Monthly revenue",
-        monthlyCosts: "Monthly costs",
-        monthlyProfit: "Monthly net profit",
-        monthlyDetails: "Monthly details",
-        monthlyOrders: "Monthly orders",
-        monthlyDelivered: "Delivered orders",
-        monthlyReturned: "Returned orders",
-        monthlyReturnCost: "Monthly return cost",
-        monthlyROI: "ROI",
-        monthlyInsightsTitle: "Smart insights",
-        discountsTitle: "Discount calculator",
-        discountsHint: "Choose a discount and see its impact on profit",
-        discountSliderTitle: "Discount percentage",
-        discountedPriceTitle: "Discounted price",
-        discountedProfitTitle: "Discounted profit",
-        discountsTableTitle: "Suggested discounts table",
-        chartsTitle: "Charts & analysis",
-        chartsHint: "Charts update automatically when you open this tab",
-        chart_cost_breakdown: "Cost breakdown",
-        chart_profit_overview: "Profit overview",
-        chart_daily_profit: "Daily net profit forecast (30 days)",
-        chart_orders: "Orders distribution",
-        chart_roi: "ROI",
-        footerTitle: "PRO • COD Pricing Tool",
-        footerSub: "v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts",
-        msg_pdf_generating: "Generating PDF...",
-        msg_pdf_done: "PDF exported successfully!",
-        msg_pdf_error: "Error while generating PDF",
-        msg_saved: "Data saved successfully!",
-        msg_no_saved: "No saved data found!",
-        msg_loaded: "Data loaded successfully!",
-        msg_reset: "All data cleared!",
-        msg_example: "Example loaded!",
-        confirm_reset: "Are you sure you want to clear all data?",
-        insight_profit_high: "Excellent monthly profit.",
-        insight_profit_mid: "Good profit. Try increasing volume.",
-        insight_profit_low: "Low profit. Review your costs.",
-        insight_profit_neg: "You are losing money. Adjust price or reduce costs.",
-        insight_roi_high: "Excellent ROI ({roi}%).",
-        insight_roi_mid: "Good ROI ({roi}%).",
-        insight_roi_low: "Low ROI ({roi}%).",
-        insight_ret_high: "High return rate ({rr}%).",
-        insight_ret_low: "Low return rate ({rr}%).",
-        status_loss: "Loss",
-        status_low: "Low",
-        status_ok: "OK",
-        status_good: "Good",
-        cur_dzd: "DZD"
-      },
-      fr: {
-        fxPrefix: "Taux par défaut (USD → devise) : ",
-        fxHintNote: "Vous pouvez modifier le taux de change dans le champ « Taux de change » et il sera enregistré automatiquement.",
-        heroTitle: "Outil de tarification produit",
-        heroTag: "Outil pro de tarification COD pour e-commerce en Algérie",
-        heroSub1: "Prévisions des bénéfices et coûts sur 30 jours",
-        heroSub2: "Trouvez la meilleure remise sans perdre de profit",
-        heroSub3: "Visualisez vos données clairement",
-        tab_calculator: "Calculatrice",
-        tab_monthly: "Mensuel",
-        tab_discounts: "Remises",
-        tab_charts: "Graphiques",
-        btn_save: "Sauvegarder",
-        btn_load: "Charger",
-        btn_pdf: "PDF",
-        btn_reset: "Réinitialiser",
-        btn_example: "Exemple",
-        inputsTitle: "Entrées",
-        lbl_productName: "Nom du produit",
-        ph_productName: "Exemple : Montre intelligente",
-        lbl_wholesale: "Prix de gros (USD)",
-        lbl_exchange: "Taux de change",
-        lbl_confirm: "Taux de confirmation (%)",
-        lbl_delivery: "Taux de livraison (%)",
-        lbl_dailyBudget: "Budget quotidien (USD)",
-        lbl_cpo: "Coût par commande (USD)",
-        lbl_extra: "Coûts supplémentaires (DZD)",
-        lbl_returnCost: "Coût de retour par commande (DZD)",
-        lbl_finalPrice: "Prix final (DZD)",
-        lbl_profitMargin: "Profit (DZD)",
-        hint_finalPrice: "Si vous entrez le prix final, le profit sera calculé automatiquement",
-        hint_profit: "Si vous entrez le profit, le prix final sera suggéré automatiquement",
-        lossWarning: "Attention : Vous perdez de l'argent",
-        lossHint: "Révisez le prix ou les coûts avant de lancer les pubs.",
-        sec_orders: "Commandes totales prévues :",
-        dailyOrders: "Commandes quotidiennes :",
-        confirmedOrders: "Commandes confirmées :",
-        deliveredOrders: "Commandes livrées :",
-        returnedOrders: "Commandes retournées :",
-        returnRate: "Taux de retour :",
-        returnCostDaily: "Coût de retour quotidien :",
-        sec_marketing: "Analyse des coûts marketing",
-        cpo: "Coût par commande :",
-        finalCpo: "Coût réel par commande :",
-        finalCpoDzd: "Coût réel (DZD) :",
-        sec_costDetails: "Détails des coûts",
-        wholesaleLine: "Prix de gros :",
-        adsLine: "Coût pub :",
-        extraLine: "Coûts extra :",
-        totalCost: "Coût total :",
-        suggestedFinalPrice: "Prix final suggéré",
-        currencyNote: "En DZD selon le taux de change actuel",
-        profitMargin: "Marge bénéficiaire :",
-        netProfit: "Bénéfice net :",
-        sec_dailyProfit: "Analyse du bénéfice quotidien",
-        profitFormula: "Formule :",
-        sec_roi: "Retour sur investissement",
-        revenue: "Revenu quotidien :",
-        dailyCosts: "Coûts quotidiens :",
-        roi: "ROI",
-        monthlyTitle: "Prévisions de bénéfices mensuels",
-        monthlyHint: "Estimation sur 30 jours basée sur vos entrées",
-        monthlyRevenue: "Revenu mensuel",
-        monthlyCosts: "Coûts mensuels",
-        monthlyProfit: "Bénéfice net mensuel",
-        monthlyDetails: "Détails mensuels",
-        monthlyOrders: "Commandes mensuelles",
-        monthlyDelivered: "Commandes livrées",
-        monthlyReturned: "Commandes retournées",
-        monthlyReturnCost: "Coût de retour mensuel",
-        monthlyROI: "ROI",
-        monthlyInsightsTitle: "Conseils intelligents",
-        discountsTitle: "Calculatrice de remises",
-        discountsHint: "Choisissez une remise et voyez son impact sur le profit",
-        discountSliderTitle: "Pourcentage de remise",
-        discountedPriceTitle: "Prix après remise",
-        discountedProfitTitle: "Profit après remise",
-        discountsTableTitle: "Tableau des remises suggérées",
-        chartsTitle: "Graphiques et analyses",
-        chartsHint: "Les graphiques se mettent à jour automatiquement à l'ouverture de l'onglet",
-        chart_cost_breakdown: "Répartition des coûts",
-        chart_profit_overview: "Aperçu des bénéfices",
-        chart_daily_profit: "Prévision bénéfice quotidien (30 jours)",
-        chart_orders: "Répartition des commandes",
-        chart_roi: "ROI",
-        footerTitle: "PRO • COD Pricing Tool",
-        footerSub: "v4.1 PRO • Thème Sombre • PDF • Mensuel • Graphiques • Remises",
-        msg_pdf_generating: "Génération du PDF...",
-        msg_pdf_done: "PDF exporté avec succès !",
-        msg_pdf_error: "Erreur lors de la génération du PDF",
-        msg_saved: "Données enregistrées avec succès !",
-        msg_no_saved: "Aucune donnée enregistrée trouvée !",
-        msg_loaded: "Données chargées avec succès !",
-        msg_reset: "Toutes les données effacées !",
-        msg_example: "Exemple chargé !",
-        confirm_reset: "Êtes-vous sûr de vouloir effacer toutes les données ?",
-        insight_profit_high: "Excellent bénéfice mensuel.",
-        insight_profit_mid: "Bon bénéfice. Essayez d'augmenter le volume.",
-        insight_profit_low: "Faible bénéfice. Révisez vos coûts.",
-        insight_profit_neg: "Vous perdez de l'argent. Ajustez le prix ou réduisez les coûts.",
-        insight_roi_high: "Excellent ROI ({roi}%).",
-        insight_roi_mid: "Bon ROI ({roi}%).",
-        insight_roi_low: "Faible ROI ({roi}%).",
-        insight_ret_high: "Taux de retour élevé ({rr}%).",
-        insight_ret_low: "Taux de retour faible ({rr}%).",
-        status_loss: "Perte",
-        status_low: "Faible",
-        status_ok: "OK",
-        status_good: "Bon",
-        cur_dzd: "DA"
-      }
-    };
-
-    function t(key, params = {}) {
-      let str = translations[currentLang][key] || key;
-      Object.keys(params).forEach(k => {
-        str = str.replace(`{${k}}`, params[k]);
-      });
-      return str;
-    }
-
-    function applyTranslations() {
-      document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.getAttribute("data-i18n");
-        el.textContent = t(key);
-      });
-      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
-        const key = el.getAttribute("data-i18n-placeholder");
-        el.placeholder = t(key);
-      });
-      const hint = document.getElementById("fxHint");
-      if(hint) hint.textContent = `${currentCurrency} ${(getStoredFx(currentCurrency) || fxRates[currentCurrency]).toFixed(2)}`;
-    }
-
-    function changeLanguage(lang) {
-      currentLang = lang;
-      document.documentElement.lang = lang;
-      document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
-      setActiveByData("[data-lang]", "lang", lang);
-      applyTranslations();
-      calculate();
-      calculateMonthly();
-    }
-
-    function setActiveByData(selector, dataAttr, value) {
-      document.querySelectorAll(selector).forEach(btn => {
-        if(btn.dataset[dataAttr] === value) btn.classList.add("active");
-        else btn.classList.remove("active");
-      });
-    }
-
-    function changeCurrency(curr) {
-      currentCurrency = curr;
-      setActiveByData("[data-currency]", "currency", curr);
-      
-      const stored = getStoredFx(curr);
-      const exInput = document.getElementById("exchangeRate");
-      if(exInput) {
-        exInput.value = stored ? stored : (fxRates[curr] || "");
-      }
-      
-      applyTranslations();
-      calculate(); 
-      calculateMonthly();
-    }
-
-    function onExchangeInput() {
-      const val = parseFloat(document.getElementById("exchangeRate").value);
-      if(!isNaN(val)) {
-        localStorage.setItem(`fx_${currentCurrency}`, val);
-        const hint = document.getElementById("fxHint");
-        if(hint) hint.textContent = `${currentCurrency} ${val.toFixed(2)}`;
-        calculate();
-        calculateMonthly();
-      }
-    }
-
-    function getStoredFx(curr) {
-      const s = localStorage.getItem(`fx_${curr}`);
-      return s ? parseFloat(s) : null;
-    }
-
-    function switchTab(tabName, btnElement) {
-      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
-      document.getElementById(`tab-${tabName}`).classList.add("active");
-      document.querySelectorAll(".tab-button").forEach(el => el.classList.remove("active"));
-      btnElement.classList.add("active");
-      
-      if(tabName === "charts") updateCharts();
-      if(tabName === "discounts") calculateDiscount();
-    }
-    
-    // Scenario Function
-    function applyScenario(num) {
-      const scenarios = {
-        1: { wholesale: 1000, exchange: 250, confirm: 60, delivery: 80, ads: 20, cpo: 2.5, extra: 200, return: 300, profit: 800 },
-        2: { wholesale: 1500, exchange: 245, confirm: 70, delivery: 85, ads: 30, cpo: 3.0, extra: 250, return: 350, profit: 1200 },
-        3: { wholesale: 2000, exchange: 248, confirm: 50, delivery: 75, ads: 50, cpo: 4.0, extra: 300, return: 400, profit: 1500 },
-        4: { wholesale: 800, exchange: 250, confirm: 80, delivery: 90, ads: 15, cpo: 1.5, extra: 150, return: 250, profit: 600 }
-      };
-      
-      const s = scenarios[num];
-      if(!s) return;
-      
-      if(document.getElementById("wholesalePrice")) document.getElementById("wholesalePrice").value = s.wholesale;
-      if(document.getElementById("exchangeRate")) document.getElementById("exchangeRate").value = s.exchange;
-      if(document.getElementById("confirmRate")) document.getElementById("confirmRate").value = s.confirm;
-      if(document.getElementById("deliveryRate")) document.getElementById("deliveryRate").value = s.delivery;
-      if(document.getElementById("dailyAdSpend")) document.getElementById("dailyAdSpend").value = s.ads;
-      if(document.getElementById("costPerOrder")) document.getElementById("costPerOrder").value = s.cpo;
-      if(document.getElementById("additionalCosts")) document.getElementById("additionalCosts").value = s.extra;
-      if(document.getElementById("returnCost")) document.getElementById("returnCost").value = s.return;
-      
-      if(document.getElementById("profitMarginInput")) document.getElementById("profitMarginInput").value = s.profit;
-      isEditingMargin = true;
-      isEditingPrice = false;
-      
-      calculate();
-      calculateMonthly();
-      calculateDiscount();
-      showSuccessMessage(`تم تطبيق سيناريو ${num}`, "info");
-    }
-
-    function onFinalPriceChange() {
-      isEditingPrice = true;
-      isEditingMargin = false;
-      calculate();
-    }
-    function onProfitMarginChange() {
-      isEditingMargin = true;
-      isEditingPrice = false;
-      calculate();
-    }
-
-    function calculate() {
-      const wholesale = parseFloat(document.getElementById("wholesalePrice").value) || 0;
-      const exchange = parseFloat(document.getElementById("exchangeRate").value) || 0;
-      const confirm = parseFloat(document.getElementById("confirmRate").value) || 0;
-      const delivery = parseFloat(document.getElementById("deliveryRate").value) || 0;
-      const dailyAd = parseFloat(document.getElementById("dailyAdSpend").value) || 0;
-      const costPer = parseFloat(document.getElementById("costPerOrder").value) || 0;
-      const additionalCostsValue = parseFloat(document.getElementById("additionalCosts").value) || 0;
-      const returnCost = parseFloat(document.getElementById("returnCost").value) || 0;
-
-      const dailyOrders = costPer > 0 ? (dailyAd / costPer) : 0;
-      const confirmedOrders = dailyOrders * (confirm / 100);
-      const deliveredOrders = confirmedOrders * (delivery / 100);
-      const returnedOrders = confirmedOrders - deliveredOrders;
-      const returnRate = confirmedOrders > 0 ? (returnedOrders / confirmedOrders) * 100 : 0;
-
-      const totalReturnCost = returnedOrders * returnCost;
-      const finalCostPerOrder = dailyOrders > 0 ? (dailyAd / dailyOrders) : 0;
-      const finalCostDZD = finalCostPerOrder * exchange;
-      
-      // Cost of Sold Goods = wholesale + ads + extra + (returnCost distributed)
-      // Actually we sum total costs then divide or sum per unit
-      const totalCost = wholesale + finalCostDZD + additionalCostsValue + (deliveredOrders > 0 ? (totalReturnCost / deliveredOrders) : 0);
-
-      let calculatedFinalPrice = 0;
-      let profitMargin = 0;
-
-      if (isEditingPrice) {
-        calculatedFinalPrice = parseFloat(document.getElementById("finalPrice").value) || 0;
-        profitMargin = calculatedFinalPrice - totalCost;
-        if(document.getElementById("profitMarginInput")) {
-            // Avoid infinite loop by only setting if not focused or carefully
-            // But here we just update display or value. 
-            // Better to only update value if user is not typing in it
-            if(document.activeElement.id !== "profitMarginInput") {
-                document.getElementById("profitMarginInput").value = profitMargin > 0 ? profitMargin.toFixed(0) : 0;
-            }
-        }
-      } else {
-        // Default or margin editing
-        profitMargin = parseFloat(document.getElementById("profitMarginInput").value) || 0;
-        calculatedFinalPrice = totalCost + profitMargin;
-        if(document.activeElement.id !== "finalPrice") {
-             document.getElementById("finalPrice").value = calculatedFinalPrice > 0 ? calculatedFinalPrice.toFixed(0) : 0;
-        }
-      }
-
-      const netProfit = profitMargin; // Per unit
-      const dailyNetProfit = (netProfit * deliveredOrders) - totalReturnCost; // Wait, totalReturnCost is already in unit cost? 
-      // Let's refine formula:
-      // Unit Cost (Sold) = Wholesale + Ad(allocated) + Extra + Return(allocated)
-      // Unit Profit = Price - Unit Cost
-      // Daily Profit = Unit Profit * Delivered
-      // This matches: (Price * Del) - (Unit Cost * Del)
-      // Unit Cost * Del = (Whole*Del) + (Ad*Del/Orders? No Ad is fixed daily)
-      
-      // Let's stick to simple Daily P&L:
-      // Revenue = Price * Delivered
-      // Expenses = (Whole * Delivered) + (Ads Daily * Exch) + (Extra * Delivered) + (Return * Returned)
-      // Profit = Revenue - Expenses
-      
-      // Re-calculate based on daily totals for accuracy
-      const dailyRevenue = calculatedFinalPrice * deliveredOrders;
-      const dailyWholesaleCost = wholesale * deliveredOrders; // Assuming we only pay wholesale for delivered? Usually confirm but let's assume COD model often only pays for what ships/delivers or maybe ships. 
-      // If we buy stock upfront, it's different. Dropshipping model: pay when confirmed/shipped.
-      // Let's assume we pay wholesale for every CONFIRMED order (shipped), then returned ones come back? 
-      // Simple model: Cost of Goods Sold (COGS) for delivered items. Returned items go back to stock (minus return fees).
-      
-      const dailyTotalExpenses = (wholesale * deliveredOrders) + (dailyAd * exchange) + (additionalCostsValue * deliveredOrders) + (returnedOrders * returnCost);
-      
-      // Recalculate Unit metrics based on these daily totals to be consistent
-      // Unit Profit = (Daily Revenue - Daily Expenses) / Delivered
-      
-      const realDailyProfit = dailyRevenue - dailyTotalExpenses;
-      const realUnitProfit = deliveredOrders > 0 ? (realDailyProfit / deliveredOrders) : 0;
-      
-      // Update the variables used for display
-      const roi = dailyTotalExpenses > 0 ? (realDailyProfit / dailyTotalExpenses) * 100 : 0;
-      
-      calculationResults = {
-        wholesale, exchange, confirm, delivery, dailyAd, costPer, additionalCostsValue, returnCost,
-        dailyOrders, confirmedOrders, deliveredOrders, returnedOrders, returnRate,
-        totalReturnCost, finalCostPerOrder, finalCostDZD,
-        totalCost: (dailyTotalExpenses / (deliveredOrders || 1)), // Approx unit cost
-        calculatedFinalPrice, 
-        profitMargin: realUnitProfit, 
-        netProfit: realUnitProfit,
-        dailyNetProfit: realDailyProfit, 
-        revenue: dailyRevenue, 
-        totalDailyCosts: dailyTotalExpenses, 
-        roi
-      };
-
-      // ===== DISPLAY =====
-      document.getElementById("dailyOrders").textContent = dailyOrders.toFixed(0);
-      document.getElementById("confirmedOrders").textContent = confirmedOrders.toFixed(0);
-      document.getElementById("deliveredOrders").textContent = deliveredOrders.toFixed(0);
-      document.getElementById("returnedOrders").textContent = returnedOrders.toFixed(0);
-      document.getElementById("returnRate").textContent = `${returnRate.toFixed(0)}%`;
-
-      document.getElementById("costPerOrderDisplay").textContent = costPer.toFixed(2);
-      document.getElementById("finalCostPerOrder").textContent = finalCostPerOrder.toFixed(2);
-      document.getElementById("finalCostDZD").textContent = finalCostDZD.toFixed(0);
-
-      document.getElementById("wholesalePriceDisplay").textContent = wholesale.toFixed(0);
-      document.getElementById("adCostDisplay").textContent = finalCostDZD.toFixed(0);
-      
-      // Display Unit Cost approx
-      const unitCostDisplay = deliveredOrders > 0 ? (dailyTotalExpenses / deliveredOrders) : 0;
-      document.getElementById("totalCost").textContent = unitCostDisplay.toFixed(0);
-
-      document.getElementById("finalPriceDisplay").textContent = calculatedFinalPrice.toFixed(0);
-      document.getElementById("profitMarginDisplay").textContent = realUnitProfit.toFixed(0);
-      document.getElementById("netProfitDisplay").textContent = realUnitProfit.toFixed(0);
-
-      if (returnCost > 0 && returnedOrders > 0){
-        document.getElementById("returnCostRow").classList.remove("hidden");
-        document.getElementById("totalReturnCost").textContent = (returnedOrders * returnCost).toFixed(0);
-        document.getElementById("dailyProfitCalc").textContent = `${dailyRevenue.toFixed(0)} - ${dailyTotalExpenses.toFixed(0)}`;
-      } else {
-        document.getElementById("returnCostRow").classList.add("hidden");
-        document.getElementById("dailyProfitCalc").textContent = `${dailyRevenue.toFixed(0)} - ${dailyTotalExpenses.toFixed(0)}`;
-      }
-
-      document.getElementById("dailyNetProfit").textContent = realDailyProfit.toFixed(0);
-      document.getElementById("revenue").textContent = dailyRevenue.toFixed(0);
-      document.getElementById("totalDailyCosts").textContent = dailyTotalExpenses.toFixed(0);
-      document.getElementById("roi").textContent = `${roi.toFixed(0)}%`;
-
-      if (additionalCostsValue > 0){
-        document.getElementById("additionalCostsRow").classList.remove("hidden");
-        document.getElementById("additionalCostsDisplay").textContent = additionalCostsValue.toFixed(0);
-      } else {
-        document.getElementById("additionalCostsRow").classList.add("hidden");
-      }
-
-      const lossWarning = document.getElementById("lossWarning");
-      if (realDailyProfit < 0) lossWarning.classList.remove("hidden");
-      else lossWarning.classList.add("hidden");
-    }
-
-    function calculateMonthly(){
-      if (!calculationResults.dailyNetProfit && calculationResults.dailyNetProfit !== 0) calculate();
-
-      const monthlyRevenue = calculationResults.revenue * 30;
-      const monthlyCosts = calculationResults.totalDailyCosts * 30;
-      const monthlyProfit = calculationResults.dailyNetProfit * 30;
-      const monthlyOrders = calculationResults.dailyOrders * 30;
-      const monthlyDelivered = calculationResults.deliveredOrders * 30;
-      const monthlyReturned = calculationResults.returnedOrders * 30;
-      const monthlyReturnCostTotal = (calculationResults.returnedOrders * parseFloat(document.getElementById("returnCost").value || 0)) * 30;
-      const monthlyROI = calculationResults.roi;
-
-      document.getElementById("monthlyRevenue").textContent = monthlyRevenue.toLocaleString();
-      document.getElementById("monthlyCosts").textContent = monthlyCosts.toLocaleString();
-      document.getElementById("monthlyProfit").textContent = monthlyProfit.toLocaleString();
-
-      document.getElementById("monthlyOrders").textContent = monthlyOrders.toFixed(0);
-      document.getElementById("monthlyDelivered").textContent = monthlyDelivered.toFixed(0);
-      document.getElementById("monthlyReturned").textContent = monthlyReturned.toFixed(0);
-      document.getElementById("monthlyReturnCost").textContent = monthlyReturnCostTotal.toLocaleString();
-      document.getElementById("monthlyROI").textContent = `${monthlyROI.toFixed(1)}%`;
-
-      // Insights
-      const insightsDiv = document.getElementById("monthlyInsights");
-      insightsDiv.innerHTML = "";
-      
-      const addInsight = (text, colorClass) => {
-        const div = document.createElement("div");
-        div.className = `p-3 rounded-lg border ${colorClass} bg-opacity-10 flex items-center gap-2`;
-        div.innerHTML = text;
-        insightsDiv.appendChild(div);
-      };
-
-      if(monthlyProfit > 1000000) addInsight("🚀 " + t("insight_profit_high"), "border-emerald-500 bg-emerald-500 text-emerald-200");
-      else if(monthlyProfit > 200000) addInsight("✅ " + t("insight_profit_mid"), "border-blue-500 bg-blue-500 text-blue-200");
-      else if(monthlyProfit > 0) addInsight("⚠️ " + t("insight_profit_low"), "border-orange-500 bg-orange-500 text-orange-200");
-      else addInsight("🛑 " + t("insight_profit_neg"), "border-red-500 bg-red-500 text-red-200");
-
-      if(monthlyROI > 200) addInsight("🔥 " + t("insight_roi_high", {roi: monthlyROI.toFixed(0)}), "border-emerald-500 bg-emerald-500 text-emerald-200");
-      else if(monthlyROI > 50) addInsight("📈 " + t("insight_roi_mid", {roi: monthlyROI.toFixed(0)}), "border-blue-500 bg-blue-500 text-blue-200");
-      else addInsight("📉 " + t("insight_roi_low", {roi: monthlyROI.toFixed(0)}), "border-red-500 bg-red-500 text-red-200");
-
-      if(calculationResults.returnRate > 30) addInsight("📦 " + t("insight_ret_high", {rr: calculationResults.returnRate.toFixed(0)}), "border-red-500 bg-red-500 text-red-200");
-    }
-
-    function calculateDiscount() {
-      const discount = parseInt(document.getElementById("discountSlider").value);
-      document.getElementById("discountPercent").textContent = discount;
-
-      const basePrice = calculationResults.calculatedFinalPrice || 0;
-      const baseProfit = calculationResults.netProfit || 0;
-      
-      const discountedPrice = basePrice * (1 - (discount / 100));
-      const discountedProfit = baseProfit - (basePrice - discountedPrice);
-
-      document.getElementById("discountedPrice").textContent = discountedPrice.toFixed(0);
-      document.getElementById("discountedProfit").textContent = discountedProfit.toFixed(0);
-
-      // Table
-      const table = document.getElementById("discountTable");
-      table.innerHTML = "";
-      
-      [5, 10, 15, 20, 25, 30].forEach(d => {
-        const p = basePrice * (1 - (d / 100));
-        const prof = baseProfit - (basePrice - p);
-        const row = document.createElement("div");
-        row.className = "flex justify-between p-3 glass rounded-lg items-center";
-        row.innerHTML = `
-          <div class="font-bold text-white">-${d}%</div>
-          <div class="text-white/80">${p.toFixed(0)} ${t("cur_dzd")}</div>
-          <div class="font-bold ${prof > 0 ? 'text-emerald-300' : 'text-red-300'}">${prof.toFixed(0)} ${t("cur_dzd")}</div>
-        `;
-        table.appendChild(row);
-      });
-    }
-
-    // Charts
-    let costPieChart, profitBarChart, monthlyLineChart, ordersDonutChart, roiChart;
-
-    function updateCharts() {
-      if(!calculationResults.revenue) return;
-      
-      const r = calculationResults;
-      const ctx1 = document.getElementById('costPieChart');
-      const ctx2 = document.getElementById('profitBarChart');
-      const ctx3 = document.getElementById('monthlyLineChart');
-      const ctx4 = document.getElementById('ordersDonutChart');
-      const ctx5 = document.getElementById('roiChart');
-
-      if(costPieChart) costPieChart.destroy();
-      if(profitBarChart) profitBarChart.destroy();
-      if(monthlyLineChart) monthlyLineChart.destroy();
-      if(ordersDonutChart) ordersDonutChart.destroy();
-      if(roiChart) roiChart.destroy();
-
-      Chart.defaults.color = 'rgba(255,255,255,0.7)';
-      Chart.defaults.borderColor = 'rgba(255,255,255,0.1)';
-
-      // 1. Cost Breakdown
-      // Wholesale total, Ads total, Extra total, Return total
-      const totalWholesale = r.wholesale * r.deliveredOrders; // Approx
-      const totalAds = r.dailyAd * r.exchange;
-      const totalExtra = r.additionalCostsValue * r.deliveredOrders;
-      const totalReturn = r.returnedOrders * r.returnCost;
-      
-      costPieChart = new Chart(ctx1, {
-        type: 'doughnut',
-        data: {
-          labels: [t('wholesaleLine'), t('adsLine'), t('extraLine'), t('returnedOrders')],
-          datasets: [{
-            data: [totalWholesale, totalAds, totalExtra, totalReturn],
-            backgroundColor: ['#8b5cf6', '#22d3ee', '#f59e0b', '#ef4444'],
-            borderWidth: 0
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-      });
-
-      // 2. Profit vs Revenue
-      profitBarChart = new Chart(ctx2, {
-        type: 'bar',
-        data: {
-          labels: [t('revenue'), t('totalCost'), t('netProfit')],
-          datasets: [{
-            label: 'Daily Values',
-            data: [r.revenue, r.totalDailyCosts, r.dailyNetProfit],
-            backgroundColor: ['#10b981', '#ef4444', '#8b5cf6'],
-            borderRadius: 8
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-      });
-
-      // 3. Monthly Projection Line
-      const days = Array.from({length: 30}, (_, i) => i + 1);
-      const profitData = days.map(d => r.dailyNetProfit * d);
-      
-      monthlyLineChart = new Chart(ctx3, {
-        type: 'line',
-        data: {
-          labels: days,
-          datasets: [{
-            label: t('monthlyProfit'),
-            data: profitData,
-            borderColor: '#22d3ee',
-            backgroundColor: 'rgba(34,211,238,0.1)',
-            fill: true,
-            tension: 0.4
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      // 4. Orders Donut
-      ordersDonutChart = new Chart(ctx4, {
-        type: 'doughnut',
-        data: {
-          labels: [t('deliveredOrders'), t('returnedOrders')],
-          datasets: [{
-            data: [r.deliveredOrders, r.returnedOrders],
-            backgroundColor: ['#10b981', '#ef4444'],
-            borderWidth: 0
-          }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-      });
-
-      // 5. ROI Gauge (Doughnut trick)
-      // ROI can be 0 to >100. Let's show it as a single value or simple bar
-      // Let's do a bar for simplicity or a gauge
-      roiChart = new Chart(ctx5, {
-        type: 'bar',
-        data: {
-          labels: ['ROI %'],
-          datasets: [{
-            data: [r.roi],
-            backgroundColor: r.roi > 0 ? '#10b981' : '#ef4444',
-            borderRadius: 10,
-            barThickness: 40
-          }]
-        },
-        options: { 
-            indexAxis: 'y', 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            plugins: { legend: { display: false } },
-            scales: { x: { min: 0 } }
-        }
-      });
-    }
-
-    function showSuccessMessage(message, type = "success"){
-      const messageDiv = document.getElementById("successMessage");
-      const messageText = document.getElementById("successText");
-      if (!messageDiv || !messageText) return;
-
-      messageText.textContent = message;
-      messageDiv.classList.remove("hidden");
-
-      setTimeout(() => {
-        messageDiv.classList.add("hidden");
-      }, 3000);
-    }
-
-    function hideSuccessMessage(){
-      document.getElementById("successMessage")?.classList.add("hidden");
-    }
-
-    function saveData(){
-      const data = {
-        productName: document.getElementById("productName")?.value || "",
-        wholesalePrice: document.getElementById("wholesalePrice")?.value || "",
-        exchangeRate: document.getElementById("exchangeRate")?.value || "",
-        confirmRate: document.getElementById("confirmRate")?.value || "",
-        deliveryRate: document.getElementById("deliveryRate")?.value || "",
-        dailyAdSpend: document.getElementById("dailyAdSpend")?.value || "",
-        costPerOrder: document.getElementById("costPerOrder")?.value || "",
-        additionalCosts: document.getElementById("additionalCosts")?.value || "",
-        returnCost: document.getElementById("returnCost")?.value || "",
-        finalPrice: document.getElementById("finalPrice")?.value || "",
-        profitMarginInput: document.getElementById("profitMarginInput")?.value || "",
-        lang: currentLang,
-        currency: currentCurrency,
-        timestamp: new Date().toISOString()
-      };
-
-      localStorage.setItem("pricingToolData", JSON.stringify(data));
-      showSuccessMessage(t("msg_saved"), "success");
-    }
-
-    function loadData(){
-      const saved = localStorage.getItem("pricingToolData");
-      if (!saved){
-        showSuccessMessage(t("msg_no_saved"), "warning");
-        return;
-      }
-
-      const data = JSON.parse(saved);
-
-      if (document.getElementById("productName")) document.getElementById("productName").value = data.productName ?? "";
-      if (document.getElementById("wholesalePrice")) document.getElementById("wholesalePrice").value = data.wholesalePrice ?? "";
-      if (document.getElementById("exchangeRate")) document.getElementById("exchangeRate").value = data.exchangeRate ?? (fxRates[currentCurrency] ?? fxRates.DZD);
-      if (document.getElementById("confirmRate")) document.getElementById("confirmRate").value = data.confirmRate ?? "";
-      if (document.getElementById("deliveryRate")) document.getElementById("deliveryRate").value = data.deliveryRate ?? "";
-      if (document.getElementById("dailyAdSpend")) document.getElementById("dailyAdSpend").value = data.dailyAdSpend ?? "";
-      if (document.getElementById("costPerOrder")) document.getElementById("costPerOrder").value = data.costPerOrder ?? "";
-      if (document.getElementById("additionalCosts")) document.getElementById("additionalCosts").value = data.additionalCosts ?? "";
-      if (document.getElementById("returnCost")) document.getElementById("returnCost").value = data.returnCost ?? "";
-      if (document.getElementById("finalPrice")) document.getElementById("finalPrice").value = data.finalPrice ?? "";
-      if (document.getElementById("profitMarginInput")) document.getElementById("profitMarginInput").value = data.profitMarginInput ?? "";
-
-      if (data.currency) currentCurrency = data.currency;
-      if (data.lang) currentLang = data.lang;
-
-      setActiveByData("[data-lang]", "lang", currentLang);
-      setActiveByData("[data-currency]", "currency", currentCurrency);
-
-      applyTranslations();
-      changeCurrency(currentCurrency);
-      changeLanguage(currentLang);
-
-      calculate();
-      calculateMonthly();
-      calculateDiscount();
-
-      showSuccessMessage(t("msg_loaded"), "success");
-    }
-
-    function resetAll(){
-      if (!confirm(t("confirm_reset"))) return;
-
-      const ids = [
-        "productName","wholesalePrice","exchangeRate","confirmRate","deliveryRate",
-        "dailyAdSpend","costPerOrder","additionalCosts","returnCost","finalPrice","profitMarginInput"
-      ];
-      ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = "";
-      });
-
-      isEditingPrice = false;
-      isEditingMargin = false;
-
-      const ex = document.getElementById("exchangeRate");
-      if (ex) ex.value = getStoredFx(currentCurrency) ?? (fxRates[currentCurrency] ?? fxRates.DZD);
-
-      calculate();
-      calculateMonthly();
-      calculateDiscount();
-      if (document.getElementById("tab-charts")?.classList.contains("active")) updateCharts();
-
-      showSuccessMessage(t("msg_reset"), "success");
-    }
-
-    function loadExample(){
-      if (document.getElementById("productName")) document.getElementById("productName").value = "منتج تجريبي";
-      if (document.getElementById("wholesalePrice")) document.getElementById("wholesalePrice").value = 1200;
-      if (document.getElementById("exchangeRate")) document.getElementById("exchangeRate").value = (fxRates[currentCurrency] ?? fxRates.DZD);
-      if (document.getElementById("confirmRate")) document.getElementById("confirmRate").value = 60;
-      if (document.getElementById("deliveryRate")) document.getElementById("deliveryRate").value = 80;
-      if (document.getElementById("dailyAdSpend")) document.getElementById("dailyAdSpend").value = 25;
-      if (document.getElementById("costPerOrder")) document.getElementById("costPerOrder").value = 2.5;
-      if (document.getElementById("additionalCosts")) document.getElementById("additionalCosts").value = 200;
-      if (document.getElementById("returnCost")) document.getElementById("returnCost").value = 300;
-
-      if (document.getElementById("profitMarginInput")) document.getElementById("profitMarginInput").value = 800;
-      isEditingMargin = true;
-      isEditingPrice = false;
-
-      calculate();
-      calculateMonthly();
-      calculateDiscount();
-
-      showSuccessMessage(t("msg_example"), "success");
-    }
-
-    async function exportToPDF(){
-      try{
-        showSuccessMessage(t("msg_pdf_generating"), "info");
-
-        const { jsPDF } = window.jspdf || {};
-        if (!jsPDF || !window.html2canvas){
-          showSuccessMessage(t("msg_pdf_error"), "danger");
-          return;
-        }
-
-        const node = document.querySelector(".content") || document.body;
-        const canvas = await html2canvas(node, { scale: 2, backgroundColor: "#ffffff" });
-        const imgData = canvas.toDataURL("image/png");
-
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-
-        const imgWidth = pageWidth;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        let y = 0;
-        pdf.addImage(imgData, "PNG", 0, y, imgWidth, imgHeight);
-
-        let heightLeft = imgHeight - pageHeight;
-        while (heightLeft > 0){
-          y -= pageHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, "PNG", 0, y, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-
-        pdf.save("COD-Pricing-Plan.pdf");
-        showSuccessMessage(t("msg_pdf_done"), "success");
-
-      } catch(err){
-        console.error(err);
-        showSuccessMessage(t("msg_pdf_error"), "danger");
-      }
-    }
-  </script>
- <!-- ===================== CHAT BOT WIDGET (NEW STREAMING) ===================== -->
-<div id="chat-widget" class="no-print" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
-    <!-- نافذة الشات -->
-    <div id="chatWindow" style="display: none; position: absolute; bottom: 80px; right: 0; width: 350px; height: 500px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; font-family: 'Tajawal', sans-serif; border: 1px solid rgba(0,0,0,0.1);">
-        <!-- الهيدر -->
-        <div class="chat-header" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="font-size: 20px;">🤖</span>
-                <span>المستشار الذكي</span>
-            </div>
-            <span onclick="toggleChat()" style="cursor: pointer; opacity: 0.8; padding: 5px;">✕</span>
+          </div>
         </div>
-        
-        <!-- جسم الشات -->
-        <div id="chatBody" class="chat-body" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 10px;">
-            <div class="msg bot-msg" style="padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; background: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px;">
-                مرحبا! أنا هنا باش نعاونك في حساباتك واستراتيجية البيع. واش تحب تسقسي؟
-            </div>
-        </div>
-        
-        <!-- الفوتر (حقل الكتابة) -->
-        <div class="chat-footer" style="padding: 12px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; background: white;">
-            <input type="text" id="chatInput" placeholder="اكتب سؤالك..." style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; outline: none; color: #333;" onkeypress="handleEnter(event)">
-            <button onclick="sendMessage()" style="background: #2563eb; color: white; padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s;">➤</button>
-        </div>
-    </div>
-    
-    <!-- زر الفتح -->
-    <button id="chat-toggle-btn" onclick="toggleChat()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; transition: transform 0.2s;">💬</button>
-</div>
 
-<!-- سكريبت الشات بوت -->
+        <!-- Footer -->
+        <div class="p-6 text-center border-t border-white/10 no-print">
+          <p class="text-white/90 mb-2" data-i18n="footerTitle">PRO • COD Pricing Tool</p>
+          <p class="text-xs text-white/60" data-i18n="footerSub">v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts</p>
+        </div>
+
+      </div> <!-- /Main Card -->
+
+    </div> <!-- /max-w -->
+  </div> <!-- /min-h -->
+<!-- ===================== PART 6 / 7 (UPDATED FROM SCRATCH) ===================== -->
 <script>
-    // 1. فتح وإغلاق النافذة
-    function toggleChat() {
-        const win = document.getElementById('chatWindow');
-        if (!win) return;
-        const isHidden = win.style.display === 'none' || win.style.display === '';
-        win.style.display = isHidden ? 'flex' : 'none';
-        if (isHidden) setTimeout(() => document.getElementById('chatInput')?.focus(), 100);
+/* -------------------------------------------
+   Phase 2: Language + Currency + i18n
+------------------------------------------- */
+
+let currentLang = localStorage.getItem("toolLang") || "ar";
+let currentCurrency = localStorage.getItem("toolCurrency") || "DZD";
+
+const fxRates = {
+  DZD: 248.00,
+  MAD: 9.2113,
+  TND: 2.9328
+};
+
+const I18N = {
+  ar: {
+    fxPrefix: "سعر الصرف افتراضي (USD → العملة): ",
+    fxHintNote: "يمكنك تغيير سعر الصرف من خانة “سعر الصرف” وسيُحفظ تلقائياً.",
+
+    heroTitle: "أداة تسعير المنتجات",
+    heroTag: "أداة احترافية لحساب تسعير المنتجات في التجارة الإلكترونية بالجزائر",
+    heroSub1: "توقع أرباحك ومصاريفك على مدار 30 يوم",
+    heroSub2: "احسب الخصم الأمثل دون خسارة أرباحك",
+    heroSub3: "تصور بياناتك بشكل مرئي وسهل الفهم",
+
+    tab_calculator: "حاسبة التسعير",
+    tab_monthly: "توقعات شهرية",
+    tab_discounts: "حاسبة الخصومات",
+    tab_charts: "الرسوم البيانية",
+
+    btn_save: "حفظ",
+    btn_load: "استرجاع",
+    btn_pdf: "PDF",
+    btn_reset: "مسح الكل",
+    btn_example: "مثال",
+
+    inputsTitle: "الإدخالات",
+    lbl_productName: "اسم المنتج",
+    ph_productName: "مثال: ساعة ذكية",
+    lbl_wholesale: "سعر الشراء بالجملة (دج)",
+    lbl_exchange: "سعر الصرف",
+    lbl_confirm: "نسبة التأكيد (%)",
+    lbl_delivery: "نسبة التوصيل (%)",
+    lbl_dailyBudget: "الميزانية اليومية (USD)",
+    lbl_cpo: "التكلفة لكل طلب (USD)",
+    lbl_extra: "تكاليف إضافية (دج)",
+    lbl_returnCost: "تكلفة الإرجاع لكل طلب (دج)",
+    lbl_finalPrice: "السعر النهائي (دج)",
+    lbl_profitMargin: "الربح (دج)",
+    hint_finalPrice: "إذا كتبت السعر النهائي يتم حساب الربح تلقائياً",
+    hint_profit: "إذا كتبت الربح يتم اقتراح السعر النهائي تلقائياً",
+
+    lossWarning: "تحذير: أنت في خسارة",
+    lossHint: "راجع السعر أو التكاليف قبل إطلاق الحملات.",
+
+    sec_orders: "إجمالي الطلبات المتوقعة:",
+    dailyOrders: "الطلبات اليومية:",
+    confirmedOrders: "الطلبات المؤكدة:",
+    deliveredOrders: "الطلبات المستلمة:",
+    returnedOrders: "الطلبات المرتجعة:",
+    returnRate: "نسبة الإرجاع:",
+    returnCostDaily: "تكلفة الإرجاع اليومية:",
+
+    sec_marketing: "تحليل تكاليف التسويق",
+    cpo: "التكلفة لكل طلب:",
+    finalCpo: "التكلفة الفعلية:",
+    finalCpoDzd: "التكلفة الفعلية (DZD):",
+
+    sec_costDetails: "تفاصيل التكلفة",
+    wholesaleLine: "سعر الجملة:",
+    adsLine: "تكلفة الإعلانات:",
+    extraLine: "تكاليف إضافية:",
+    totalCost: "التكلفة الإجمالية:",
+
+    suggestedFinalPrice: "السعر النهائي المقترح",
+    currencyNote: "بالدينار (DZD) حسب سعر الصرف الحالي",
+    profitMargin: "هامش الربح:",
+    netProfit: "الربح الصافي:",
+
+    sec_dailyProfit: "تحليل الربح اليومي",
+    profitFormula: "المعادلة:",
+
+    sec_roi: "العائد على الاستثمار",
+    revenue: "الإيرادات اليومية:",
+    dailyCosts: "التكاليف اليومية:",
+    roi: "ROI",
+
+    monthlyTitle: "توقعات الربح الشهري",
+    monthlyHint: "حساب تقريبي على 30 يوم بناءً على قيمك الحالية",
+    monthlyRevenue: "الإيرادات الشهرية",
+    monthlyCosts: "التكاليف الشهرية",
+    monthlyProfit: "الربح الصافي الشهري",
+    monthlyDetails: "تفاصيل الشهر",
+    monthlyOrders: "الطلبات الشهرية",
+    monthlyDelivered: "الطلبات المستلمة",
+    monthlyReturned: "الطلبات المرتجعة",
+    monthlyReturnCost: "تكلفة الإرجاع الشهرية",
+    monthlyROI: "ROI",
+    monthlyInsightsTitle: "نصائح ذكية",
+
+    discountsTitle: "حاسبة العروض والخصومات",
+    discountsHint: "اختر نسبة الخصم وشاهد تأثيرها على الربح",
+    discountSliderTitle: "نسبة الخصم",
+    discountedPriceTitle: "السعر بعد الخصم",
+    discountedProfitTitle: "الربح بعد الخصم",
+    discountsTableTitle: "جدول الخصومات المقترحة",
+
+    chartsTitle: "الرسوم البيانية والتحليل",
+    chartsHint: "تحديث الرسوم يتم تلقائياً عند فتح التبويب",
+    chart_cost_breakdown: "توزيع التكاليف",
+    chart_profit_overview: "مقارنة الأرباح",
+    chart_daily_profit: "توقع الربح اليومي (30 يوم)",
+    chart_orders: "توزيع الطلبات",
+    chart_roi: "ROI",
+
+    footerTitle: "PRO • COD Pricing Tool",
+    footerSub: "v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts",
+
+    msg_pdf_generating: "جاري إنشاء ملف PDF...",
+    msg_pdf_done: "تم تصدير PDF بنجاح!",
+    msg_pdf_error: "حدث خطأ أثناء إنشاء PDF",
+    msg_saved: "تم حفظ البيانات بنجاح!",
+    msg_no_saved: "لا توجد بيانات محفوظة سابقاً!",
+    msg_loaded: "تم استرجاع البيانات بنجاح!",
+    msg_reset: "تم مسح جميع البيانات!",
+    msg_example: "تم تحميل المثال التوضيحي!",
+    confirm_reset: "هل أنت متأكد من مسح جميع البيانات؟",
+
+    insight_profit_high: "ربح شهري ممتاز.",
+    insight_profit_mid: "ربح جيد. حاول زيادة حجم المبيعات.",
+    insight_profit_low: "الربح منخفض. راجع التكاليف.",
+    insight_profit_neg: "أنت في خسارة. عدّل السعر أو قلّل التكاليف.",
+
+    insight_roi_high: "ROI ممتاز ({roi}%).",
+    insight_roi_mid: "ROI جيد ({roi}%).",
+    insight_roi_low: "ROI منخفض ({roi}%).",
+
+    insight_ret_high: "نسبة الإرجاع عالية ({rr}%).",
+    insight_ret_low: "نسبة الإرجاع منخفضة ({rr}%).",
+
+    status_loss: "خسارة",
+    status_low: "منخفض",
+    status_ok: "مقبول",
+    status_good: "جيد",
+
+    cur_dzd: "دج"
+  },
+
+  en: {
+    fxPrefix: "Default rate (USD → currency): ",
+    fxHintNote: "You can change the exchange rate in the “Exchange rate” field and it will be saved automatically.",
+
+    heroTitle: "Product Pricing Tool",
+    heroTag: "Pro COD pricing tool for e-commerce in Algeria",
+    heroSub1: "Forecast profits and costs over 30 days",
+    heroSub2: "Find the best discount without losing profit",
+    heroSub3: "Visualize your data clearly",
+
+    tab_calculator: "Calculator",
+    tab_monthly: "Monthly",
+    tab_discounts: "Discounts",
+    tab_charts: "Charts",
+
+    btn_save: "Save",
+    btn_load: "Load",
+    btn_pdf: "PDF",
+    btn_reset: "Reset",
+    btn_example: "Example",
+
+    inputsTitle: "Inputs",
+    lbl_productName: "Product name",
+    ph_productName: "Example: Smart watch",
+    lbl_wholesale: "Wholesale price (DZD)",
+    lbl_exchange: "Exchange rate",
+    lbl_confirm: "Confirmation rate (%)",
+    lbl_delivery: "Delivery rate (%)",
+    lbl_dailyBudget: "Daily budget (USD)",
+    lbl_cpo: "Cost per order (USD)",
+    lbl_extra: "Additional costs (DZD)",
+    lbl_returnCost: "Return cost per order (DZD)",
+    lbl_finalPrice: "Final price (DZD)",
+    lbl_profitMargin: "Profit (DZD)",
+    hint_finalPrice: "If you enter final price, profit will be calculated automatically",
+    hint_profit: "If you enter profit, final price will be suggested automatically",
+
+    lossWarning: "Warning: You are losing money",
+    lossHint: "Review price or costs before scaling ads.",
+
+    sec_orders: "Expected total orders:",
+    dailyOrders: "Daily orders:",
+    confirmedOrders: "Confirmed orders:",
+    deliveredOrders: "Delivered orders:",
+    returnedOrders: "Returned orders:",
+    returnRate: "Return rate:",
+    returnCostDaily: "Daily return cost:",
+
+    sec_marketing: "Marketing cost analysis",
+    cpo: "Cost per order:",
+    finalCpo: "Real cost per order:",
+    finalCpoDzd: "Real cost (DZD):",
+
+    sec_costDetails: "Cost details",
+    wholesaleLine: "Wholesale:",
+    adsLine: "Ads cost:",
+    extraLine: "Extra costs:",
+    totalCost: "Total cost:",
+
+    suggestedFinalPrice: "Suggested final price",
+    currencyNote: "In DZD based on current exchange rate",
+    profitMargin: "Profit margin:",
+    netProfit: "Net profit:",
+
+    sec_dailyProfit: "Daily profit analysis",
+    profitFormula: "Formula:",
+
+    sec_roi: "Return on investment",
+    revenue: "Daily revenue:",
+    dailyCosts: "Daily costs:",
+    roi: "ROI",
+
+    monthlyTitle: "Monthly profit forecast",
+    monthlyHint: "30-day estimate based on your inputs",
+    monthlyRevenue: "Monthly revenue",
+    monthlyCosts: "Monthly costs",
+    monthlyProfit: "Monthly net profit",
+    monthlyDetails: "Monthly details",
+    monthlyOrders: "Monthly orders",
+    monthlyDelivered: "Delivered orders",
+    monthlyReturned: "Returned orders",
+    monthlyReturnCost: "Monthly return cost",
+    monthlyROI: "ROI",
+    monthlyInsightsTitle: "Smart insights",
+
+    discountsTitle: "Discount calculator",
+    discountsHint: "Choose a discount and see its impact on profit",
+    discountSliderTitle: "Discount percentage",
+    discountedPriceTitle: "Discounted price",
+    discountedProfitTitle: "Discounted profit",
+    discountsTableTitle: "Suggested discounts table",
+
+    chartsTitle: "Charts & analysis",
+    chartsHint: "Charts update automatically when you open this tab",
+    chart_cost_breakdown: "Cost breakdown",
+    chart_profit_overview: "Profit overview",
+    chart_daily_profit: "Daily net profit forecast (30 days)",
+    chart_orders: "Orders distribution",
+    chart_roi: "ROI",
+
+    footerTitle: "PRO • COD Pricing Tool",
+    footerSub: "v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts",
+
+    msg_pdf_generating: "Generating PDF...",
+    msg_pdf_done: "PDF exported successfully!",
+    msg_pdf_error: "Error while generating PDF",
+    msg_saved: "Data saved successfully!",
+    msg_no_saved: "No saved data found!",
+    msg_loaded: "Data loaded successfully!",
+    msg_reset: "All data cleared!",
+    msg_example: "Example loaded!",
+    confirm_reset: "Are you sure you want to clear all data?",
+
+    insight_profit_high: "Excellent monthly profit.",
+    insight_profit_mid: "Good profit. Try increasing volume.",
+    insight_profit_low: "Low profit. Review your costs.",
+    insight_profit_neg: "You are losing money. Adjust price or reduce costs.",
+
+    insight_roi_high: "Excellent ROI ({roi}%).",
+    insight_roi_mid: "Good ROI ({roi}%).",
+    insight_roi_low: "Low ROI ({roi}%).",
+
+    insight_ret_high: "High return rate ({rr}%).",
+    insight_ret_low: "Low return rate ({rr}%).",
+
+    status_loss: "Loss",
+    status_low: "Low",
+    status_ok: "OK",
+    status_good: "Good",
+
+    cur_dzd: "DZD"
+  },
+
+  fr: {
+    fxPrefix: "Taux par défaut (USD → devise) : ",
+    fxHintNote: "Vous pouvez modifier le taux dans le champ “Taux de change” et il sera sauvegardé automatiquement.",
+
+    heroTitle: "Outil de Pricing",
+    heroTag: "Outil PRO de pricing COD pour l'e-commerce en Algérie",
+    heroSub1: "Prévoir profits et coûts sur 30 jours",
+    heroSub2: "Trouver la meilleure remise sans perdre",
+    heroSub3: "Visualiser vos données clairement",
+
+    tab_calculator: "Calcul",
+    tab_monthly: "Mensuel",
+    tab_discounts: "Remises",
+    tab_charts: "Graphiques",
+
+    btn_save: "Sauver",
+    btn_load: "Charger",
+    btn_pdf: "PDF",
+    btn_reset: "Reset",
+    btn_example: "Exemple",
+
+    inputsTitle: "Entrées",
+    lbl_productName: "Nom du produit",
+    ph_productName: "Exemple : Montre connectée",
+    lbl_wholesale: "Prix d'achat (DZD)",
+    lbl_exchange: "Taux de change",
+    lbl_confirm: "Taux de confirmation (%)",
+    lbl_delivery: "Taux de livraison (%)",
+    lbl_dailyBudget: "Budget pub/jour (USD)",
+    lbl_cpo: "Coût par commande (USD)",
+    lbl_extra: "Frais supplémentaires (DZD)",
+    lbl_returnCost: "Coût de retour (DZD)",
+    lbl_finalPrice: "Prix final (DZD)",
+    lbl_profitMargin: "Profit (DZD)",
+    hint_finalPrice: "Si vous saisissez le prix final, le profit est calculé automatiquement",
+    hint_profit: "Si vous saisissez le profit, le prix final est suggéré automatiquement",
+
+    lossWarning: "Alerte : perte",
+    lossHint: "Revoyez le prix ou les coûts avant d’augmenter la pub.",
+
+    sec_orders: "Total commandes estimées :",
+    dailyOrders: "Commandes / jour :",
+    confirmedOrders: "Confirmées :",
+    deliveredOrders: "Livrées :",
+    returnedOrders: "Retours :",
+    returnRate: "Taux de retour :",
+    returnCostDaily: "Coût de retour / jour :",
+
+    sec_marketing: "Analyse des coûts marketing",
+    cpo: "Coût/commande :",
+    finalCpo: "Coût réel/commande :",
+    finalCpoDzd: "Coût réel (DZD) :",
+
+    sec_costDetails: "Détails des coûts",
+    wholesaleLine: "Achat :",
+    adsLine: "Publicité :",
+    extraLine: "Extra :",
+    totalCost: "Coût total :",
+
+    suggestedFinalPrice: "Prix final suggéré",
+    currencyNote: "En DZD selon le taux actuel",
+    profitMargin: "Marge :",
+    netProfit: "Profit net :",
+
+    sec_dailyProfit: "Analyse du profit/jour",
+    profitFormula: "Formule :",
+
+    sec_roi: "Retour sur investissement",
+    revenue: "Revenu / jour :",
+    dailyCosts: "Coûts / jour :",
+    roi: "ROI",
+
+    monthlyTitle: "Prévision du profit mensuel",
+    monthlyHint: "Estimation 30 jours selon vos valeurs",
+    monthlyRevenue: "Revenu mensuel",
+    monthlyCosts: "Coûts mensuels",
+    monthlyProfit: "Profit net mensuel",
+    monthlyDetails: "Détails du mois",
+    monthlyOrders: "Commandes mensuelles",
+    monthlyDelivered: "Livrées",
+    monthlyReturned: "Retours",
+    monthlyReturnCost: "Coût des retours",
+    monthlyROI: "ROI",
+    monthlyInsightsTitle: "Conseils",
+
+    discountsTitle: "Calculateur de remises",
+    discountsHint: "Choisissez une remise et voyez l’impact sur le profit",
+    discountSliderTitle: "Pourcentage de remise",
+    discountedPriceTitle: "Prix remisé",
+    discountedProfitTitle: "Profit remisé",
+    discountsTableTitle: "Tableau des remises",
+
+    chartsTitle: "Graphiques & analyse",
+    chartsHint: "Mise à jour automatique à l’ouverture",
+    chart_cost_breakdown: "Répartition des coûts",
+    chart_profit_overview: "Aperçu du profit",
+    chart_daily_profit: "Prévision du profit net (30 jours)",
+    chart_orders: "Répartition des commandes",
+    chart_roi: "ROI",
+
+    footerTitle: "PRO • COD Pricing Tool",
+    footerSub: "v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts",
+
+    msg_pdf_generating: "Génération du PDF...",
+    msg_pdf_done: "PDF exporté !",
+    msg_pdf_error: "Erreur lors de la génération du PDF",
+    msg_saved: "Données sauvegardées !",
+    msg_no_saved: "Aucune donnée sauvegardée !",
+    msg_loaded: "Données chargées !",
+    msg_reset: "Tout effacé !",
+    msg_example: "Exemple chargé !",
+    confirm_reset: "Êtes-vous sûr de vouloir tout effacer ?",
+
+    insight_profit_high: "Excellent profit mensuel.",
+    insight_profit_mid: "Bon profit. Augmentez le volume.",
+    insight_profit_low: "Profit faible. Revoyez les coûts.",
+    insight_profit_neg: "Perte. Ajustez le prix ou réduisez les coûts.",
+
+    insight_roi_high: "Excellent ROI ({roi}%).",
+    insight_roi_mid: "Bon ROI ({roi}%).",
+    insight_roi_low: "ROI faible ({roi}%).",
+
+    insight_ret_high: "Taux de retour élevé ({rr}%).",
+    insight_ret_low: "Taux de retour faible ({rr}%).",
+
+    status_loss: "Perte",
+    status_low: "Faible",
+    status_ok: "Moyen",
+    status_good: "Bon",
+
+    cur_dzd: "DZD"
+  }
+};
+
+function t(key, vars = null){
+  const pack = I18N[currentLang] || I18N.ar;
+  let out = (pack && pack[key]) || (I18N.ar && I18N.ar[key]) || key;
+  if (vars){
+    out = out.replace(/\{(\w+)\}/g, (_, k) => (vars[k] !== undefined ? String(vars[k]) : `{${k}}`));
+  }
+  return out;
+}
+
+function setActiveByData(selector, dataKey, value){
+  document.querySelectorAll(selector).forEach(btn => {
+    btn.classList.remove("active");
+    if (btn.dataset && btn.dataset[dataKey] === value) btn.classList.add("active");
+  });
+}
+
+function formatFx(code, rate){
+  const decimals = (code === "MAD" || code === "TND") ? 4 : 2;
+  return `${code} ${Number(rate).toFixed(decimals)}`;
+}
+
+function getStoredFx(code){
+  const k = `fx_custom_${code}`;
+  const v = localStorage.getItem(k);
+  const n = Number(v);
+  if (v !== null && v !== "" && !Number.isNaN(n) && n > 0) return n;
+  return null;
+}
+
+function setStoredFx(code, rate){
+  const k = `fx_custom_${code}`;
+  localStorage.setItem(k, String(rate));
+}
+
+function applyTranslations(){
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    el.textContent = t(key);
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    el.setAttribute("placeholder", t(key));
+  });
+
+  const prefix = document.querySelector(".fx-prefix");
+  if (prefix) prefix.textContent = t("fxPrefix");
+}
+
+function changeCurrency(code){
+  currentCurrency = code;
+  localStorage.setItem("toolCurrency", code);
+
+  setActiveByData("[data-currency]", "currency", code);
+
+  const defaultRate = fxRates[code] ?? fxRates.DZD;
+  const storedRate = getStoredFx(code);
+  const rate = storedRate ?? defaultRate;
+
+  const ex = document.getElementById("exchangeRate");
+  if (ex) ex.value = rate;
+
+  const fxHint = document.getElementById("fxHint");
+  if (fxHint) fxHint.textContent = formatFx(code, rate);
+
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+  if (document.getElementById("tab-charts")?.classList.contains("active")) updateCharts();
+}
+
+function changeLanguage(lang){
+  currentLang = lang;
+  localStorage.setItem("toolLang", lang);
+
+  setActiveByData("[data-lang]", "lang", lang);
+
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === "ar") ? "rtl" : "ltr";
+
+  // Keep header LTR (for buttons/FX hint)
+  const header = document.getElementById("appHeader");
+  if (header) header.setAttribute("dir", "ltr");
+
+  applyTranslations();
+
+  calculateMonthly();
+  calculateDiscount();
+  if (document.getElementById("tab-charts")?.classList.contains("active")) updateCharts();
+}
+
+function onExchangeInput(){
+  const ex = document.getElementById("exchangeRate");
+  const n = Number(ex?.value);
+  if (!Number.isNaN(n) && n > 0){
+    setStoredFx(currentCurrency, n);
+    const fxHint = document.getElementById("fxHint");
+    if (fxHint) fxHint.textContent = formatFx(currentCurrency, n);
+  }
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+  if (document.getElementById("tab-charts")?.classList.contains("active")) updateCharts();
+}
+
+/* -------------------------------------------
+   Core logic
+------------------------------------------- */
+
+let isEditingPrice = false;
+let isEditingMargin = false;
+let charts = {};
+let calculationResults = {};
+
+function switchTab(tabName, btn){
+  document.querySelectorAll(".tab-content").forEach(tab => tab.classList.remove("active"));
+  document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
+
+  document.getElementById(`tab-${tabName}`)?.classList.add("active");
+  if (btn) btn.classList.add("active");
+
+  if (tabName === "charts") setTimeout(updateCharts, 60);
+  if (tabName === "monthly") calculateMonthly();
+  if (tabName === "discounts") calculateDiscount();
+}
+
+function onProfitMarginChange(){
+  isEditingMargin = true;
+  isEditingPrice = false;
+  const fp = document.getElementById("finalPrice");
+  if (fp) fp.value = "";
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+}
+
+function onFinalPriceChange(){
+  isEditingPrice = true;
+  isEditingMargin = false;
+  const pm = document.getElementById("profitMarginInput");
+  if (pm) pm.value = "";
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+}
+
+function calculate(){
+  const wholesale = parseFloat(document.getElementById("wholesalePrice")?.value) || 0;
+  const exchange = parseFloat(document.getElementById("exchangeRate")?.value) || (fxRates[currentCurrency] ?? fxRates.DZD);
+  const confirm = parseFloat(document.getElementById("confirmRate")?.value) || 0;
+  const delivery = parseFloat(document.getElementById("deliveryRate")?.value) || 0;
+  const dailyAd = parseFloat(document.getElementById("dailyAdSpend")?.value) || 0;
+  const costPer = parseFloat(document.getElementById("costPerOrder")?.value) || 0;
+  const additionalCostsValue = parseFloat(document.getElementById("additionalCosts")?.value) || 0;
+  const returnCost = parseFloat(document.getElementById("returnCost")?.value) || 0;
+
+  // ===== ORDERS (INTEGER, NO DECIMALS) =====
+  const dailyOrdersFloat = costPer > 0 ? (dailyAd / costPer) : 0;
+  const confirmedOrdersFloat = dailyOrdersFloat * (confirm / 100);
+  const deliveredOrdersFloat = confirmedOrdersFloat * (delivery / 100);
+
+  const dailyOrders = Math.max(0, Math.round(dailyOrdersFloat));
+  const confirmedOrders = Math.max(0, Math.round(confirmedOrdersFloat));
+  let deliveredOrders = Math.max(0, Math.round(deliveredOrdersFloat));
+  deliveredOrders = Math.min(deliveredOrders, confirmedOrders);
+
+  const returnedOrders = Math.max(0, confirmedOrders - deliveredOrders);
+
+  // Return rate based on integers (more accurate for return costs)
+  const returnRate = confirmedOrders > 0 ? (returnedOrders / confirmedOrders) * 100 : 0;
+
+  // Return cost uses integer returned orders
+  const totalReturnCost = returnedOrders * returnCost;
+
+  const finalCostPerOrder = deliveredOrders > 0 ? (dailyAd / deliveredOrders) : 0;
+  const finalCostDZD = finalCostPerOrder * exchange;
+
+  const totalCost = wholesale + finalCostDZD + additionalCostsValue;
+
+  let calculatedFinalPrice = 0;
+  let profitMargin = 0;
+  let netProfit = 0;
+
+  const profitMarginInput = document.getElementById("profitMarginInput")?.value ?? "";
+  const finalPriceInput = document.getElementById("finalPrice")?.value ?? "";
+
+  if (isEditingMargin && profitMarginInput !== ""){
+    profitMargin = parseFloat(profitMarginInput) || 0;
+    calculatedFinalPrice = totalCost + profitMargin;
+    netProfit = profitMargin;
+  } else if (isEditingPrice && finalPriceInput !== ""){
+    calculatedFinalPrice = parseFloat(finalPriceInput) || 0;
+    profitMargin = calculatedFinalPrice - totalCost;
+    netProfit = profitMargin;
+  } else {
+    calculatedFinalPrice = totalCost;
+    netProfit = 0;
+  }
+
+  const dailyNetProfit = (netProfit * deliveredOrders) - totalReturnCost;
+
+  const revenue = deliveredOrders * calculatedFinalPrice;
+  const totalDailyCosts =
+    (wholesale * deliveredOrders) +
+    (dailyAd * exchange) +
+    (additionalCostsValue * deliveredOrders) +
+    totalReturnCost;
+
+  const roi = totalDailyCosts > 0 ? ((revenue - totalDailyCosts) / totalDailyCosts) * 100 : 0;
+
+  calculationResults = {
+    wholesale, exchange, confirm, delivery, dailyAd, costPer, additionalCostsValue, returnCost,
+    dailyOrders, confirmedOrders, deliveredOrders, returnedOrders, returnRate,
+    totalReturnCost, finalCostPerOrder, finalCostDZD,
+    totalCost, calculatedFinalPrice, profitMargin, netProfit,
+    dailyNetProfit, revenue, totalDailyCosts, roi
+  };
+
+  // ===== DISPLAY (NO DECIMALS) =====
+  document.getElementById("dailyOrders").textContent = dailyOrders.toFixed(0);
+  document.getElementById("confirmedOrders").textContent = confirmedOrders.toFixed(0);
+  document.getElementById("deliveredOrders").textContent = deliveredOrders.toFixed(0);
+  document.getElementById("returnedOrders").textContent = returnedOrders.toFixed(0);
+  document.getElementById("returnRate").textContent = `${returnRate.toFixed(0)}%`;
+
+  document.getElementById("costPerOrderDisplay").textContent = costPer.toFixed(2);
+  document.getElementById("finalCostPerOrder").textContent = finalCostPerOrder.toFixed(2);
+  document.getElementById("finalCostDZD").textContent = finalCostDZD.toFixed(0);
+
+  document.getElementById("wholesalePriceDisplay").textContent = wholesale.toFixed(0);
+  document.getElementById("adCostDisplay").textContent = finalCostDZD.toFixed(0);
+  document.getElementById("totalCost").textContent = totalCost.toFixed(0);
+
+  document.getElementById("finalPriceDisplay").textContent = calculatedFinalPrice.toFixed(0);
+  document.getElementById("profitMarginDisplay").textContent = profitMargin.toFixed(0);
+  document.getElementById("netProfitDisplay").textContent = netProfit.toFixed(0);
+
+  if (returnCost > 0 && returnedOrders > 0){
+    document.getElementById("returnCostRow").classList.remove("hidden");
+    document.getElementById("totalReturnCost").textContent = totalReturnCost.toFixed(0);
+    document.getElementById("dailyProfitCalc").textContent =
+      `${deliveredOrders.toFixed(0)} × ${netProfit.toFixed(0)} - ${totalReturnCost.toFixed(0)}`;
+  } else {
+    document.getElementById("returnCostRow").classList.add("hidden");
+    document.getElementById("dailyProfitCalc").textContent =
+      `${deliveredOrders.toFixed(0)} × ${netProfit.toFixed(0)}`;
+  }
+
+  document.getElementById("dailyNetProfit").textContent = dailyNetProfit.toFixed(0);
+  document.getElementById("revenue").textContent = revenue.toFixed(0);
+  document.getElementById("totalDailyCosts").textContent = totalDailyCosts.toFixed(0);
+  document.getElementById("roi").textContent = `${roi.toFixed(0)}%`;
+
+  if (additionalCostsValue > 0){
+    document.getElementById("additionalCostsRow").classList.remove("hidden");
+    document.getElementById("additionalCostsDisplay").textContent = additionalCostsValue.toFixed(0);
+  } else {
+    document.getElementById("additionalCostsRow").classList.add("hidden");
+  }
+
+  const lossWarning = document.getElementById("lossWarning");
+  if (dailyNetProfit < 0) lossWarning.classList.remove("hidden");
+  else lossWarning.classList.add("hidden");
+}
+
+function calculateMonthly(){
+  if (!calculationResults.dailyNetProfit && calculationResults.dailyNetProfit !== 0) calculate();
+
+  const monthlyRevenue = calculationResults.revenue * 30;
+  const monthlyCosts = calculationResults.totalDailyCosts * 30;
+  const monthlyProfit = calculationResults.dailyNetProfit * 30;
+  const monthlyOrders = calculationResults.dailyOrders * 30;
+  const monthlyDelivered = calculationResults.deliveredOrders * 30;
+  const monthlyReturned = calculationResults.returnedOrders * 30;
+  const monthlyReturnCostTotal = calculationResults.totalReturnCost * 30;
+  const monthlyROI = calculationResults.roi;
+
+  document.getElementById("monthlyRevenue").textContent = monthlyRevenue.toFixed(0);
+  document.getElementById("monthlyCosts").textContent = monthlyCosts.toFixed(0);
+  document.getElementById("monthlyProfit").textContent = monthlyProfit.toFixed(0);
+  document.getElementById("monthlyOrders").textContent = monthlyOrders.toFixed(0);
+  document.getElementById("monthlyDelivered").textContent = monthlyDelivered.toFixed(0);
+  document.getElementById("monthlyReturned").textContent = monthlyReturned.toFixed(0);
+  document.getElementById("monthlyReturnCost").textContent = monthlyReturnCostTotal.toFixed(0);
+  document.getElementById("monthlyROI").textContent = `${monthlyROI.toFixed(0)}%`;
+
+  generateMonthlyInsights(monthlyProfit, monthlyROI, calculationResults.returnRate);
+}
+
+function generateMonthlyInsights(profit, roi, returnRate){
+  const insights = [];
+
+  if (profit > 100000) insights.push({ type:"success", text: t("insight_profit_high") });
+  else if (profit > 50000) insights.push({ type:"info", text: t("insight_profit_mid") });
+  else if (profit > 0) insights.push({ type:"warning", text: t("insight_profit_low") });
+  else insights.push({ type:"danger", text: t("insight_profit_neg") });
+
+  if (roi > 100) insights.push({ type:"success", text: t("insight_roi_high", { roi: roi.toFixed(0) }) });
+  else if (roi > 50) insights.push({ type:"info", text: t("insight_roi_mid", { roi: roi.toFixed(0) }) });
+  else if (roi > 0) insights.push({ type:"warning", text: t("insight_roi_low", { roi: roi.toFixed(0) }) });
+
+  if (returnRate > 30) insights.push({ type:"warning", text: t("insight_ret_high", { rr: returnRate.toFixed(0) }) });
+  else if (returnRate < 20) insights.push({ type:"success", text: t("insight_ret_low", { rr: returnRate.toFixed(0) }) });
+
+  const colors = {
+    success: "border border-emerald-400/30 bg-emerald-400/10",
+    info: "border border-sky-400/30 bg-sky-400/10",
+    warning: "border border-orange-400/30 bg-orange-400/10",
+    danger: "border border-red-400/30 bg-red-400/10"
+  };
+
+  const container = document.getElementById("monthlyInsights");
+  if (!container) return;
+
+  container.innerHTML = insights.map(x =>
+    `<div class="rounded-xl p-4 ${colors[x.type]}">${x.text}</div>`
+  ).join("");
+}
+
+function calculateDiscount(){
+  if (!calculationResults.calculatedFinalPrice && calculationResults.calculatedFinalPrice !== 0) calculate();
+
+  const discountPercent = parseInt(document.getElementById("discountSlider")?.value || "0", 10);
+  document.getElementById("discountPercent").textContent = `${discountPercent}%`;
+
+  const originalPrice = calculationResults.calculatedFinalPrice;
+  const discountedPrice = originalPrice * (1 - discountPercent / 100);
+  const discountedProfit = discountedPrice - calculationResults.totalCost;
+
+  document.getElementById("discountedPrice").textContent = discountedPrice.toFixed(0);
+  document.getElementById("discountedProfit").textContent = discountedProfit.toFixed(0);
+
+  const profitEl = document.getElementById("discountedProfit");
+  if (discountedProfit < 0) profitEl.style.color = "var(--bad)";
+  else if (discountedProfit < calculationResults.netProfit * 0.3) profitEl.style.color = "var(--warn)";
+  else profitEl.style.color = "var(--good)";
+
+  generateDiscountTable(originalPrice, calculationResults.totalCost, calculationResults.netProfit);
+}
+
+function generateDiscountTable(originalPrice, totalCost, originalProfit){
+  const discounts = [0,5,10,15,20,25,30];
+  const container = document.getElementById("discountTable");
+  if (!container) return;
+
+  const cur = (currentLang === "ar" && currentCurrency === "DZD") ? t("cur_dzd") : currentCurrency;
+
+  container.innerHTML = discounts.map(d => {
+    const newPrice = originalPrice * (1 - d/100);
+    const newProfit = newPrice - totalCost;
+
+    const statusKey =
+      (newProfit < 0) ? "status_loss" :
+      (newProfit < originalProfit * 0.3) ? "status_low" :
+      (newProfit < originalProfit * 0.7) ? "status_ok" : "status_good";
+
+    const statusColor =
+      (newProfit < 0) ? "text-red-300" :
+      (newProfit < originalProfit * 0.3) ? "text-orange-300" :
+      (newProfit < originalProfit * 0.7) ? "text-yellow-200" : "text-emerald-300";
+
+    return `
+      <div class="glass rounded-xl p-4 flex justify-between items-center hover:bg-white/10 transition-all">
+        <span class="font-bold">${d}%</span>
+        <span class="font-bold">${newPrice.toFixed(0)} ${cur}</span>
+        <span class="font-bold ${statusColor}">${newProfit.toFixed(0)} ${cur}</span>
+        <span class="text-sm font-semibold ${statusColor}">${t(statusKey)}</span>
+      </div>
+    `;
+  }).join("");
+}
+
+/* -------------------------------------------
+   Charts (Neon look)
+------------------------------------------- */
+
+function injectNeonChartCSS(){
+  if (document.getElementById("neonChartsStyle")) return;
+  const style = document.createElement("style");
+  style.id = "neonChartsStyle";
+  style.textContent = `
+    .chart-frame{position:relative}
+    .chart-frame::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.35;
+      background-image:
+        linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size:48px 48px;
+      mask-image: radial-gradient(circle at 50% 40%, rgba(0,0,0,1), rgba(0,0,0,.25) 70%, rgba(0,0,0,0) 100%);
+    }
+    .chart-frame canvas{
+      filter: drop-shadow(0 18px 34px rgba(96,165,250,.12))
+              drop-shadow(0 10px 22px rgba(139,92,246,.10));
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+const chartAreaGridBG = {
+  id: "chartAreaGridBG",
+  beforeDraw(chart){
+    const { ctx, chartArea } = chart;
+    if (!chartArea) return;
+    const { left, top, right, bottom, width, height } = chartArea;
+
+    ctx.save();
+
+    const g = ctx.createLinearGradient(left, top, right, bottom);
+    g.addColorStop(0, "rgba(255,255,255,0.03)");
+    g.addColorStop(1, "rgba(255,255,255,0.01)");
+    ctx.fillStyle = g;
+    ctx.fillRect(left, top, width, height);
+
+    const stepX = Math.max(40, Math.floor(width / 12));
+    const stepY = Math.max(36, Math.floor(height / 9));
+
+    ctx.strokeStyle = "rgba(255,255,255,0.06)";
+    ctx.lineWidth = 1;
+
+    for (let x = left; x <= right; x += stepX){
+      ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke();
+    }
+    for (let y = top; y <= bottom; y += stepY){
+      ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
     }
 
-    // 2. التعامل مع زر Enter
-    function handleEnter(e) {
-        if (e.key === 'Enter') sendMessage();
-    }
+    ctx.restore();
+  }
+};
 
-    // 3. دالة الإرسال المتطورة (Streaming + Plain Text)
-    async function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const body = document.getElementById('chatBody');
-        
-        if (!input || !body) return;
-        
-        const txt = input.value.trim();
-        if (!txt) return;
+const neonGlow = {
+  id: "neonGlow",
+  beforeDatasetDraw(chart, args, pluginOptions){
+    const { ctx } = chart;
+    ctx.save();
+    ctx.shadowColor = pluginOptions?.color || "rgba(96,165,250,0.45)";
+    ctx.shadowBlur = pluginOptions?.blur ?? 14;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+  },
+  afterDatasetDraw(chart){
+    chart.ctx.restore();
+  }
+};
 
-        // إضافة رسالة المستخدم
-        const userDiv = document.createElement('div');
-        userDiv.className = 'msg user-msg';
-        userDiv.style.cssText = "padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; background: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 2px;";
-        userDiv.textContent = txt;
-        body.appendChild(userDiv);
-        
-        input.value = '';
-        body.scrollTop = body.scrollHeight;
+function _makeGradient(ctx, area, stops){
+  const g = ctx.createLinearGradient(0, area.top, 0, area.bottom);
+  stops.forEach(s => g.addColorStop(s[0], s[1]));
+  return g;
+}
 
-        // إضافة مؤشر الانتظار
-        const botDiv = document.createElement('div');
-        botDiv.className = 'msg bot-msg';
-        botDiv.style.cssText = "padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; background: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px;";
-        botDiv.textContent = "✍️...";
-        body.appendChild(botDiv);
-        body.scrollTop = body.scrollHeight;
+function updateCharts(){
+  injectNeonChartCSS();
+  if (!calculationResults.totalCost && calculationResults.totalCost !== 0) calculate();
 
-        try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: txt })
-            });
+  Object.values(charts).forEach(c => c && c.destroy && c.destroy());
+  charts = {};
 
-            if (!response.ok) throw new Error("Server Error");
+  if (typeof Chart === "undefined") return;
 
-            // مسح المؤشر
-            botDiv.textContent = "";
-            
-            // القراءة المتدفقة (Streaming)
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
+  Chart.defaults.color = "#ffffff";
+  Chart.defaults.borderColor = "rgba(255,255,255,0.12)";
+  Chart.defaults.font.family = "Inter, Tajawal, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif";
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.boxWidth = 10;
 
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                
-                const chunk = decoder.decode(value, { stream: true });
-                botDiv.textContent += chunk;
-                body.scrollTop = body.scrollHeight;
-            }
+  const cur = (currentLang === "ar" && currentCurrency === "DZD") ? t("cur_dzd") : currentCurrency;
 
-        } catch (error) {
-            console.error(error);
-            botDiv.innerHTML = "<span style='color:red'>حدث خطأ، حاول مرة أخرى.</span>";
+  // Cost Pie
+  const costCanvas = document.getElementById("costPieChart");
+  if (costCanvas){
+    const costCtx = costCanvas.getContext("2d");
+    charts.costPie = new Chart(costCtx, {
+      type: "pie",
+      data: {
+        labels: [
+          t("wholesaleLine").replace(":",""),
+          t("adsLine").replace(":",""),
+          t("extraLine").replace(":",""),
+          t("returnCostDaily").replace(":","")
+        ],
+        datasets: [{
+          data: [
+            calculationResults.wholesale,
+            calculationResults.finalCostDZD,
+            calculationResults.additionalCostsValue,
+            calculationResults.totalReturnCost
+          ],
+          backgroundColor: ["#6D5BFF", "#F59E0B", "#A855F7", "#EF4444"],
+          borderColor: "rgba(255,255,255,0.85)",
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          neonGlow: { color: "rgba(96,165,250,0.35)", blur: 16 },
+          legend: { position: "bottom" }
         }
+      },
+      plugins: [chartAreaGridBG, neonGlow]
+    });
+  }
+
+  // Profit Bar
+  const profitCanvas = document.getElementById("profitBarChart");
+  if (profitCanvas){
+    const profitCtx = profitCanvas.getContext("2d");
+    charts.profitBar = new Chart(profitCtx, {
+      type: "bar",
+      data: {
+        labels: [
+          t("revenue").replace(":",""),
+          t("dailyCosts").replace(":",""),
+          t("sec_dailyProfit")
+        ],
+        datasets: [{
+          label: cur,
+          data: [calculationResults.revenue, calculationResults.totalDailyCosts, calculationResults.dailyNetProfit],
+          borderRadius: 12,
+          borderSkipped: false,
+          maxBarThickness: 54,
+          backgroundColor: (ctx) => {
+            const { chart } = ctx;
+            const area = chart.chartArea;
+            if (!area) return "#60A5FA";
+            return [
+              _makeGradient(chart.ctx, area, [[0,"rgba(34,197,94,.95)"], [1,"rgba(34,197,94,.25)"]]),
+              _makeGradient(chart.ctx, area, [[0,"rgba(239,68,68,.95)"], [1,"rgba(239,68,68,.25)"]]),
+              _makeGradient(chart.ctx, area, [[0,"rgba(109,91,255,.95)"], [1,"rgba(109,91,255,.25)"]])
+            ][ctx.dataIndex] || "#60A5FA";
+          }
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 900, easing: "easeOutQuart" },
+        plugins: {
+          neonGlow: { color: "rgba(139,92,246,0.35)", blur: 18 },
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.10)" }, ticks: { color: "#ffffff" } },
+          x: { grid: { display: false }, ticks: { color: "#ffffff" } }
+        }
+      },
+      plugins: [chartAreaGridBG, neonGlow]
+    });
+  }
+
+  // Monthly Line (30 days)
+  const monthlyCanvas = document.getElementById("monthlyLineChart");
+  if (monthlyCanvas){
+    const monthlyCtx = monthlyCanvas.getContext("2d");
+    const monthlyData = Array.from({ length: 30 }, (_, i) => calculationResults.dailyNetProfit * (i + 1));
+    charts.monthlyLine = new Chart(monthlyCtx, {
+      type: "line",
+      data: {
+        labels: Array.from({ length: 30 }, (_, i) => i + 1),
+        datasets: [{
+          label: t("chart_daily_profit"),
+          data: monthlyData,
+          tension: 0.38,
+          borderWidth: 3,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBorderWidth: 2,
+          pointBorderColor: "rgba(255,255,255,0.90)",
+          borderColor: (ctx) => {
+            const { chart } = ctx;
+            const area = chart.chartArea;
+            if (!area) return "#60A5FA";
+            const g = chart.ctx.createLinearGradient(area.left, 0, area.right, 0);
+            g.addColorStop(0, "rgba(34,211,238,0.95)");
+            g.addColorStop(0.5, "rgba(96,165,250,0.95)");
+            g.addColorStop(1, "rgba(139,92,246,0.95)");
+            return g;
+          },
+          backgroundColor: (ctx) => {
+            const { chart } = ctx;
+            const area = chart.chartArea;
+            if (!area) return "rgba(96,165,250,0.10)";
+            const g = chart.ctx.createLinearGradient(0, area.top, 0, area.bottom);
+            g.addColorStop(0, "rgba(34,211,238,0.18)");
+            g.addColorStop(1, "rgba(139,92,246,0.03)");
+            return g;
+          },
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 900, easing: "easeOutQuart" },
+        plugins: {
+          neonGlow: { color: "rgba(34,211,238,0.35)", blur: 18 },
+          legend: { labels: { color: "#ffffff" } }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.10)" }, ticks: { color: "#ffffff" } },
+          x: { grid: { color: "rgba(255,255,255,0.06)" }, ticks: { color: "#ffffff", maxRotation: 45, minRotation: 45 } }
+        }
+      },
+      plugins: [chartAreaGridBG, neonGlow]
+    });
+  }
+
+  // Orders Donut
+  const ordersCanvas = document.getElementById("ordersDonutChart");
+  if (ordersCanvas){
+    const ordersCtx = ordersCanvas.getContext("2d");
+    const notConfirmed = Math.max(0, calculationResults.dailyOrders - calculationResults.confirmedOrders);
+
+    charts.ordersDonut = new Chart(ordersCtx, {
+      type: "doughnut",
+      data: {
+        labels: [
+          t("deliveredOrders").replace(":",""),
+          t("returnedOrders").replace(":",""),
+          "غير مؤكدة"
+        ],
+        datasets: [{
+          data: [calculationResults.deliveredOrders, calculationResults.returnedOrders, notConfirmed],
+          backgroundColor: ["#10b981", "#ef4444", "#6b7280"],
+          borderColor: "rgba(255,255,255,0.85)",
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          neonGlow: { color: "rgba(16,185,129,0.25)", blur: 16 },
+          legend: { position: "bottom" }
+        }
+      },
+      plugins: [chartAreaGridBG, neonGlow]
+    });
+  }
+
+  // ROI Chart (simple)
+  const roiCanvas = document.getElementById("roiChart");
+  if (roiCanvas){
+    const roiCtx = roiCanvas.getContext("2d");
+    charts.roiChart = new Chart(roiCtx, {
+      type: "bar",
+      data: {
+        labels: [t("roi")],
+        datasets: [{
+          label: "%",
+          data: [calculationResults.roi],
+          borderRadius: 14,
+          borderSkipped: false,
+          backgroundColor: "rgba(34,197,94,0.65)"
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          neonGlow: { color: "rgba(34,197,94,0.35)", blur: 18 },
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.10)" } },
+          x: { grid: { display: false } }
+        }
+      },
+      plugins: [chartAreaGridBG, neonGlow]
+    });
+  }
+}
+
+/* -------------------------------------------
+   Save / Load / Reset / Example / PDF
+------------------------------------------- */
+
+function showSuccessMessage(message, type = "success"){
+  const messageDiv = document.getElementById("successMessage");
+  const messageText = document.getElementById("successText");
+  if (!messageDiv || !messageText) return;
+
+  messageText.textContent = message;
+  messageDiv.classList.remove("hidden");
+
+  setTimeout(() => {
+    messageDiv.classList.add("hidden");
+  }, 3000);
+}
+
+function hideSuccessMessage(){
+  document.getElementById("successMessage")?.classList.add("hidden");
+}
+
+function saveData(){
+  const data = {
+    productName: document.getElementById("productName")?.value || "",
+    wholesalePrice: document.getElementById("wholesalePrice")?.value || "",
+    exchangeRate: document.getElementById("exchangeRate")?.value || "",
+    confirmRate: document.getElementById("confirmRate")?.value || "",
+    deliveryRate: document.getElementById("deliveryRate")?.value || "",
+    dailyAdSpend: document.getElementById("dailyAdSpend")?.value || "",
+    costPerOrder: document.getElementById("costPerOrder")?.value || "",
+    additionalCosts: document.getElementById("additionalCosts")?.value || "",
+    returnCost: document.getElementById("returnCost")?.value || "",
+    finalPrice: document.getElementById("finalPrice")?.value || "",
+    profitMarginInput: document.getElementById("profitMarginInput")?.value || "",
+    lang: currentLang,
+    currency: currentCurrency,
+    timestamp: new Date().toISOString()
+  };
+
+  localStorage.setItem("pricingToolData", JSON.stringify(data));
+  showSuccessMessage(t("msg_saved"), "success");
+}
+
+function loadData(){
+  const saved = localStorage.getItem("pricingToolData");
+  if (!saved){
+    showSuccessMessage(t("msg_no_saved"), "warning");
+    return;
+  }
+
+  const data = JSON.parse(saved);
+
+  if (document.getElementById("productName")) document.getElementById("productName").value = data.productName ?? "";
+  if (document.getElementById("wholesalePrice")) document.getElementById("wholesalePrice").value = data.wholesalePrice ?? "";
+  if (document.getElementById("exchangeRate")) document.getElementById("exchangeRate").value = data.exchangeRate ?? (fxRates[currentCurrency] ?? fxRates.DZD);
+  if (document.getElementById("confirmRate")) document.getElementById("confirmRate").value = data.confirmRate ?? "";
+  if (document.getElementById("deliveryRate")) document.getElementById("deliveryRate").value = data.deliveryRate ?? "";
+  if (document.getElementById("dailyAdSpend")) document.getElementById("dailyAdSpend").value = data.dailyAdSpend ?? "";
+  if (document.getElementById("costPerOrder")) document.getElementById("costPerOrder").value = data.costPerOrder ?? "";
+  if (document.getElementById("additionalCosts")) document.getElementById("additionalCosts").value = data.additionalCosts ?? "";
+  if (document.getElementById("returnCost")) document.getElementById("returnCost").value = data.returnCost ?? "";
+  if (document.getElementById("finalPrice")) document.getElementById("finalPrice").value = data.finalPrice ?? "";
+  if (document.getElementById("profitMarginInput")) document.getElementById("profitMarginInput").value = data.profitMarginInput ?? "";
+
+  // restore lang/currency if present
+  if (data.currency) currentCurrency = data.currency;
+  if (data.lang) currentLang = data.lang;
+
+  setActiveByData("[data-lang]", "lang", currentLang);
+  setActiveByData("[data-currency]", "currency", currentCurrency);
+
+  applyTranslations();
+  changeCurrency(currentCurrency);
+  changeLanguage(currentLang);
+
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+
+  showSuccessMessage(t("msg_loaded"), "success");
+}
+
+function resetAll(){
+  if (!confirm(t("confirm_reset"))) return;
+
+  const ids = [
+    "productName","wholesalePrice","exchangeRate","confirmRate","deliveryRate",
+    "dailyAdSpend","costPerOrder","additionalCosts","returnCost","finalPrice","profitMarginInput"
+  ];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+
+  isEditingPrice = false;
+  isEditingMargin = false;
+
+  // reset exchange to default for current currency
+  const ex = document.getElementById("exchangeRate");
+  if (ex) ex.value = getStoredFx(currentCurrency) ?? (fxRates[currentCurrency] ?? fxRates.DZD);
+
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+  if (document.getElementById("tab-charts")?.classList.contains("active")) updateCharts();
+
+  showSuccessMessage(t("msg_reset"), "success");
+}
+
+function loadExample(){
+  if (document.getElementById("productName")) document.getElementById("productName").value = "منتج تجريبي";
+  if (document.getElementById("wholesalePrice")) document.getElementById("wholesalePrice").value = 1200;
+  if (document.getElementById("exchangeRate")) document.getElementById("exchangeRate").value = (fxRates[currentCurrency] ?? fxRates.DZD);
+  if (document.getElementById("confirmRate")) document.getElementById("confirmRate").value = 60;
+  if (document.getElementById("deliveryRate")) document.getElementById("deliveryRate").value = 80;
+  if (document.getElementById("dailyAdSpend")) document.getElementById("dailyAdSpend").value = 25;
+  if (document.getElementById("costPerOrder")) document.getElementById("costPerOrder").value = 2.5;
+  if (document.getElementById("additionalCosts")) document.getElementById("additionalCosts").value = 200;
+  if (document.getElementById("returnCost")) document.getElementById("returnCost").value = 300;
+
+  // Example uses margin mode
+  if (document.getElementById("profitMarginInput")) document.getElementById("profitMarginInput").value = 800;
+  isEditingMargin = true;
+  isEditingPrice = false;
+
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+
+  showSuccessMessage(t("msg_example"), "success");
+}
+
+async function exportToPDF(){
+  try{
+    showSuccessMessage(t("msg_pdf_generating"), "info");
+
+    const { jsPDF } = window.jspdf || {};
+    if (!jsPDF || !window.html2canvas){
+      showSuccessMessage(t("msg_pdf_error"), "danger");
+      return;
     }
+
+    const node = document.querySelector(".content") || document.body;
+    const canvas = await html2canvas(node, { scale: 2, backgroundColor: "#ffffff" });
+    const imgData = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+
+    const imgWidth = pageWidth;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    let y = 0;
+    pdf.addImage(imgData, "PNG", 0, y, imgWidth, imgHeight);
+
+    // If content is longer than one page
+    let heightLeft = imgHeight - pageHeight;
+    while (heightLeft > 0){
+      y -= pageHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "PNG", 0, y, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    pdf.save("pricing-tool.pdf");
+    showSuccessMessage(t("msg_pdf_done"), "success");
+  } catch (e){
+    showSuccessMessage(t("msg_pdf_error"), "danger");
+  }
+}
+const SCENARIOS = {
+  1: {
+    nameAr: "سيناريو 01",
+    productName: "سيناريو 01 - ضعيف",
+    wholesalePrice: 1200,
+    confirmRate: 35,
+    deliveryRate: 55,
+    dailyAdSpend: 12,      // USD
+    costPerOrder: 3.2,     // USD
+    additionalCosts: 250,  // DZD
+    returnCost: 350,       // DZD
+    profitMargin: 200      // DZD (هامش منخفض)
+  },
+  2: {
+    nameAr: "سيناريو 02",
+    productName: "سيناريو 02 - متوسط/ضعيف",
+    wholesalePrice: 1200,
+    confirmRate: 50,
+    deliveryRate: 70,
+    dailyAdSpend: 18,
+    costPerOrder: 2.1,
+    additionalCosts: 220,
+    returnCost: 320,
+    profitMargin: 450
+  },
+  3: {
+    nameAr: "سيناريو 03",
+    productName: "سيناريو 03 - جيد",
+    wholesalePrice: 1200,
+    confirmRate: 65,
+    deliveryRate: 80,
+    dailyAdSpend: 25,
+    costPerOrder: 1.3,
+    additionalCosts: 200,
+    returnCost: 300,
+    profitMargin: 750
+  },
+  4: {
+    nameAr: "سيناريو 04",
+    productName: "سيناريو 04 - ممتاز",
+    wholesalePrice: 1200,
+    confirmRate: 80,
+    deliveryRate: 85,
+    dailyAdSpend: 30,
+    costPerOrder: 0.9,
+    additionalCosts: 180,
+    returnCost: 280,
+    profitMargin: 950
+  }
+};
+
+function applyScenario(n){
+  const s = SCENARIOS[n];
+  if (!s) return;
+
+  // Fill inputs
+  document.getElementById("productName").value = s.productName;
+  document.getElementById("wholesalePrice").value = s.wholesalePrice;
+  document.getElementById("confirmRate").value = s.confirmRate;
+  document.getElementById("deliveryRate").value = s.deliveryRate;
+  document.getElementById("dailyAdSpend").value = s.dailyAdSpend;
+  document.getElementById("costPerOrder").value = s.costPerOrder;
+  document.getElementById("additionalCosts").value = s.additionalCosts;
+  document.getElementById("returnCost").value = s.returnCost;
+
+  // نخلي الحساب يعتمد على هامش الربح
+  document.getElementById("finalPrice").value = "";
+  document.getElementById("profitMarginInput").value = s.profitMargin;
+
+  // flags (مثل منطقك الحالي)
+  isEditingMargin = true;
+  isEditingPrice = false;
+
+  // Recompute
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+
+  // Toast
+  if (typeof showSuccessMessage === "function") {
+    showSuccessMessage(`تم تحميل ${s.nameAr}`);
+  }
+}
+
+/* -------------------------------------------
+   Init
+------------------------------------------- */
+
+window.addEventListener("DOMContentLoaded", () => {
+  // Activate buttons
+  setActiveByData("[data-lang]", "lang", currentLang);
+  setActiveByData("[data-currency]", "currency", currentCurrency);
+
+  // Apply translations
+  applyTranslations();
+
+  // Init FX
+  const initRate = getStoredFx(currentCurrency) ?? (fxRates[currentCurrency] ?? fxRates.DZD);
+  const ex = document.getElementById("exchangeRate");
+  if (ex && (!ex.value || Number(ex.value) <= 0)) ex.value = initRate;
+
+  const fxHint = document.getElementById("fxHint");
+  if (fxHint) fxHint.textContent = formatFx(currentCurrency, Number(ex?.value || initRate));
+
+  // Force language & currency state
+  changeLanguage(currentLang);
+  changeCurrency(currentCurrency);
+
+  // First calculation
+  calculate();
+  calculateMonthly();
+  calculateDiscount();
+  
+  // تهيئة البطاقات التحفيزية المحسنة
+  initMotivationCards();
+});
+
+
+/* ===================== نظام البطاقات التحفيزية المحسن ===================== */
+let currentMotivationCard = 0;
+let motivationInterval;
+
+function initMotivationCards() {
+  const cards = document.querySelectorAll('.motivation-card');
+  const dots = document.querySelectorAll('.card-dots .dot');
+
+  if (cards.length === 0) return;
+
+  window.showMotivationCard = function(index) {
+    cards.forEach((card, i) => {
+      if (i === index) {
+        card.style.display = 'block';
+        card.style.animation = 'none';
+        setTimeout(() => {
+          card.style.animation = 'slideInCard 0.8s ease forwards';
+        }, 10);
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    dots.forEach((dot, i) => {
+      if (i === index) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+
+    currentMotivationCard = index;
+  };
+
+  function nextMotivationCard() {
+    currentMotivationCard = (currentMotivationCard + 1) % cards.length;
+    window.showMotivationCard(currentMotivationCard);
+  }
+
+  function startMotivationRotation() {
+    motivationInterval = setInterval(nextMotivationCard, 8000);
+  }
+
+  function resetMotivationRotation() {
+    clearInterval(motivationInterval);
+    startMotivationRotation();
+  }
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      window.showMotivationCard(index);
+      resetMotivationRotation();
+    });
+  });
+
+  // السحب على الهواتف
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  cards.forEach(card => {
+    card.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    card.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchEndX < touchStartX - 50) {
+        nextMotivationCard();
+        resetMotivationRotation();
+      }
+      if (touchEndX > touchStartX + 50) {
+        currentMotivationCard = (currentMotivationCard - 1 + cards.length) % cards.length;
+        window.showMotivationCard(currentMotivationCard);
+        resetMotivationRotation();
+      }
+    });
+  });
+
+  startMotivationRotation();
+}
+
 </script>
-</body>
-</html>
