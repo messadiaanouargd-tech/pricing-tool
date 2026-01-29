@@ -1,73 +1,102 @@
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  );
+// api/chat.js
+export const config = {
+  runtime: 'edge', // هذا ضروري جداً للـ Streaming في Vercel
+};
 
+export default async function handler(req) {
+  // CORS Headers
   if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
+    return new Response(null, {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
   }
 
-  const { message } = req.body;
-  const apiKey = process.env.GROQ_API_KEY;
-
-  if (!apiKey) {
-    return res.status(500).json({ reply: "⚠️ خطأ: مفتاح API غير موجود." });
+  if (req.method !== 'POST') {
+    return new Response('Method Not Allowed', { status: 405 });
   }
 
   try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
+    const { message } = await req.json();
+    const apiKey = process.env.GROQ_API_KEY;
+
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
-        "Content-Type": "application/json"
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
+        model: 'llama-3.3-70b-versatile',
+        stream: true, // <--- السر هنا: تفعيل التدفقة
         messages: [
           {
             role: "system",
             content: `
-            أنت "مستشار التجارة الذكي"، خبير متخصص في التجارة الإلكترونية (E-commerce & COD) في السوق الجزائري.
-            
-            شخصيتك:
-            - تتحدث باللهجة الجزائرية البيضاء (مفهومة واحترافية).
-            - أسلوبك: ذكي، عملي، ومباشر (بدون مقدمات طويلة مملة).
-            - لا تعطي إجابات عامة مثل "يجب عليك التسويق"، بل أعطِ أرقاماً واستراتيجيات حقيقية.
-            - أنت تعرف تحديات الجزائر: مشاكل التوصيل (Yalidine/Wilaya 58)، الروتور (Retour)، الدفع عند الاستلام، ومشاكل حظر حسابات الفيسبوك.
-
-            تعليمات صارمة للإجابة:
-            1. إذا سألك عن التسعير: استخدم معادلة (سعر الشراء + الإعلانات + التوصيل + هامش الربح) واذكر خطر الروتور دائماً.
-            2. إذا سألك عن الإعلانات: تحدث عن Facebook Ads Library، التيك توك في الجزائر، وكيفية استهداف الولايات الكبرى.
-            3. كن مختصراً ومفيداً. لا تكتب جرائد.
-            4. إذا كانت الإجابة تتطلب خطوات، استخدم نقاطاً (1، 2، 3).
-            5. دائماً اختم بنصيحة ذهبية قصيرة.
+            أنت خبير استراتيجي في التجارة الإلكترونية الجزائرية. 
+            تتحدث بلهجة جزائرية محترفة وواضحة.
+            لا تعطي إجابات جاهزة. حلل سؤال المستخدم، فكر، ثم أعطِ حلاً مخصصاً له.
+            استخدم التنسيق (Bold, Lists) لتكون إجابتك مقروءة.
             `
           },
-          {
-            role: "user",
-            content: message
-          }
+          { role: 'user', content: message },
         ],
-        temperature: 0.6, // تقليل العشوائية ليكون أكثر دقة
-        max_tokens: 1024
-      })
+        temperature: 0.6,
+        max_tokens: 2048,
+      }),
     });
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || "خطأ في الاتصال");
-    }
+    // تحويل استجابة Groq المتدفقة إلى استجابة للمتصفح
+    const stream = new ReadableStream({
+      async start(controller) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
 
-    const data = await response.json();
-    return res.status(200).json({ reply: data.choices[0].message.content });
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            const chunk = decoder.decode(value);
+            // Groq يرسل البيانات بصيغة SSE (data: {...})
+            const lines = chunk.split('\n');
+            
+            for (const line of lines) {
+              if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+                try {
+                  const data = JSON.parse(line.slice(6));
+                  const content = data.choices[0]?.delta?.content || '';
+                  if (content) {
+                    controller.enqueue(new TextEncoder().encode(content));
+                  }
+                } catch (e) {
+                  // تجاهل الأخطاء البسيطة في التحليل
+                }
+              }
+            }
+          }
+          controller.close();
+        } catch (error) {
+          controller.error(error);
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
 
   } catch (error) {
-    console.error("Error:", error);
-    return res.status(500).json({ reply: "عذراً، حدث خطأ تقني بسيط. حاول مرة أخرى." });
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }
