@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  // إعدادات السماح (CORS) عشان الموقع يشتغل
+  // 1. السماح للموقع بالاتصال (CORS)
   res.setHeader('Access-Control-Allow-Credentials', true);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
@@ -8,21 +8,22 @@ export default async function handler(req, res) {
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   );
 
-  // الرد على طلبات الفحص (OPTIONS)
+  // 2. معالجة طلبات التحقق
   if (req.method === 'OPTIONS') {
     res.status(200).end();
     return;
   }
 
-  // استقبال الرسالة من المستخدم
+  // 3. التحقق من الرسالة والمفتاح
   const { message } = req.body;
-  const apiKey = process.env.GROQ_API_KEY; // المفتاح سنجلبه من إعدادات Vercel
+  const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
-    return res.status(500).json({ reply: "خطأ: مفتاح API غير موجود في الإعدادات" });
+    return res.status(500).json({ reply: "⚠️ خطأ: مفتاح API غير مربوط في Vercel" });
   }
 
   try {
+    // 4. الاتصال بـ Groq (الموديل الجديد)
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -30,11 +31,11 @@ export default async function handler(req, res) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "llama-3.3-70b-versatile", // هذا هو الموديل الجديد المضمون
+        model: "llama-3.3-70b-versatile", // الموديل القوي والجديد
         messages: [
           {
             role: "system",
-            content: "أنت مساعد ذكي للتجارة الإلكترونية في الجزائر. تكلم باللهجة الجزائرية وكن مختصراً ومفيداً."
+            content: "أنت مساعد ذكي وخبير في التجارة الإلكترونية (COD) في الجزائر. اسمك 'مستشار التسعير'. أجب باللهجة الجزائرية المفهومة. كن مختصراً، ذكياً، ومحفزاً. العملة هي DZD."
           },
           {
             role: "user",
@@ -46,15 +47,17 @@ export default async function handler(req, res) {
       })
     });
 
+    // 5. التحقق من استجابة Groq
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error?.message || "خطأ في الاتصال بـ Groq");
+        throw new Error(errorData.error?.message || "خطأ غير معروف من Groq");
     }
 
     const data = await response.json();
     return res.status(200).json({ reply: data.choices[0].message.content });
 
   } catch (error) {
-    return res.status(500).json({ reply: "حدث خطأ: " + error.message });
+    console.error("Error:", error);
+    return res.status(500).json({ reply: "عذراً، حدث خطأ في الاتصال بالمخدم." });
   }
 }
