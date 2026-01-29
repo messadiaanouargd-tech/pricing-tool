@@ -2,6 +2,7 @@ export const config = {
   runtime: 'edge',
 };
 
+
 export default async function handler(req) {
   // CORS Headers
   if (req.method === 'OPTIONS') {
