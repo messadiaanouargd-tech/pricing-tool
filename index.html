@@ -1209,6 +1209,12 @@
         <div id="authMsg" style="margin-top: 1rem; color: #f87171; font-size: 0.875rem; display: none; background: rgba(239, 68, 68, 0.1); padding: 0.5rem; border-radius: 0.25rem; border: 1px solid rgba(239, 68, 68, 0.2);"></div>
     </div>
 </div>
+<!-- زر تسجيل الخروج -->
+<div class="no-print" style="position: absolute; top: 10px; left: 10px; z-index: 50;">
+    <button onclick="logout()" style="padding: 8px 15px; background: rgba(239, 68, 68, 0.1); color: #f87171; border-radius: 8px; font-weight: bold; border: 1px solid rgba(239, 68, 68, 0.2); cursor: pointer;">
+        خروج 🚪
+    </button>
+</div>
 
   <div class="min-h-screen p-4">
     <div class="w-full max-w-screen-2xl mx-auto">
@@ -3275,3 +3281,126 @@ function initMotivationCards() {
 }
 
 </script>
+<!-- ===================== 3. كود الشات بوت (ألصقه هنا) ===================== -->
+<div id="chat-widget" class="no-print" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <div id="chatWindow" style="display: none; position: absolute; bottom: 80px; right: 0; width: 350px; height: 500px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; font-family: sans-serif; border: 1px solid rgba(0,0,0,0.1);">
+        <div style="background: #1e293b; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+            <span>المستشار الذكي 🤖</span>
+            <span onclick="toggleChat()" style="cursor: pointer; padding: 5px;">✕</span>
+        </div>
+        <div id="chatBody" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 10px;">
+            <div style="padding: 10px; border-radius: 10px; max-width: 85%; background: #e2e8f0; color: #1e293b; align-self: flex-start;">
+                مرحبا! أنا هنا باش نعاونك.
+            </div>
+        </div>
+        <div style="padding: 12px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; background: white;">
+            <input type="text" id="chatInput" placeholder="اكتب سؤالك..." style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px;" onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()" style="background: #2563eb; color: white; padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer;">➤</button>
+        </div>
+    </div>
+    <button onclick="toggleChat()" style="width: 60px; height: 60px; border-radius: 50%; background: #2563eb; color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-size: 24px;">💬</button>
+</div>
+
+<!-- ===================== 4. سكريبتات الحماية والشات (Logic) ===================== -->
+<script type="module">
+    // استدعاء مكتبات Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+
+    // إعدادات مشروعك
+    const firebaseConfig = {
+      apiKey: "AIzaSyBoDXsELYXl440Wb3bd6xir0sMbj-6LSIA",
+      authDomain: "cod-pricing.firebaseapp.com",
+      projectId: "cod-pricing",
+      storageBucket: "cod-pricing.firebasestorage.app",
+      messagingSenderId: "815665273956",
+      appId: "1:815665273956:web:6a496b1d28da2aa0b25371"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    // مراقبة هل المستخدم مسجل أم لا
+    onAuthStateChanged(auth, (user) => {
+        const overlay = document.getElementById('authOverlay');
+        if (overlay) {
+            // إذا كان مسجل -> أخفِ القفل، وإلا -> أظهر القفل
+            if (user) { overlay.style.display = 'none'; } 
+            else { overlay.style.display = 'flex'; }
+        }
+    });
+
+    // تعريف دوال الدخول والخروج لتستخدمها الأزرار
+    window.emailLogin = async () => {
+        try { await signInWithEmailAndPassword(auth, document.getElementById('loginEmail').value, document.getElementById('loginPass').value); } 
+        catch(e) { alert("خطأ في الدخول: " + e.code); }
+    };
+
+    window.emailSignup = async () => {
+        try { await createUserWithEmailAndPassword(auth, document.getElementById('signupEmail').value, document.getElementById('signupPass').value); } 
+        catch(e) { alert("خطأ في التسجيل: " + e.code); }
+    };
+
+    window.googleLogin = async () => {
+        try { await signInWithPopup(auth, googleProvider); } 
+        catch(e) { alert("خطأ جوجل: " + e.code); }
+    };
+
+    window.resetPassword = async () => {
+        const email = document.getElementById('resetEmail').value;
+        if(!email) return alert("اكتب الإيميل أولاً");
+        try { await sendPasswordResetEmail(auth, email); alert("تم إرسال رابط التغيير!"); window.showLogin(); } 
+        catch(e) { alert("خطأ: " + e.code); }
+    };
+
+    window.logout = () => signOut(auth);
+
+    // التبديل بين الواجهات (تسجيل دخول / إنشاء حساب)
+    window.showSignup = () => { document.getElementById('loginForm').style.display='none'; document.getElementById('signupForm').style.display='block'; };
+    window.showLogin = () => { document.getElementById('signupForm').style.display='none'; document.getElementById('resetForm').style.display='none'; document.getElementById('loginForm').style.display='block'; };
+    window.showReset = () => { document.getElementById('loginForm').style.display='none'; document.getElementById('resetForm').style.display='block'; };
+</script>
+
+<script>
+    // منطق الشات بوت
+    function toggleChat() {
+        const win = document.getElementById('chatWindow');
+        win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none';
+    }
+    
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const body = document.getElementById('chatBody');
+        const txt = input.value.trim();
+        if (!txt) return;
+
+        // رسالة المستخدم
+        body.innerHTML += `<div style="padding:10px; border-radius:10px; max-width:85%; background:#3b82f6; color:white; align-self:flex-end; margin:5px 0;">${txt}</div>`;
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
+
+        // رد البوت (جاري الكتابة)
+        const botDiv = document.createElement('div');
+        botDiv.style.cssText = "padding:10px; border-radius:10px; max-width:85%; background:#e2e8f0; color:#1e293b; align-self:flex-start; margin:5px 0;";
+        botDiv.innerText = "...";
+        body.appendChild(botDiv);
+
+        // الاتصال بالذكاء الاصطناعي
+        try {
+            const res = await fetch('/api/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message: txt}) });
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            botDiv.innerText = "";
+            
+            while(true) {
+                const {done, value} = await reader.read();
+                if(done) break;
+                botDiv.innerText += decoder.decode(value, {stream: true});
+                body.scrollTop = body.scrollHeight;
+            }
+        } catch(e) { botDiv.innerText = "حدث خطأ في الاتصال، حاول لاحقاً."; }
+    }
+</script>
+</body>
+</html>
