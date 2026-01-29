@@ -1,6 +1,5 @@
-// api/chat.js
 export const config = {
-  runtime: 'edge', // هذا ضروري جداً للـ Streaming في Vercel
+  runtime: 'edge',
 };
 
 export default async function handler(req) {
@@ -24,6 +23,10 @@ export default async function handler(req) {
     const { message } = await req.json();
     const apiKey = process.env.GROQ_API_KEY;
 
+    if (!apiKey) {
+      return new Response(JSON.stringify({ error: "API Key missing" }), { status: 500 });
+    }
+
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -32,49 +35,64 @@ export default async function handler(req) {
       },
       body: JSON.stringify({
         model: 'llama-3.3-70b-versatile',
-        stream: true, // <--- السر هنا: تفعيل التدفقة
+        stream: true, // تفعيل التدفق
         messages: [
           {
             role: "system",
             content: `
-            أنت خبير استراتيجي في التجارة الإلكترونية الجزائرية. 
-            تتحدث بلهجة جزائرية محترفة وواضحة.
-            لا تعطي إجابات جاهزة. حلل سؤال المستخدم، فكر، ثم أعطِ حلاً مخصصاً له.
-            استخدم التنسيق (Bold, Lists) لتكون إجابتك مقروءة.
+            أنت "مستشار التجارة الذكي" في الجزائر.
+            تتكلم باللهجة الجزائرية المفهومة.
+            أسلوبك: خبير، مباشر، ومحفز.
+            مهمتك: مساعدة المستخدم في استراتيجيات التسعير، التسويق، وحل مشاكل الـ COD.
+            لا تستخدم مقدمات طويلة. ادخل في صلب الموضوع فوراً.
             `
           },
           { role: 'user', content: message },
         ],
-        temperature: 0.6,
-        max_tokens: 2048,
+        temperature: 0.5,
+        max_tokens: 1024,
       }),
     });
 
-    // تحويل استجابة Groq المتدفقة إلى استجابة للمتصفح
+    if (!response.ok) {
+      const err = await response.text();
+      return new Response(JSON.stringify({ error: `Groq API Error: ${err}` }), { status: 500 });
+    }
+
+    // إعداد الـ Stream للعودة إلى المتصفح
     const stream = new ReadableStream({
       async start(controller) {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
+        let buffer = '';
 
         try {
           while (true) {
             const { done, value } = await reader.read();
             if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            buffer += chunk;
             
-            const chunk = decoder.decode(value);
-            // Groq يرسل البيانات بصيغة SSE (data: {...})
-            const lines = chunk.split('\n');
-            
+            // معالجة البيانات سطر بسطر
+            const lines = buffer.split('\n');
+            buffer = lines.pop(); // الاحتفاظ بآخر جزء غير مكتمل
+
             for (const line of lines) {
-              if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+              const trimmedLine = line.trim();
+              if (!trimmedLine || trimmedLine === 'data: [DONE]') continue;
+              
+              if (trimmedLine.startsWith('data: ')) {
                 try {
-                  const data = JSON.parse(line.slice(6));
+                  const jsonStr = trimmedLine.slice(6);
+                  const data = JSON.parse(jsonStr);
                   const content = data.choices[0]?.delta?.content || '';
+                  
                   if (content) {
                     controller.enqueue(new TextEncoder().encode(content));
                   }
                 } catch (e) {
-                  // تجاهل الأخطاء البسيطة في التحليل
+                  // تجاهل الأسطر غير الصالحة بصمت
                 }
               }
             }
@@ -89,7 +107,8 @@ export default async function handler(req) {
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/plain; charset=utf-8',
-        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive',
       },
     });
 
