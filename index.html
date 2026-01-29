@@ -2273,22 +2273,46 @@
       }
     }
   </script>
-  <!-- بداية كود الشات بوت (Streaming) -->
-<script>
-    /* =========================================
-       كود الشات بوت المتطور (Streaming)
-       ========================================= */
+ <!-- ===================== CHAT BOT WIDGET (NEW STREAMING) ===================== -->
+<div id="chat-widget" class="no-print" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+    <!-- نافذة الشات -->
+    <div id="chatWindow" style="display: none; position: absolute; bottom: 80px; right: 0; width: 350px; height: 500px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; font-family: 'Tajawal', sans-serif; border: 1px solid rgba(0,0,0,0.1);">
+        <!-- الهيدر -->
+        <div class="chat-header" style="background: linear-gradient(135deg, #1e293b, #0f172a); color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 20px;">🤖</span>
+                <span>المستشار الذكي</span>
+            </div>
+            <span onclick="toggleChat()" style="cursor: pointer; opacity: 0.8; padding: 5px;">✕</span>
+        </div>
+        
+        <!-- جسم الشات -->
+        <div id="chatBody" class="chat-body" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 10px;">
+            <div class="msg bot-msg" style="padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; background: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px;">
+                مرحبا! أنا هنا باش نعاونك في حساباتك واستراتيجية البيع. واش تحب تسقسي؟
+            </div>
+        </div>
+        
+        <!-- الفوتر (حقل الكتابة) -->
+        <div class="chat-footer" style="padding: 12px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; background: white;">
+            <input type="text" id="chatInput" placeholder="اكتب سؤالك..." style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; outline: none; color: #333;" onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()" style="background: #2563eb; color: white; padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer; transition: background 0.2s;">➤</button>
+        </div>
+    </div>
+    
+    <!-- زر الفتح -->
+    <button id="chat-toggle-btn" onclick="toggleChat()" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(37,99,235,0.3); display: flex; align-items: center; justify-content: center; font-size: 24px; transition: transform 0.2s;">💬</button>
+</div>
 
+<!-- سكريبت الشات بوت -->
+<script>
     // 1. فتح وإغلاق النافذة
     function toggleChat() {
         const win = document.getElementById('chatWindow');
-        if (win) {
-            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
-            // التركيز على حقل الإدخال عند الفتح
-            if (win.style.display === 'flex') {
-                setTimeout(() => document.getElementById('chatInput')?.focus(), 100);
-            }
-        }
+        if (!win) return;
+        const isHidden = win.style.display === 'none' || win.style.display === '';
+        win.style.display = isHidden ? 'flex' : 'none';
+        if (isHidden) setTimeout(() => document.getElementById('chatInput')?.focus(), 100);
     }
 
     // 2. التعامل مع زر Enter
@@ -2296,32 +2320,31 @@
         if (e.key === 'Enter') sendMessage();
     }
 
-    // 3. إرسال الرسالة (مع الـ Streaming)
+    // 3. دالة الإرسال المتطورة (Streaming + Plain Text)
     async function sendMessage() {
         const input = document.getElementById('chatInput');
         const body = document.getElementById('chatBody');
         
-        // التحقق من وجود العناصر
-        if (!input || !body) return console.error("عناصر الشات غير موجودة!");
-
+        if (!input || !body) return;
+        
         const txt = input.value.trim();
         if (!txt) return;
 
         // إضافة رسالة المستخدم
         const userDiv = document.createElement('div');
         userDiv.className = 'msg user-msg';
-        userDiv.style.cssText = "background:#2563eb; color:white; padding:8px 12px; border-radius:15px; margin:5px 0; align-self:flex-end; max-width:80%; word-wrap: break-word;";
+        userDiv.style.cssText = "padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; background: #3b82f6; color: white; align-self: flex-end; border-bottom-right-radius: 2px;";
         userDiv.textContent = txt;
         body.appendChild(userDiv);
         
-        input.value = ''; // تفريغ الحقل
-        body.scrollTop = body.scrollHeight; // النزول للأسفل
+        input.value = '';
+        body.scrollTop = body.scrollHeight;
 
-        // إنشاء فقاعة رد البوت (فارغة مؤقتاً)
+        // إضافة مؤشر الانتظار
         const botDiv = document.createElement('div');
         botDiv.className = 'msg bot-msg';
-        botDiv.style.cssText = "background:#f3f4f6; color:#1f2937; padding:8px 12px; border-radius:15px; margin:5px 0; align-self:flex-start; max-width:80%; line-height:1.6; word-wrap: break-word;";
-        botDiv.textContent = "✍️ يفكر...";
+        botDiv.style.cssText = "padding: 10px 14px; border-radius: 12px; max-width: 85%; font-size: 14px; line-height: 1.5; word-wrap: break-word; background: #e2e8f0; color: #1e293b; align-self: flex-start; border-bottom-left-radius: 2px;";
+        botDiv.textContent = "✍️...";
         body.appendChild(botDiv);
         body.scrollTop = body.scrollHeight;
 
@@ -2332,11 +2355,12 @@
                 body: JSON.stringify({ message: txt })
             });
 
-            if (!response.ok) throw new Error("فشل الاتصال");
+            if (!response.ok) throw new Error("Server Error");
 
-            // بدء استقبال الرد المتدفق
-            botDiv.textContent = ""; // مسح "يفكر..."
+            // مسح المؤشر
+            botDiv.textContent = "";
             
+            // القراءة المتدفقة (Streaming)
             const reader = response.body.getReader();
             const decoder = new TextDecoder();
 
@@ -2345,22 +2369,15 @@
                 if (done) break;
                 
                 const chunk = decoder.decode(value, { stream: true });
-                
-                // إضافة النص تدريجياً
                 botDiv.textContent += chunk;
-                
-                // تمرير الشاشة للأسفل مع كل كلمة
                 body.scrollTop = body.scrollHeight;
             }
 
         } catch (error) {
             console.error(error);
-            botDiv.textContent = "حدث خطأ في الاتصال، حاول مجدداً.";
-            botDiv.style.color = "#dc2626"; // لون أحمر للخطأ
+            botDiv.innerHTML = "<span style='color:red'>حدث خطأ، حاول مرة أخرى.</span>";
         }
     }
 </script>
-<!-- نهاية كود الشات بوت -->
-
 </body>
 </html>
