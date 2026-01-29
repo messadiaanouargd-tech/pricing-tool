@@ -2273,5 +2273,94 @@
       }
     }
   </script>
+  <!-- بداية كود الشات بوت (Streaming) -->
+<script>
+    /* =========================================
+       كود الشات بوت المتطور (Streaming)
+       ========================================= */
+
+    // 1. فتح وإغلاق النافذة
+    function toggleChat() {
+        const win = document.getElementById('chatWindow');
+        if (win) {
+            win.style.display = (win.style.display === 'flex') ? 'none' : 'flex';
+            // التركيز على حقل الإدخال عند الفتح
+            if (win.style.display === 'flex') {
+                setTimeout(() => document.getElementById('chatInput')?.focus(), 100);
+            }
+        }
+    }
+
+    // 2. التعامل مع زر Enter
+    function handleEnter(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+
+    // 3. إرسال الرسالة (مع الـ Streaming)
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const body = document.getElementById('chatBody');
+        
+        // التحقق من وجود العناصر
+        if (!input || !body) return console.error("عناصر الشات غير موجودة!");
+
+        const txt = input.value.trim();
+        if (!txt) return;
+
+        // إضافة رسالة المستخدم
+        const userDiv = document.createElement('div');
+        userDiv.className = 'msg user-msg';
+        userDiv.style.cssText = "background:#2563eb; color:white; padding:8px 12px; border-radius:15px; margin:5px 0; align-self:flex-end; max-width:80%; word-wrap: break-word;";
+        userDiv.textContent = txt;
+        body.appendChild(userDiv);
+        
+        input.value = ''; // تفريغ الحقل
+        body.scrollTop = body.scrollHeight; // النزول للأسفل
+
+        // إنشاء فقاعة رد البوت (فارغة مؤقتاً)
+        const botDiv = document.createElement('div');
+        botDiv.className = 'msg bot-msg';
+        botDiv.style.cssText = "background:#f3f4f6; color:#1f2937; padding:8px 12px; border-radius:15px; margin:5px 0; align-self:flex-start; max-width:80%; line-height:1.6; word-wrap: break-word;";
+        botDiv.textContent = "✍️ يفكر...";
+        body.appendChild(botDiv);
+        body.scrollTop = body.scrollHeight;
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: txt })
+            });
+
+            if (!response.ok) throw new Error("فشل الاتصال");
+
+            // بدء استقبال الرد المتدفق
+            botDiv.textContent = ""; // مسح "يفكر..."
+            
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                
+                const chunk = decoder.decode(value, { stream: true });
+                
+                // إضافة النص تدريجياً
+                botDiv.textContent += chunk;
+                
+                // تمرير الشاشة للأسفل مع كل كلمة
+                body.scrollTop = body.scrollHeight;
+            }
+
+        } catch (error) {
+            console.error(error);
+            botDiv.textContent = "حدث خطأ في الاتصال، حاول مجدداً.";
+            botDiv.style.color = "#dc2626"; // لون أحمر للخطأ
+        }
+    }
+</script>
+<!-- نهاية كود الشات بوت -->
+
 </body>
 </html>
