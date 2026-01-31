@@ -660,6 +660,18 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    // دالة تسجيل الخروج
+window.logout = function() {
+  auth.signOut().then(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload();
+  }).catch((error) => {
+    console.error('Logout error:', error);
+    alert('حدث خطأ أثناء تسجيل الخروج');
+  });
+}
+
     const db = getFirestore(app);
 
     const TRIAL_DURATION = 24 * 60 * 60 * 1000;
@@ -1708,20 +1720,21 @@
           </div>
         </div>
 
-      <!-- Footer -->
-<div class="p-6 border-t border-white/10 no-print" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-  <!-- المحتوى الأساسي (في الوسط) -->
-  <div style="flex: 1; text-align: center;">
-    <p class="text-white/90 mb-2" data-i18n="footerTitle">PRO • COD Pricing Tool</p>
-    <p class="text-xs text-white/60" data-i18n="footerSub">v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts</p>
-  </div>
+   <!-- Footer -->
+<div class="p-6 border-t border-white/10 no-print" style="position: relative; text-align: center;">
+  <!-- المحتوى الأساسي -->
+  <p class="text-white/90 mb-2" data-i18n="footerTitle">PRO • COD Pricing Tool</p>
+  <p class="text-xs text-white/60" data-i18n="footerSub">v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts</p>
   
-  <!-- زر تسجيل الخروج (ثابت في اليسار) -->
-  <button onclick="logout()" dir="ltr" style="padding: 5px 12px; background: rgba(239, 68, 68, 0.08); color: #ef4444; border-radius: 6px; font-weight: 500; font-size: 0.813rem; border: 1px solid rgba(239, 68, 68, 0.15); cursor: pointer; transition: all 0.2s;" data-i18n="logoutBtn">
+  <!-- زر تسجيل الخروج - ثابت في اليسار دائماً -->
+  <button 
+    onclick="logout()" 
+    dir="ltr"
+    style="position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%); padding: 5px 12px; background: rgba(239, 68, 68, 0.08); color: #ef4444; border-radius: 6px; font-weight: 500; font-size: 0.813rem; border: 1px solid rgba(239, 68, 68, 0.15); cursor: pointer; transition: all 0.2s;" 
+    data-i18n="logoutBtn">
     تسجيل الخروج 🚪
   </button>
 </div>
-
 
       </div> <!-- /Main Card -->
 
