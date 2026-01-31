@@ -622,23 +622,9 @@
   </script>
   <!-- ============================================================== -->
 
-  <!-- ===================== FINAL VERSION - 24H WITH ANALYTICS ===================== -->
+  <!-- ===================== FINAL VERSION - 24H WITH HYBRID SECURITY ===================== -->
   <script>
-    (function() {
-      const TRIAL_DURATION = 24 * 60 * 60 * 1000; // 24 hours
-      const WHATSAPP_NUMBER = "213540018556";
-      const PRICE = "4500,00 دج";
-
-      const COOKIE_NAME = 'pricingToolFirstUse';
-      const STORAGE_NAME = 'pricingToolStartTime';
-      const LICENSE_STORAGE = 'pricingToolLicense';
-
-      // أكواد التفعيل
-      // ===================== FINAL VERSION - 24H WITH HYBRID SECURITY =====================
-  (function() {
-    // This script is kept for compatibility but now uses Firestore
-    console.log('✅ Hybrid license system loaded');
-  })();
+    console.log("Hybrid license system loaded");
   </script>
 
   <!-- ============================================== -->
@@ -3245,10 +3231,8 @@ function initMotivationCards() {
       messagingSenderId: "815665273956",
       appId: "1:815665273956:web:6a496b1d28da2aa0b25371"
     };
-
-  const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider();  // ← أضف هذا السطر
-
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
     // مراقبة هل المستخدم مسجل أم لا
