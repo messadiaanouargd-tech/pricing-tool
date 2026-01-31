@@ -3248,6 +3248,9 @@ function initMotivationCards() {
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+  const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();  // ← أضف هذا السطر
+
     const googleProvider = new GoogleAuthProvider();
 
     // مراقبة هل المستخدم مسجل أم لا
