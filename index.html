@@ -671,21 +671,57 @@ window.logout = function() {
     // التحقق من المستخدم
     // ==========================================
     // التحقق الفوري قبل تحميل Firebase
-(function() {
-  const overlay = document.getElementById("authOverlay");
-  const checkingAuth = document.createElement('div');
-  checkingAuth.id = 'authChecking';
-  checkingAuth.style.cssText = 'position:fixed;inset:0;background:#0f172a;z-index:10001;display:flex;align-items:center;justify-content:center;';
-  checkingAuth.innerHTML = '<div style="width:40px;height:40px;border:3px solid rgba(139,92,246,0.3);border-top-color:#8b5cf6;border-radius:50%;animation:spin 0.8s linear infinite;"></div><style>@keyframes spin{to{transform:rotate(360deg);}}</style>';
-  document.body.appendChild(checkingAuth);
+// ════════════════════════════════════════════════════════════
+// 🚀 تحميل فوري - بدون انتظار
+// ════════════════════════════════════════════════════════════
+
+const overlay = document.getElementById("authOverlay");
+
+// تحقق من localStorage فوراً
+const wasLoggedIn = localStorage.getItem('user_logged_in');
+
+if (wasLoggedIn === 'yes') {
+  // المستخدم كان مسجل دخول من قبل - افتح مباشرة
+  overlay.style.display = "none";
+} else {
+  // مستخدم جديد - أظهر صفحة التسجيل
+  overlay.style.display = "flex";
+}
+
+// التحقق النهائي من Firebase
+onAuthStateChanged(auth, async (user) => {
   
-  // إخفاء loader بعد التحقق من Auth
-  setTimeout(() => {
-    if (checkingAuth.parentNode) {
-      checkingAuth.remove();
+  if (!user) {
+    // لا يوجد مستخدم - أظهر صفحة التسجيل
+    localStorage.removeItem('user_logged_in');
+    overlay.style.display = "flex";
+    return;
+  }
+  
+  // المستخدم مسجل دخول
+  localStorage.setItem('user_logged_in', 'yes');
+  overlay.style.display = "none";
+  
+  try {
+    const userDoc = await getDoc(doc(db, 'users', user.uid));
+    
+    if (userDoc.exists() && userDoc.data().isPro) {
+      localStorage.setItem(LICENSE_STORAGE, JSON.stringify({
+        isPro: true,
+        licenseKey: userDoc.data().licenseKey,
+        validatedAt: Date.now()
+      }));
+      
+      removeTrialElements();
+      console.log('✅ النسخة الكاملة مفعّلة');
+    } else {
+      initTrialMode();
     }
-  }, 3000); // أقصى وقت انتظار
-})();
+  } catch (error) {
+    console.error('Error checking user:', error);
+    initTrialMode();
+  }
+});
 
 onAuthStateChanged(auth, async (user) => {
   const overlay = document.getElementById("authOverlay");
