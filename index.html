@@ -1708,16 +1708,16 @@
           </div>
         </div>
 
-       <!-- Footer -->
+      <!-- Footer -->
 <div class="p-6 border-t border-white/10 no-print" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-  <!-- المحتوى الأساسي (في الوسط/اليمين) -->
+  <!-- المحتوى الأساسي (في الوسط) -->
   <div style="flex: 1; text-align: center;">
     <p class="text-white/90 mb-2" data-i18n="footerTitle">PRO • COD Pricing Tool</p>
     <p class="text-xs text-white/60" data-i18n="footerSub">v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts</p>
   </div>
   
-  <!-- زر تسجيل الخروج (في اليسار) -->
-  <button onclick="logout()" style="padding: 5px 12px; background: rgba(239, 68, 68, 0.08); color: #ef4444; border-radius: 6px; font-weight: 500; font-size: 0.813rem; border: 1px solid rgba(239, 68, 68, 0.15); cursor: pointer; transition: all 0.2s;">
+  <!-- زر تسجيل الخروج (ثابت في اليسار) -->
+  <button onclick="logout()" dir="ltr" style="padding: 5px 12px; background: rgba(239, 68, 68, 0.08); color: #ef4444; border-radius: 6px; font-weight: 500; font-size: 0.813rem; border: 1px solid rgba(239, 68, 68, 0.15); cursor: pointer; transition: all 0.2s;" data-i18n="logoutBtn">
     تسجيل الخروج 🚪
   </button>
 </div>
@@ -1872,7 +1872,8 @@ const I18N = {
     status_low: "منخفض",
     status_ok: "مقبول",
     status_good: "جيد",
-
+    logoutBtn: "تسجيل الخروج 🚪",
+    
     cur_dzd: "دج"
   },
 
@@ -2005,6 +2006,7 @@ const I18N = {
     status_low: "Low",
     status_ok: "OK",
     status_good: "Good",
+    logoutBtn: "Logout 🚪",
 
     cur_dzd: "DZD"
   },
@@ -2138,6 +2140,7 @@ const I18N = {
     status_low: "Faible",
     status_ok: "Moyen",
     status_good: "Bon",
+    logoutBtn: "Déconnexion 🚪",
 
     cur_dzd: "DZD"
   }
