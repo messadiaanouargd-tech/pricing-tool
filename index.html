@@ -1714,11 +1714,20 @@
           </div>
         </div>
 
-        <!-- Footer -->
-        <div class="p-6 text-center border-t border-white/10 no-print">
-          <p class="text-white/90 mb-2" data-i18n="footerTitle">PRO • COD Pricing Tool</p>
-          <p class="text-xs text-white/60" data-i18n="footerSub">v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts</p>
-        </div>
+       <!-- Footer -->
+<div class="p-6 border-t border-white/10 no-print" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <!-- المحتوى الأساسي (في الوسط/اليمين) -->
+  <div style="flex: 1; text-align: center;">
+    <p class="text-white/90 mb-2" data-i18n="footerTitle">PRO • COD Pricing Tool</p>
+    <p class="text-xs text-white/60" data-i18n="footerSub">v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts</p>
+  </div>
+  
+  <!-- زر تسجيل الخروج (في اليسار) -->
+  <button onclick="logout()" style="padding: 5px 12px; background: rgba(239, 68, 68, 0.08); color: #ef4444; border-radius: 6px; font-weight: 500; font-size: 0.813rem; border: 1px solid rgba(239, 68, 68, 0.15); cursor: pointer; transition: all 0.2s;">
+    تسجيل الخروج 🚪
+  </button>
+</div>
+
 
       </div> <!-- /Main Card -->
 
@@ -1974,7 +1983,7 @@ const I18N = {
     chart_roi: "ROI",
 
     footerTitle: "PRO • COD Pricing Tool",
-    footerSub: "v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts",
+    footerSub: "v4.1 PRO • Dark Theme • Monthly • Charts • Discounts",
 
     msg_pdf_generating: "Generating PDF...",
     msg_pdf_done: "PDF exported successfully!",
@@ -2107,7 +2116,7 @@ const I18N = {
     chart_roi: "ROI",
 
     footerTitle: "PRO • COD Pricing Tool",
-    footerSub: "v4.1 PRO • Dark Theme • PDF • Monthly • Charts • Discounts",
+    footerSub: "v4.1 PRO • Dark Theme • Monthly • Charts • Discounts",
 
     msg_pdf_generating: "Génération du PDF...",
     msg_pdf_done: "PDF exporté !",
