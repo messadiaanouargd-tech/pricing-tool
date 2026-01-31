@@ -634,527 +634,436 @@
       const LICENSE_STORAGE = 'pricingToolLicense';
 
       // أكواد التفعيل
-      const VALID_LICENSE_KEYS = [
-        'CODPRO-8X2K-9M4L-7N6P',
-        'CODGLD-5Q3R-1W8T-4Y9Z',
-        'CODULT-2A6B-3C8D-9E5F',
-        'CODVIP-7H4J-6K2M-8N1L',
-        'CODMAX-9P5Q-4R7S-2T8V'
-      ];
+      // ===================== FINAL VERSION - 24H WITH HYBRID SECURITY =====================
+  (function() {
+    // This script is kept for compatibility but now uses Firestore
+    console.log('✅ Hybrid license system loaded');
+  })();
+  </script>
 
-      function validateLicenseKey(key) {
-        if (!key || key.length < 10) return false;
-        return VALID_LICENSE_KEYS.includes(key.toUpperCase().trim());
+  <!-- ============================================== -->
+  <!-- نظام التفعيل الهجين الآمن (بدون Cloud Functions) -->
+  <!-- ============================================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBoDXsELYXl440Wb3bd6xir0sMbj-6LSIA",
+      authDomain: "cod-pricing.firebaseapp.com",
+      projectId: "cod-pricing",
+      storageBucket: "cod-pricing.firebasestorage.app",
+      messagingSenderId: "815665273956",
+      appId: "1:815665273956:web:6a496b1d28da2aa0b25371"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const TRIAL_DURATION = 24 * 60 * 60 * 1000;
+    const COOKIE_NAME = 'pricingToolFirstUse';
+    const STORAGE_NAME = 'pricingToolStartTime';
+    const LICENSE_STORAGE = 'pricingToolLicense';
+    const WHATSAPP_NUMBER = "213540018556";
+    const PRICE = "4500,00 دج";
+
+    // ==========================================
+    // التحقق من المستخدم
+    // ==========================================
+    onAuthStateChanged(auth, async (user) => {
+      const overlay = document.getElementById('authOverlay');
+      
+      if (!user) {
+        if (overlay) overlay.style.display = 'flex';
+        return;
       }
 
-      function activateLicense(key) {
-        const licenseData = { key: key, activatedAt: Date.now() };
-        localStorage.setItem(LICENSE_STORAGE, JSON.stringify(licenseData));
-        setCookie(LICENSE_STORAGE, JSON.stringify(licenseData), 3650);
+      if (overlay) overlay.style.display = 'none';
 
-        // Track activation event in Google Analytics
+      try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        
+        if (userDoc.exists() && userDoc.data().isPro) {
+          localStorage.setItem(LICENSE_STORAGE, JSON.stringify({
+            isPro: true,
+            licenseKey: userDoc.data().licenseKey,
+            validatedAt: Date.now()
+          }));
+          
+          removeTrialElements();
+          console.log('✅ النسخة الكاملة مفعّلة');
+        } else {
+          initTrialMode();
+        }
+      } catch (error) {
+        console.error('Error checking user:', error);
+        initTrialMode();
+      }
+    });
+
+    // ==========================================
+    // التفعيل من Firestore
+    // ==========================================
+    window.activateLicenseHybrid = async function(licenseKey) {
+      if (!licenseKey || licenseKey.length < 10) {
+        return { success: false, message: '⚠️ أدخل الكود' };
+      }
+
+      const user = auth.currentUser;
+      if (!user) {
+        return { success: false, message: '⚠️ سجل دخول أولاً' };
+      }
+
+      try {
+        const cleanKey = licenseKey.toUpperCase().trim();
+        const licenseDoc = await getDoc(doc(db, 'licenses', cleanKey));
+
+        if (!licenseDoc.exists()) {
+          return { success: false, message: '❌ كود خاطئ' };
+        }
+
+        const licenseData = licenseDoc.data();
+
+        if (licenseData.status === 'used') {
+          return { success: false, message: '⚠️ الكود مستخدم من قبل' };
+        }
+
+        if (licenseData.status === 'revoked') {
+          return { success: false, message: '⚠️ الكود ملغي' };
+        }
+
+        await updateDoc(doc(db, 'licenses', cleanKey), {
+          status: 'used',
+          usedBy: user.uid,
+          userEmail: user.email,
+          activatedAt: new Date()
+        });
+
+        await setDoc(doc(db, 'users', user.uid), {
+          licenseKey: cleanKey,
+          isPro: true,
+          activatedAt: new Date(),
+          email: user.email
+        }, { merge: true });
+
+        localStorage.setItem(LICENSE_STORAGE, JSON.stringify({
+          isPro: true,
+          licenseKey: cleanKey,
+          validatedAt: Date.now()
+        }));
+
         if (typeof gtag !== 'undefined') {
           gtag('event', 'license_activated', {
             'event_category': 'License',
-            'event_label': 'License Activated Successfully'
+            'event_label': 'Hybrid Activation Success'
           });
         }
-      }
 
-      function checkLicense() {
-        const licenseCookie = getCookie(LICENSE_STORAGE);
-        const licenseStorage = localStorage.getItem(LICENSE_STORAGE);
+        return { success: true, message: '✅ تم التفعيل بنجاح!' };
 
-        if (licenseCookie || licenseStorage) {
-          try {
-            const license = JSON.parse(licenseCookie || licenseStorage);
-            if (validateLicenseKey(license.key)) return true;
-          } catch(e) {}
+      } catch (error) {
+        console.error('License activation error:', error);
+        
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'license_failed', {
+            'event_category': 'License',
+            'event_label': error.code || 'Unknown Error'
+          });
         }
+
+        return { success: false, message: '❌ حدث خطأ: ' + (error.message || 'غير معروف') };
+      }
+    };
+
+    // ==========================================
+    // دوال مساعدة
+    // ==========================================
+    function hasValidLicense() {
+      const stored = localStorage.getItem(LICENSE_STORAGE);
+      if (!stored) return false;
+
+      try {
+        const data = JSON.parse(stored);
+        const age = Date.now() - (data.validatedAt || 0);
+        if (age > 30 * 24 * 60 * 60 * 1000) return false;
+        return data.isPro === true;
+      } catch {
         return false;
       }
+    }
 
-      function setCookie(name, value, days) {
-        const date = new Date();
-        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-        document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/;SameSite=Strict";
+    function setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      document.cookie = name + "=" + value + ";expires=" + date.toUTCString() + ";path=/;SameSite=Strict";
+    }
+
+    function getCookie(name) {
+      const nameEQ = name + "=";
+      const ca = document.cookie.split(';');
+      for(let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length);
       }
+      return null;
+    }
 
-      function getCookie(name) {
-        const nameEQ = name + "=";
-        const ca = document.cookie.split(';');
-        for(let i = 0; i < ca.length; i++) {
-          let c = ca[i].trim();
-          if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length);
-        }
-        return null;
-      }
+    function checkTrialStatus() {
+      let firstVisit = getCookie(COOKIE_NAME) || localStorage.getItem(STORAGE_NAME);
+      const currentTime = Date.now();
 
-      function checkTrialStatus() {
-        let firstVisit = getCookie(COOKIE_NAME) || localStorage.getItem(STORAGE_NAME);
-        const currentTime = Date.now();
+      if (!firstVisit) {
+        const visitTime = currentTime.toString();
+        setCookie(COOKIE_NAME, visitTime, 365);
+        localStorage.setItem(STORAGE_NAME, visitTime);
 
-        if (!firstVisit) {
-          const visitTime = currentTime.toString();
-          setCookie(COOKIE_NAME, visitTime, 365);
-          localStorage.setItem(STORAGE_NAME, visitTime);
-
-          // Track trial start in Google Analytics
-          if (typeof gtag !== 'undefined') {
-            gtag('event', 'trial_started', {
-              'event_category': 'Trial',
-              'event_label': 'New Trial Started'
-            });
-          }
-
-          return { isExpired: false, timeLeft: TRIAL_DURATION };
-        }
-
-        const firstVisitTime = parseInt(firstVisit);
-        const timeElapsed = currentTime - firstVisitTime;
-        const timeLeft = TRIAL_DURATION - timeElapsed;
-
-        return {
-          isExpired: timeElapsed >= TRIAL_DURATION,
-          timeLeft: Math.max(0, timeLeft)
-        };
-      }
-
-      function disableAllInputs() {
-        setTimeout(() => {
-          const inputs = document.querySelectorAll('input:not(.license-input), textarea, select, button:not(.license-btn):not(.whatsapp-btn)');
-          inputs.forEach(input => {
-            input.disabled = true;
-            input.style.opacity = '0.5';
-            input.style.cursor = 'not-allowed';
-          });
-        }, 100);
-      }
-
-      function isIncognitoMode() {
-        return new Promise((resolve) => {
-          try {
-            localStorage.setItem('incognito_test', '1');
-            localStorage.removeItem('incognito_test');
-
-            if ('storage' in navigator && 'estimate' in navigator.storage) {
-              navigator.storage.estimate().then(({quota}) => {
-                resolve(quota < 120000000);
-              }).catch(() => resolve(false));
-            } else {
-              resolve(false);
-            }
-          } catch(e) {
-            resolve(true);
-          }
-        });
-      }
-
-      function disableToolCompletely() {
-        const style = document.createElement('style');
-        style.textContent = `
-          input, textarea, select, button {
-            pointer-events: none !important;
-            opacity: 0.3 !important;
-            cursor: not-allowed !important;
-          }
-        `;
-        document.head.appendChild(style);
-
-        document.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); }, true);
-        document.addEventListener('keydown', e => { e.preventDefault(); e.stopPropagation(); }, true);
-      }
-
-      function showIncognitoBlockScreen() {
-        // Track incognito attempt
         if (typeof gtag !== 'undefined') {
-          gtag('event', 'incognito_blocked', {
-            'event_category': 'Security',
-            'event_label': 'Incognito Mode Blocked'
-          });
-        }
-
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-          background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px);
-          z-index: 999999; display: flex; align-items: center; justify-content: center;
-        `;
-
-        overlay.innerHTML = `
-          <div style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
-            border: 3px solid rgba(255, 255, 255, 0.3); border-radius: 24px; padding: 48px;
-            max-width: 500px; text-align: center; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.8);">
-            <div style="font-size: 80px; margin-bottom: 24px;">🚫</div>
-            <h2 style="font-size: 32px; font-weight: 900; margin-bottom: 16px; color: #fff;">
-              التصفح المخفي محظور!
-            </h2>
-            <p style="font-size: 18px; color: rgba(255, 255, 255, 0.95); margin-bottom: 32px; line-height: 1.8;">
-              هذه الأداة لا تعمل في وضع التصفح المخفي.<br><br>
-              <strong>افتح الأداة في نافذة عادية للمتابعة.</strong>
-            </p>
-          </div>
-        `;
-
-        document.body.appendChild(overlay);
-      }
-
-      // هيدر الفترة التجريبية
-      function createTrialHeader() {
-        const header = document.createElement('div');
-        header.id = 'trialHeader';
-        header.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          background: linear-gradient(
-            135deg,
-            rgba(139, 92, 246, 0.08),
-            rgba(34, 211, 238, 0.08)
-          );
-          backdrop-filter: blur(10px);
-          border-bottom: 1px solid rgba(139, 92, 246, 0.2);
-          padding: 12px 24px;
-          z-index: 9998;
-          box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 20px;
-          flex-wrap: wrap;
-        `;
-
-        const status = checkTrialStatus();
-        const hours = Math.floor(status.timeLeft / (1000 * 60 * 60));
-        const minutes = Math.floor((status.timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-
-        header.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 250px;">
-            <div style="
-              background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(34, 211, 238, 0.15));
-              padding: 8px 16px;
-              border-radius: 12px;
-              border: 1px solid rgba(139, 92, 246, 0.3);
-              display: flex;
-              align-items: center;
-              gap: 10px;
-            ">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: #8b5cf6;">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <div>
-                <div style="font-size: 10px; color: rgba(255, 255, 255, 0.6); font-weight: 600; letter-spacing: 0.5px;">الوقت المتبقي على الفترة التجريبية</div>
-                <div id="timerDisplay" style="color: #22d3ee; font-weight: 900; font-size: 16px; direction: ltr; text-align: left;">
-                  ${hours}h ${minutes}m
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 300px; max-width: 500px;">
-            <input 
-              type="text" 
-              class="license-input"
-              placeholder="كود التفعيل"
-              style="
-                flex: 1;
-                padding: 10px 16px;
-                border: 2px solid rgba(139, 92, 246, 0.3);
-                border-radius: 10px;
-                background: rgba(255, 255, 255, 0.05);
-                color: rgba(255, 255, 255, 0.9);
-                font-size: 14px;
-                font-weight: 600;
-                text-align: center;
-                letter-spacing: 0.5px;
-                text-transform: uppercase;
-                transition: all 0.3s;
-              "
-            />
-            <button class="license-btn" style="
-              padding: 10px 24px;
-              background: linear-gradient(135deg, #22c55e, #16a34a);
-              color: white;
-              border: none;
-              border-radius: 10px;
-              font-weight: 700;
-              font-size: 14px;
-              cursor: pointer;
-              white-space: nowrap;
-              transition: all 0.3s;
-              box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
-            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 16px rgba(34, 197, 94, 0.4)';"
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 12px rgba(34, 197, 94, 0.3)';">
-              ✨ تفعيل
-            </button>
-          </div>
-
-          <div id="licenseMsg" style="color: rgba(255, 255, 255, 0.8); font-size: 12px; font-weight: 600; min-width: 150px; text-align: center;"></div>
-        `;
-
-        document.body.appendChild(header);
-        document.body.style.paddingTop = '80px';
-
-        // تحديث المؤقت
-        setInterval(() => {
-          const s = checkTrialStatus();
-          if (s.isExpired) {
-            location.reload();
-          }
-          const h = Math.floor(s.timeLeft / (1000 * 60 * 60));
-          const m = Math.floor((s.timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-          document.getElementById('timerDisplay').innerHTML = `${h}h ${m}m`;
-        }, 60000);
-
-        // معالج التفعيل
-        const btn = header.querySelector('.license-btn');
-        const input = header.querySelector('.license-input');
-        const msg = document.getElementById('licenseMsg');
-
-        input.addEventListener('focus', function() {
-          this.style.borderColor = 'rgba(139, 92, 246, 0.6)';
-          this.style.background = 'rgba(255, 255, 255, 0.08)';
-        });
-
-        input.addEventListener('blur', function() {
-          this.style.borderColor = 'rgba(139, 92, 246, 0.3)';
-          this.style.background = 'rgba(255, 255, 255, 0.05)';
-        });
-
-        btn.addEventListener('click', () => {
-          const key = input.value.trim();
-          if (!key) {
-            msg.style.color = '#fca5a5';
-            msg.textContent = '⚠️ أدخل الكود';
-            setTimeout(() => msg.textContent = '', 3000);
-            return;
-          }
-
-          if (validateLicenseKey(key)) {
-            activateLicense(key);
-            msg.style.color = '#86efac';
-            msg.textContent = '✅ تم التفعيل!';
-            setTimeout(() => location.reload(), 1500);
-          } else {
-            // Track failed activation
-            if (typeof gtag !== 'undefined') {
-              gtag('event', 'license_failed', {
-                'event_category': 'License',
-                'event_label': 'Invalid License Key Entered'
-              });
-            }
-
-            msg.style.color = '#fca5a5';
-            msg.textContent = '❌ كود خاطئ';
-            input.style.borderColor = 'rgba(239, 68, 68, 0.8)';
-            setTimeout(() => {
-              msg.textContent = '';
-              input.style.borderColor = 'rgba(139, 92, 246, 0.3)';
-            }, 3000);
-          }
-        });
-
-        input.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') btn.click();
-        });
-      }
-
-      // شاشة انتهاء الفترة
-      function showExpiredScreen() {
-        document.getElementById('trialHeader')?.remove();
-
-        // Track trial expiration
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'trial_expired', {
+          gtag('event', 'trial_started', {
             'event_category': 'Trial',
-            'event_label': 'Trial Period Expired'
+            'event_label': 'New Trial Started'
           });
         }
 
-        const header = document.createElement('div');
-        header.style.cssText = `
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          background: linear-gradient(
-            135deg,
-            rgba(139, 92, 246, 0.12),
-            rgba(34, 211, 238, 0.12)
-          );
-          backdrop-filter: blur(12px);
-          border-bottom: 2px solid rgba(139, 92, 246, 0.3);
-          padding: 24px 20px;
-          z-index: 9998;
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-        `;
+        return { isExpired: false, timeLeft: TRIAL_DURATION };
+      }
 
-        header.innerHTML = `
-          <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-            <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px;">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: #ef4444;">
-                <circle cx="12" cy="12" r="10" stroke-width="2"/>
-                <path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-              <h2 style="font-size: 22px; font-weight: 800; color: rgba(255, 255, 255, 0.95); margin: 0;">
-                انتهت الفترة التجريبية
-              </h2>
-            </div>
+      const firstVisitTime = parseInt(firstVisit);
+      const timeElapsed = currentTime - firstVisitTime;
+      const timeLeft = TRIAL_DURATION - timeElapsed;
 
-            <button class="whatsapp-btn" style="
-              width: 100%;
-              max-width: 400px;
-              padding: 14px 32px;
-              background: linear-gradient(135deg, #25D366, #128C7E);
-              color: white;
-              border: none;
-              border-radius: 12px;
-              font-weight: 700;
-              font-size: 17px;
-              cursor: pointer;
-              margin-bottom: 16px;
-              transition: all 0.3s;
-              box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
-            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(37, 211, 102, 0.5)';" 
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(37, 211, 102, 0.4)';">
-              💬 تواصل عبر واتساب للشراء
-            </button>
+      return {
+        isExpired: timeElapsed >= TRIAL_DURATION,
+        timeLeft: Math.max(0, timeLeft)
+      };
+    }
 
-            <div style="background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 12px; margin-bottom: 12px; border: 1px solid rgba(139, 92, 246, 0.3);">
-              <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
-                <input 
-                  type="text" 
-                  class="license-input"
-                  placeholder="أدخل كود التفعيل"
-                  style="
-                    flex: 1;
-                    max-width: 280px;
-                    padding: 11px 16px;
-                    border: 2px solid rgba(139, 92, 246, 0.4);
-                    border-radius: 10px;
-                    background: rgba(0, 0, 0, 0.3);
-                    color: white;
-                    font-size: 14px;
-                    font-weight: 600;
-                    text-align: center;
-                    letter-spacing: 0.5px;
-                    text-transform: uppercase;
-                  "
-                />
-                <button class="license-btn" style="
-                  padding: 11px 26px;
-                  background: linear-gradient(135deg, #22d3ee, #8b5cf6);
-                  color: white;
-                  border: none;
-                  border-radius: 10px;
-                  font-weight: 700;
-                  font-size: 14px;
-                  cursor: pointer;
-                  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
-                ">
-                  ✨ تفعيل
-                </button>
-              </div>
-              <div id="licenseMsg" style="color: rgba(255, 255, 255, 0.9); font-size: 13px; font-weight: 600;"></div>
-            </div>
+    function removeTrialElements() {
+      document.getElementById('trialHeader')?.remove();
+      document.querySelectorAll('input, textarea, select, button').forEach(el => {
+        el.disabled = false;
+        el.style.opacity = '1';
+        el.style.cursor = 'auto';
+      });
+    }
 
-            <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(34, 211, 238, 0.15)); padding: 14px; border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3);">
-              <div style="font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px; font-weight: 600;">السعر</div>
-              <div style="font-size: 26px; font-weight: 900; color: #22d3ee; text-shadow: 0 2px 8px rgba(34, 211, 238, 0.3);">${PRICE}</div>
-              <div style="font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-top: 3px;">دفعة واحدة • مدى الحياة</div>
+    function disableAllInputs() {
+      setTimeout(() => {
+        const inputs = document.querySelectorAll('input:not(.license-input), textarea, select, button:not(.license-btn):not(.whatsapp-btn)');
+        inputs.forEach(input => {
+          input.disabled = true;
+          input.style.opacity = '0.5';
+          input.style.cursor = 'not-allowed';
+        });
+      }, 100);
+    }
+
+    function initTrialMode() {
+      if (hasValidLicense()) {
+        removeTrialElements();
+        return;
+      }
+
+      const status = checkTrialStatus();
+
+      if (status.isExpired) {
+        disableAllInputs();
+        showExpiredScreen();
+      } else {
+        createTrialHeader();
+      }
+    }
+
+    function createTrialHeader() {
+      const header = document.createElement('div');
+      header.id = 'trialHeader';
+      header.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(34, 211, 238, 0.08));
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        padding: 12px 24px; z-index: 9998;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 20px; flex-wrap: wrap;
+      `;
+
+      const status = checkTrialStatus();
+      const hours = Math.floor(status.timeLeft / (1000 * 60 * 60));
+      const minutes = Math.floor((status.timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+
+      header.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 250px;">
+          <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(34, 211, 238, 0.15)); padding: 8px 16px; border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.3); display: flex; align-items: center; gap: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: #8b5cf6;">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div>
+              <div style="font-size: 10px; color: rgba(255, 255, 255, 0.6); font-weight: 600;">الوقت المتبقي</div>
+              <div id="timerDisplay" style="color: #22d3ee; font-weight: 900; font-size: 16px; direction: ltr; text-align: left;">${hours}h ${minutes}m</div>
             </div>
           </div>
-        `;
+        </div>
 
-        document.body.appendChild(header);
-        document.body.style.paddingTop = '280px';
+        <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 300px; max-width: 500px;">
+          <input type="text" class="license-input" placeholder="كود التفعيل" style="flex: 1; padding: 10px 16px; border: 2px solid rgba(139, 92, 246, 0.3); border-radius: 10px; background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.9); font-size: 14px; font-weight: 600; text-align: center; letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.3s;" />
+          <button class="license-btn" style="padding: 10px 24px; background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; white-space: nowrap; transition: all 0.3s; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);">✨ تفعيل</button>
+        </div>
 
-        // معالج الواتساب
-        header.querySelector('.whatsapp-btn').addEventListener('click', () => {
-          // Track WhatsApp click
-          if (typeof gtag !== 'undefined') {
-            gtag('event', 'whatsapp_clicked', {
-              'event_category': 'Conversion',
-              'event_label': 'WhatsApp Purchase Button Clicked'
-            });
-          }
+        <div id="licenseMsg" style="color: rgba(255, 255, 255, 0.8); font-size: 12px; font-weight: 600; min-width: 150px; text-align: center;"></div>
+      `;
 
-          const msg = encodeURIComponent(`مرحباً! أريد شراء أداة COD Pricing Tool مدى الحياة بسعر ${PRICE}`);
-          window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
-        });
+      document.body.appendChild(header);
+      document.body.style.paddingTop = '80px';
 
-        // معالج التفعيل
-        const btn = header.querySelector('.license-btn');
-        const input = header.querySelector('.license-input');
-        const msgDiv = header.querySelector('#licenseMsg');
+      setInterval(() => {
+        const s = checkTrialStatus();
+        if (s.isExpired) location.reload();
+        const h = Math.floor(s.timeLeft / (1000 * 60 * 60));
+        const m = Math.floor((s.timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const timerEl = document.getElementById('timerDisplay');
+        if (timerEl) timerEl.innerHTML = `${h}h ${m}m`;
+      }, 60000);
 
-        btn.addEventListener('click', () => {
-          const key = input.value.trim();
-          if (!key) {
-            msgDiv.style.color = '#fca5a5';
-            msgDiv.textContent = '⚠️ الرجاء إدخال كود التفعيل';
-            return;
-          }
+      const btn = header.querySelector('.license-btn');
+      const input = header.querySelector('.license-input');
+      const msg = document.getElementById('licenseMsg');
 
-          if (validateLicenseKey(key)) {
-            activateLicense(key);
-            msgDiv.style.color = '#86efac';
-            msgDiv.textContent = '✅ تم التفعيل بنجاح! جاري إعادة التحميل...';
-            setTimeout(() => location.reload(), 1500);
-          } else {
-            // Track failed activation
-            if (typeof gtag !== 'undefined') {
-              gtag('event', 'license_failed', {
-                'event_category': 'License',
-                'event_label': 'Invalid License Key After Expiry'
-              });
-            }
-
-            msgDiv.style.color = '#fca5a5';
-            msgDiv.textContent = '❌ الكود الذي أدخلته غير صحيح';
-            input.style.borderColor = 'rgba(239, 68, 68, 0.8)';
-          }
-        });
-
-        input.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter') btn.click();
-        });
-      }
-
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-      } else {
-        init();
-      }
-
-      async function init() {
-        // فحص التصفح المخفي
-        const isIncognito = await isIncognitoMode();
-        if (isIncognito) {
-          disableToolCompletely();
-          showIncognitoBlockScreen();
+      btn.addEventListener('click', async () => {
+        const key = input.value.trim();
+        if (!key) {
+          msg.style.color = '#fca5a5';
+          msg.textContent = '⚠️ أدخل الكود';
+          setTimeout(() => msg.textContent = '', 3000);
           return;
         }
 
-        // فحص الترخيص
-        if (checkLicense()) {
-          console.log('✅ النسخة الكاملة مفعّلة');
-          return;
-        }
-
-        // الفترة التجريبية
-        const status = checkTrialStatus();
-
-        if (status.isExpired) {
-          disableAllInputs();
-          showExpiredScreen();
+        btn.disabled = true;
+        btn.textContent = '⏳ جاري التحقق...';
+        
+        const result = await window.activateLicenseHybrid(key);
+        
+        msg.textContent = result.message;
+        msg.style.color = result.success ? '#86efac' : '#fca5a5';
+        
+        if (result.success) {
+          setTimeout(() => location.reload(), 1500);
         } else {
-          createTrialHeader();
+          btn.disabled = false;
+          btn.textContent = '✨ تفعيل';
+          input.style.borderColor = 'rgba(239, 68, 68, 0.8)';
+          setTimeout(() => {
+            msg.textContent = '';
+            input.style.borderColor = 'rgba(139, 92, 246, 0.3)';
+          }, 3000);
         }
+      });
+
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') btn.click();
+      });
+    }
+
+    function showExpiredScreen() {
+      document.getElementById('trialHeader')?.remove();
+
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'trial_expired', {
+          'event_category': 'Trial',
+          'event_label': 'Trial Period Expired'
+        });
       }
-    })();
+
+      const header = document.createElement('div');
+      header.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(34, 211, 238, 0.12));
+        backdrop-filter: blur(12px);
+        border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+        padding: 24px 20px; z-index: 9998;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+      `;
+
+      header.innerHTML = `
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 16px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="color: #ef4444;">
+              <circle cx="12" cy="12" r="10" stroke-width="2"/>
+              <path d="M12 6v6l4 2" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <h2 style="font-size: 22px; font-weight: 800; color: rgba(255, 255, 255, 0.95); margin: 0;">انتهت الفترة التجريبية</h2>
+          </div>
+
+          <button class="whatsapp-btn" style="width: 100%; max-width: 400px; padding: 14px 32px; background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none; border-radius: 12px; font-weight: 700; font-size: 17px; cursor: pointer; margin-bottom: 16px; transition: all 0.3s; box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);">
+            💬 تواصل عبر واتساب للشراء
+          </button>
+
+          <div style="background: rgba(0, 0, 0, 0.2); padding: 16px; border-radius: 12px; margin-bottom: 12px; border: 1px solid rgba(139, 92, 246, 0.3);">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px;">
+              <input type="text" class="license-input" placeholder="أدخل كود التفعيل" style="flex: 1; max-width: 280px; padding: 11px 16px; border: 2px solid rgba(139, 92, 246, 0.4); border-radius: 10px; background: rgba(0, 0, 0, 0.3); color: white; font-size: 14px; font-weight: 600; text-align: center; letter-spacing: 0.5px; text-transform: uppercase;" />
+              <button class="license-btn" style="padding: 11px 26px; background: linear-gradient(135deg, #22d3ee, #8b5cf6); color: white; border: none; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);">✨ تفعيل</button>
+            </div>
+            <div id="licenseMsg" style="color: rgba(255, 255, 255, 0.9); font-size: 13px; font-weight: 600;"></div>
+          </div>
+
+          <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(34, 211, 238, 0.15)); padding: 14px; border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3);">
+            <div style="font-size: 11px; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px; font-weight: 600;">السعر</div>
+            <div style="font-size: 26px; font-weight: 900; color: #22d3ee; text-shadow: 0 2px 8px rgba(34, 211, 238, 0.3);">${PRICE}</div>
+            <div style="font-size: 11px; color: rgba(255, 255, 255, 0.6); margin-top: 3px;">دفعة واحدة • مدى الحياة</div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(header);
+      document.body.style.paddingTop = '280px';
+
+      header.querySelector('.whatsapp-btn').addEventListener('click', () => {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'whatsapp_clicked', {
+            'event_category': 'Conversion',
+            'event_label': 'WhatsApp Purchase Button Clicked'
+          });
+        }
+        const msg = encodeURIComponent(`مرحباً! أريد شراء أداة COD Pricing Tool مدى الحياة بسعر ${PRICE}`);
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+      });
+
+      const btn = header.querySelector('.license-btn');
+      const input = header.querySelector('.license-input');
+      const msgDiv = header.querySelector('#licenseMsg');
+
+      btn.addEventListener('click', async () => {
+        const key = input.value.trim();
+        if (!key) {
+          msgDiv.style.color = '#fca5a5';
+          msgDiv.textContent = '⚠️ الرجاء إدخال كود التفعيل';
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = '⏳ جاري التحقق...';
+        
+        const result = await window.activateLicenseHybrid(key);
+        
+        msgDiv.textContent = result.message;
+        msgDiv.style.color = result.success ? '#86efac' : '#fca5a5';
+        
+        if (result.success) {
+          setTimeout(() => location.reload(), 1500);
+        } else {
+          btn.disabled = false;
+          btn.textContent = '✨ تفعيل';
+          input.style.borderColor = 'rgba(239, 68, 68, 0.8)';
+        }
+      });
+
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') btn.click();
+      });
+    }
+
   </script>
 </head>
 <!-- ===================== PART 2 / 7 ===================== -->
