@@ -670,15 +670,38 @@ window.logout = function() {
     // ==========================================
     // التحقق من المستخدم
     // ==========================================
-    onAuthStateChanged(auth, async (user) => {
-      const overlay = document.getElementById('authOverlay');
-      
-      if (!user) {
-        if (overlay) overlay.style.display = 'flex';
-        return;
-      }
+    // التحقق الفوري قبل تحميل Firebase
+(function() {
+  const overlay = document.getElementById("authOverlay");
+  const checkingAuth = document.createElement('div');
+  checkingAuth.id = 'authChecking';
+  checkingAuth.style.cssText = 'position:fixed;inset:0;background:#0f172a;z-index:10001;display:flex;align-items:center;justify-content:center;';
+  checkingAuth.innerHTML = '<div style="width:40px;height:40px;border:3px solid rgba(139,92,246,0.3);border-top-color:#8b5cf6;border-radius:50%;animation:spin 0.8s linear infinite;"></div><style>@keyframes spin{to{transform:rotate(360deg);}}</style>';
+  document.body.appendChild(checkingAuth);
+  
+  // إخفاء loader بعد التحقق من Auth
+  setTimeout(() => {
+    if (checkingAuth.parentNode) {
+      checkingAuth.remove();
+    }
+  }, 3000); // أقصى وقت انتظار
+})();
 
-      if (overlay) overlay.style.display = 'none';
+onAuthStateChanged(auth, async (user) => {
+  const overlay = document.getElementById("authOverlay");
+  const checking = document.getElementById("authChecking");
+  
+  // إزالة loader
+  if (checking) checking.remove();
+  
+  if (!user) {
+    if (overlay) overlay.style.display = "flex";
+    return;
+  }
+  
+  // المستخدم مسجل دخول
+  if (overlay) overlay.style.display = "none";
+
 
       try {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
@@ -1067,7 +1090,7 @@ window.logout = function() {
 <!-- ===================== PART 2 / 7 ===================== -->
 <body>
   <!-- ===================== 1. نظام الحماية (AUTH OVERLAY) ===================== -->
-<div id="authOverlay" style="position: fixed; inset: 0; background: #0f172a; z-index: 10000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(20px);">
+<div id="authOverlay" style="position: fixed; inset: 0; background: #0f172a; z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px);">
     <div style="width: 100%; max-width: 400px; padding: 2.5rem; background: rgba(30, 41, 59, 0.9); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
         <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem; background: -webkit-linear-gradient(right, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">COD Tool PRO</h1>
         <p style="color: #94a3b8; font-size: 0.875rem; margin-bottom: 1.5rem;">سجل الدخول للوصول إلى الأداة</p>
