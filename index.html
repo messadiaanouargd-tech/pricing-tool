@@ -600,6 +600,150 @@
   left: 35%;
   animation-delay: 1.6s;
 }
+/* ════════════════════════════════════════════════════════════
+   🌙 LIGHT MODE - الوضع النهاري
+   ════════════════════════════════════════════════════════════ */
+
+body.light-mode {
+  --bg0: #f8fafc;
+  --bg1: #e2e8f0;
+  --text: rgba(15, 23, 42, 0.92);
+  --muted: rgba(15, 23, 42, 0.66);
+  --stroke: rgba(0, 0, 0, 0.12);
+  --glass: rgba(0, 0, 0, 0.04);
+  --glass2: rgba(0, 0, 0, 0.08);
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.12);
+  
+  background: 
+    radial-gradient(1200px 700px at 70% 10%, rgba(139,92,246,.08), transparent 60%),
+    radial-gradient(1000px 600px at 10% 35%, rgba(34,211,238,.06), transparent 55%),
+    radial-gradient(900px 700px at 50% 100%, rgba(96,165,250,.05), transparent 60%),
+    linear-gradient(180deg, #f8fafc, #e2e8f0);
+}
+
+body.light-mode .glass {
+  background: linear-gradient(135deg, rgba(255,255,255,.85), rgba(255,255,255,.65));
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,.06);
+}
+
+body.light-mode .glass-strong {
+  background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(255,255,255,.85));
+  border: 1px solid rgba(0,0,0,.1);
+  box-shadow: 0 26px 90px rgba(0,0,0,.15);
+}
+
+body.light-mode .premium-input {
+  background: rgba(255,255,255,.9);
+  border: 1px solid rgba(0,0,0,.15);
+  color: #0f172a;
+}
+
+body.light-mode .premium-input:focus {
+  border-color: rgba(139,92,246,.65);
+  box-shadow: 0 0 0 4px rgba(139,92,246,.1);
+}
+
+body.light-mode .stat-card {
+  background: rgba(255,255,255,.8);
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+body.light-mode .btn {
+  background: rgba(255,255,255,.9);
+  border: 1px solid rgba(0,0,0,.12);
+  color: #0f172a;
+}
+
+body.light-mode .btn:hover {
+  background: rgba(255,255,255,1);
+}
+
+body.light-mode .tab-button {
+  color: rgba(15,23,42,.7);
+}
+
+body.light-mode .tab-button:hover {
+  color: rgba(15,23,42,.95);
+  background: rgba(139,92,246,.08);
+}
+
+body.light-mode .tab-button.active {
+  color: rgba(15,23,42,1);
+  background: rgba(139,92,246,.15);
+}
+
+body.light-mode label,
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4,
+body.light-mode span,
+body.light-mode p,
+body.light-mode div {
+  color: var(--text);
+}
+
+body.light-mode .text-white70,
+body.light-mode .text-white80,
+body.light-mode .text-white60,
+body.light-mode .text-white50 {
+  color: rgba(15,23,42,.7) !important;
+}
+
+/* زر تبديل الوضع */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(139,92,246,.15), rgba(34,211,238,.15));
+  border: 1px solid rgba(255,255,255,.2);
+  backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 32px rgba(139,92,246,.25);
+}
+
+body.light-mode .theme-toggle {
+  background: linear-gradient(135deg, rgba(139,92,246,.1), rgba(34,211,238,.1));
+  border: 1px solid rgba(0,0,0,.1);
+}
+
+.theme-toggle svg {
+  width: 22px;
+  height: 22px;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle .sun-icon {
+  display: none;
+  color: #f59e0b;
+}
+
+.theme-toggle .moon-icon {
+  display: block;
+  color: #8b5cf6;
+}
+
+body.light-mode .theme-toggle .sun-icon {
+  display: block;
+}
+
+body.light-mode .theme-toggle .moon-icon {
+  display: none;
+}
 
   </style>
 
@@ -1125,6 +1269,22 @@ onAuthStateChanged(auth, async (user) => {
 </head>
 <!-- ===================== PART 2 / 7 ===================== -->
 <body>
+<!-- زر تبديل الوضع الليلي/النهاري -->
+<button class="theme-toggle no-print" onclick="toggleTheme()" aria-label="تبديل الوضع">
+  <!-- أيقونة الشمس (الوضع النهاري) -->
+  <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <circle cx="12" cy="12" r="4"/>
+    <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/>
+  </svg>
+  
+  <!-- أيقونة القمر (الوضع الليلي) -->
+  <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+  </svg>
+</button>
+
+<!-- باقي الكود... -->
+
   <!-- ===================== 1. نظام الحماية (AUTH OVERLAY) ===================== -->
 <div id="authOverlay" style="position: fixed; inset: 0; background: #0f172a; z-index: 10000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(20px);">
     <div style="width: 100%; max-width: 400px; padding: 2.5rem; background: rgba(30, 41, 59, 0.9); border-radius: 24px; border: 1px solid rgba(255,255,255,0.1); text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);">
@@ -3385,5 +3545,35 @@ function initMotivationCards() {
         } catch(e) { botDiv.innerText = "حدث خطأ في الاتصال، حاول لاحقاً."; }
     }
 </script>
+    // ════════════════════════════════════════════════════════════
+// 🌙 تبديل الوضع الليلي/النهاري
+// ════════════════════════════════════════════════════════════
+
+function toggleTheme() {
+  const body = document.body;
+  const isLight = body.classList.toggle('light-mode');
+  
+  // حفظ في localStorage
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  
+  // تحديث meta theme-color
+  const metaTheme = document.querySelector('meta[name="theme-color"]');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', isLight ? '#f8fafc' : '#070812');
+  }
+}
+
+// تحميل الوضع المحفوظ عند فتح الصفحة
+(function loadTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'light') {
+    document.body.classList.add('light-mode');
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', '#f8fafc');
+    }
+  }
+})();
+
 </body>
 </html>
