@@ -691,24 +691,76 @@ body.light-mode .text-white50 {
   color: rgba(15,23,42,.7) !important;
 }
 
-/* زر تبديل الوضع */
-.theme-toggle {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 9999;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(139,92,246,.15), rgba(34,211,238,.15));
-  border: 1px solid rgba(255,255,255,.2);
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(0,0,0,.15);
+/* ════════════════════════════════════════════════════════════
+   🌙 LIGHT MODE - الوضع النهاري
+   ════════════════════════════════════════════════════════════ */
+
+body.light-mode {
+  --bg0: #f8fafc;
+  --bg1: #e2e8f0;
+  --text: rgba(15, 23, 42, 0.92);
+  --muted: rgba(15, 23, 42, 0.66);
+  --stroke: rgba(0, 0, 0, 0.12);
+  --glass: rgba(0, 0, 0, 0.04);
+  --glass2: rgba(0, 0, 0, 0.08);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  
+  background: 
+    radial-gradient(1200px 700px at 70% 10%, rgba(139,92,246,.08), transparent 60%),
+    radial-gradient(1000px 600px at 10% 35%, rgba(34,211,238,.06), transparent 55%),
+    radial-gradient(900px 700px at 50% 100%, rgba(96,165,250,.05), transparent 60%),
+    linear-gradient(180deg, #f8fafc, #e2e8f0);
+}
+
+body.light-mode .glass {
+  background: linear-gradient(135deg, rgba(255,255,255,.85), rgba(255,255,255,.65));
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,.06);
+}
+
+body.light-mode .glass-strong {
+  background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(255,255,255,.85));
+  border: 1px solid rgba(0,0,0,.1);
+  box-shadow: 0 26px 90px rgba(0,0,0,.15);
+}
+
+body.light-mode .premium-input,
+body.light-mode input,
+body.light-mode select,
+body.light-mode textarea {
+  background: rgba(255,255,255,.9) !important;
+  border: 1px solid rgba(0,0,0,.15) !important;
+  color: #0f172a !important;
+}
+
+body.light-mode .stat-card {
+  background: rgba(255,255,255,.8);
+  border: 1px solid rgba(0,0,0,.08);
+}
+
+body.light-mode .btn {
+  background: rgba(255,255,255,.9);
+  border: 1px solid rgba(0,0,0,.12);
+  color: #0f172a;
+}
+
+body.light-mode label,
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4 {
+  color: var(--text) !important;
+}
+
+body.light-mode .text-white70,
+body.light-mode .text-white80,
+body.light-mode .text-white60,
+body.light-mode .text-white50 {
+  color: rgba(15,23,42,.7) !important;
+}
+
+body.light-mode #themeIcon path {
+  color: #f59e0b !important;
 }
 
 .theme-toggle:hover {
@@ -1349,6 +1401,13 @@ onAuthStateChanged(auth, async (user) => {
   <span class="text-xl font-black gradient-text">Made By Anouar</span>
   <span class="px-3 py-1 rounded-full text-xs font-black" style="background:linear-gradient(135deg, rgba(139,92,246,.92), rgba(34,211,238,.35));border:1px solid rgba(255,255,255,.14);">v4.1 PRO</span>
 </div>
+
+<!-- زر تبديل الوضع -->
+<button onclick="toggleTheme()" class="glass rounded-lg px-3 py-2 hover:bg-white/10 transition-all no-print" style="border: 1px solid rgba(255,255,255,0.1);" aria-label="تبديل الوضع">
+  <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" style="color: #8b5cf6;"/>
+  </svg>
+</button>
 
 <!-- زر اليوتيوب - أضف هنا -->
 <a href="https://www.youtube.com/watch?v=KkBCPjTGxLg" target="_blank" class="glass rounded-lg px-3 py-2 flex items-center gap-2 hover:bg-white/10 transition-all no-print" style="text-decoration: none; font-size: 0.813rem; font-weight: 600; color: rgba(255,255,255,0.85); border: 1px solid rgba(255,0,0,0.2);">
@@ -3545,35 +3604,43 @@ function initMotivationCards() {
         } catch(e) { botDiv.innerText = "حدث خطأ في الاتصال، حاول لاحقاً."; }
     }
 </script>
-    // ════════════════════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════
 // 🌙 تبديل الوضع الليلي/النهاري
 // ════════════════════════════════════════════════════════════
 
 function toggleTheme() {
   const body = document.body;
+  const icon = document.getElementById('themeIcon');
   const isLight = body.classList.toggle('light-mode');
+  
+  // تغيير الأيقونة
+  if (isLight) {
+    // وضع نهاري - أيقونة الشمس
+    icon.innerHTML = '<circle cx="12" cy="12" r="4" style="color: #f59e0b;"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" style="color: #f59e0b;"/>';
+  } else {
+    // وضع ليلي - أيقونة القمر
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" style="color: #8b5cf6;"/>';
+  }
   
   // حفظ في localStorage
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
   
-  // تحديث meta theme-color
-  const metaTheme = document.querySelector('meta[name="theme-color"]');
-  if (metaTheme) {
-    metaTheme.setAttribute('content', isLight ? '#f8fafc' : '#070812');
-  }
+  console.log('Theme switched to:', isLight ? 'Light' : 'Dark');
 }
 
 // تحميل الوضع المحفوظ عند فتح الصفحة
 (function loadTheme() {
   const savedTheme = localStorage.getItem('theme');
+  const icon = document.getElementById('themeIcon');
+  
   if (savedTheme === 'light') {
     document.body.classList.add('light-mode');
-    const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) {
-      metaTheme.setAttribute('content', '#f8fafc');
+    if (icon) {
+      icon.innerHTML = '<circle cx="12" cy="12" r="4" style="color: #f59e0b;"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41" style="color: #f59e0b;"/>';
     }
   }
 })();
+
 
 </body>
 </html>
