@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#070812" />
-  <title>PRO • COD Pricing Tool</title>
+  <title>PRO • COD Pricing Tool v6 Enhanced</title>
 
   <!-- Tailwind -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -1187,7 +1187,7 @@ onAuthStateChanged(auth, async (user) => {
            
 <div class="flex items-center gap-3">
   <span class="text-xl font-black gradient-text">Made By Anouar</span>
-  <span class="px-3 py-1 rounded-full text-xs font-black" style="background:linear-gradient(135deg, rgba(139,92,246,.92), rgba(34,211,238,.35));border:1px solid rgba(255,255,255,.14);">v4.1 PRO</span>
+  <span class="px-3 py-1 rounded-full text-xs font-black" style="background:linear-gradient(135deg, rgba(139,92,246,.92), rgba(34,211,238,.35));border:1px solid rgba(255,255,255,.14);">v6.0 PRO</span>
 </div>
 
 <!-- زر اليوتيوب - أضف هنا -->
@@ -1313,31 +1313,6 @@ onAuthStateChanged(auth, async (user) => {
           </div>
         </div>
 
-        <!-- ===================== Scenario Buttons (REPLACE Action Buttons) ===================== -->
-<div class="p-6 border-b border-white10 no-print">
-  <div class="flex flex-wrap gap-3 justify-center">
-    <button onclick="applyScenario(1)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-      🧱 سيناريو 01
-    </button>
-
-    <button onclick="applyScenario(2)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-      🟠 سيناريو 02
-    </button>
-
-    <button onclick="applyScenario(3)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-      🔷 سيناريو 03
-    </button>
-
-    <button onclick="applyScenario(4)" class="scenario-btn px-6 py-3 rounded-xl font-bold flex items-center gap-2">
-      🚀 سيناريو 04
-    </button>
-  </div>
-
-  <div class="mt-3 text-center text-xs text-white60">
-    اضغط على سيناريو لتعبئة القيم تلقائياً (ثم يمكنك تعديل أي رقم يدويًا).
-  </div>
-</div>
-<!-- ===================== END Scenario Buttons ===================== -->
 
 <!-- ===================== PART 4 / 7 ===================== -->
         <!-- Tab: Calculator -->
@@ -2369,7 +2344,7 @@ function calculate(){
   const additionalCostsValue = parseFloat(document.getElementById("additionalCosts")?.value) || 0;
   const returnCost = parseFloat(document.getElementById("returnCost")?.value) || 0;
 
-  // ===== ORDERS (INTEGER, NO DECIMALS) =====
+  // Calculate orders (keep as integers)
   const dailyOrdersFloat = costPer > 0 ? (dailyAd / costPer) : 0;
   const confirmedOrdersFloat = dailyOrdersFloat * (confirm / 100);
   const deliveredOrdersFloat = confirmedOrdersFloat * (delivery / 100);
@@ -2380,18 +2355,22 @@ function calculate(){
   deliveredOrders = Math.min(deliveredOrders, confirmedOrders);
 
   const returnedOrders = Math.max(0, confirmedOrders - deliveredOrders);
-
-  // Return rate based on integers (more accurate for return costs)
   const returnRate = confirmedOrders > 0 ? (returnedOrders / confirmedOrders) * 100 : 0;
 
-  // Return cost uses integer returned orders
-  const totalReturnCost = returnedOrders * returnCost;
+  // ✅ FIXED: Divide by actual delivered orders, not 30 days
+  const additionalCostPerOrder = deliveredOrders > 0 
+    ? additionalCostsValue / deliveredOrders 
+    : 0;
 
+  const totalReturnCost = returnedOrders * returnCost;
   const finalCostPerOrder = deliveredOrders > 0 ? (dailyAd / deliveredOrders) : 0;
   const finalCostDZD = finalCostPerOrder * exchange;
 
-  const totalCost = wholesale + finalCostDZD + additionalCostsValue;
+  // Total cost now correctly includes additional costs per order
+  const totalCost = wholesale + finalCostDZD + additionalCostPerOrder;
 
+  // ... rest of your calculation logic remains the same
+  
   let calculatedFinalPrice = 0;
   let profitMargin = 0;
   let netProfit = 0;
@@ -2413,25 +2392,25 @@ function calculate(){
   }
 
   const dailyNetProfit = (netProfit * deliveredOrders) - totalReturnCost;
-
   const revenue = deliveredOrders * calculatedFinalPrice;
   const totalDailyCosts =
     (wholesale * deliveredOrders) +
     (dailyAd * exchange) +
-    (additionalCostsValue * deliveredOrders) +
+    (additionalCostsValue) +  // Note: additionalCostsValue is daily total
     totalReturnCost;
 
   const roi = totalDailyCosts > 0 ? ((revenue - totalDailyCosts) / totalDailyCosts) * 100 : 0;
 
   calculationResults = {
-    wholesale, exchange, confirm, delivery, dailyAd, costPer, additionalCostsValue, returnCost,
+    wholesale, exchange, confirm, delivery, dailyAd, costPer, 
+    additionalCostsValue, additionalCostPerOrder, returnCost,
     dailyOrders, confirmedOrders, deliveredOrders, returnedOrders, returnRate,
     totalReturnCost, finalCostPerOrder, finalCostDZD,
     totalCost, calculatedFinalPrice, profitMargin, netProfit,
     dailyNetProfit, revenue, totalDailyCosts, roi
   };
 
-  // ===== DISPLAY (NO DECIMALS) =====
+  // Display results (no decimals for clean UI)
   document.getElementById("dailyOrders").textContent = dailyOrders.toFixed(0);
   document.getElementById("confirmedOrders").textContent = confirmedOrders.toFixed(0);
   document.getElementById("deliveredOrders").textContent = deliveredOrders.toFixed(0);
@@ -3064,89 +3043,7 @@ async function exportToPDF(){
     showSuccessMessage(t("msg_pdf_error"), "danger");
   }
 }
-const SCENARIOS = {
-  1: {
-    nameAr: "سيناريو 01",
-    productName: "سيناريو 01 - ضعيف",
-    wholesalePrice: 1200,
-    confirmRate: 35,
-    deliveryRate: 55,
-    dailyAdSpend: 12,      // USD
-    costPerOrder: 3.2,     // USD
-    additionalCosts: 250,  // DZD
-    returnCost: 350,       // DZD
-    profitMargin: 200      // DZD (هامش منخفض)
-  },
-  2: {
-    nameAr: "سيناريو 02",
-    productName: "سيناريو 02 - متوسط/ضعيف",
-    wholesalePrice: 1200,
-    confirmRate: 50,
-    deliveryRate: 70,
-    dailyAdSpend: 18,
-    costPerOrder: 2.1,
-    additionalCosts: 220,
-    returnCost: 320,
-    profitMargin: 450
-  },
-  3: {
-    nameAr: "سيناريو 03",
-    productName: "سيناريو 03 - جيد",
-    wholesalePrice: 1200,
-    confirmRate: 65,
-    deliveryRate: 80,
-    dailyAdSpend: 25,
-    costPerOrder: 1.3,
-    additionalCosts: 200,
-    returnCost: 300,
-    profitMargin: 750
-  },
-  4: {
-    nameAr: "سيناريو 04",
-    productName: "سيناريو 04 - ممتاز",
-    wholesalePrice: 1200,
-    confirmRate: 80,
-    deliveryRate: 85,
-    dailyAdSpend: 30,
-    costPerOrder: 0.9,
-    additionalCosts: 180,
-    returnCost: 280,
-    profitMargin: 950
-  }
-};
 
-function applyScenario(n){
-  const s = SCENARIOS[n];
-  if (!s) return;
-
-  // Fill inputs
-  document.getElementById("productName").value = s.productName;
-  document.getElementById("wholesalePrice").value = s.wholesalePrice;
-  document.getElementById("confirmRate").value = s.confirmRate;
-  document.getElementById("deliveryRate").value = s.deliveryRate;
-  document.getElementById("dailyAdSpend").value = s.dailyAdSpend;
-  document.getElementById("costPerOrder").value = s.costPerOrder;
-  document.getElementById("additionalCosts").value = s.additionalCosts;
-  document.getElementById("returnCost").value = s.returnCost;
-
-  // نخلي الحساب يعتمد على هامش الربح
-  document.getElementById("finalPrice").value = "";
-  document.getElementById("profitMarginInput").value = s.profitMargin;
-
-  // flags (مثل منطقك الحالي)
-  isEditingMargin = true;
-  isEditingPrice = false;
-
-  // Recompute
-  calculate();
-  calculateMonthly();
-  calculateDiscount();
-
-  // Toast
-  if (typeof showSuccessMessage === "function") {
-    showSuccessMessage(`تم تحميل ${s.nameAr}`);
-  }
-}
 
 /* -------------------------------------------
    Init
@@ -3264,26 +3161,7 @@ function initMotivationCards() {
 }
 
 </script>
-<!-- ===================== 3. كود الشات بوت (ألصقه هنا) ===================== -->
-<div id="chat-widget" class="no-print" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
-    <div id="chatWindow" style="display: none; position: absolute; bottom: 80px; right: 0; width: 350px; height: 500px; background: #ffffff; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); flex-direction: column; overflow: hidden; font-family: sans-serif; border: 1px solid rgba(0,0,0,0.1);">
-        <div style="background: #1e293b; color: white; padding: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
-            <span>المستشار الذكي 🤖</span>
-            <span onclick="toggleChat()" style="cursor: pointer; padding: 5px;">✕</span>
-        </div>
-        <div id="chatBody" style="flex: 1; padding: 15px; overflow-y: auto; background: #f8fafc; display: flex; flex-direction: column; gap: 10px;">
-            <div style="padding: 10px; border-radius: 10px; max-width: 85%; background: #e2e8f0; color: #1e293b; align-self: flex-start;">
-                مرحبا! أنا هنا باش نعاونك.
-            </div>
-        </div>
-        <div style="padding: 12px; border-top: 1px solid #e2e8f0; display: flex; gap: 8px; background: white;">
-            <input type="text" id="chatInput" placeholder="اكتب سؤالك..." style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; color: #333; background: #fff;" onkeypress="if(event.key==='Enter') sendMessage()">
 
-            <button onclick="sendMessage()" style="background: #2563eb; color: white; padding: 8px 15px; border: none; border-radius: 8px; cursor: pointer;">➤</button>
-        </div>
-    </div>
-    <button onclick="toggleChat()" style="width: 60px; height: 60px; border-radius: 50%; background: #2563eb; color: white; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); font-size: 24px;">💬</button>
-</div>
 
 <!-- ===================== 4. سكريبتات الحماية والشات (Logic) ===================== -->
 <script type="module">
@@ -3345,45 +3223,4 @@ function initMotivationCards() {
     window.showReset = () => { document.getElementById('loginForm').style.display='none'; document.getElementById('resetForm').style.display='block'; };
 </script>
 
-<script>
-    // منطق الشات بوت
-    function toggleChat() {
-        const win = document.getElementById('chatWindow');
-        win.style.display = (win.style.display === 'none' || win.style.display === '') ? 'flex' : 'none';
-    }
-    
-    async function sendMessage() {
-        const input = document.getElementById('chatInput');
-        const body = document.getElementById('chatBody');
-        const txt = input.value.trim();
-        if (!txt) return;
 
-        // رسالة المستخدم
-        body.innerHTML += `<div style="padding:10px; border-radius:10px; max-width:85%; background:#3b82f6; color:white; align-self:flex-end; margin:5px 0;">${txt}</div>`;
-        input.value = '';
-        body.scrollTop = body.scrollHeight;
-
-        // رد البوت (جاري الكتابة)
-        const botDiv = document.createElement('div');
-        botDiv.style.cssText = "padding:10px; border-radius:10px; max-width:85%; background:#e2e8f0; color:#1e293b; align-self:flex-start; margin:5px 0;";
-        botDiv.innerText = "...";
-        body.appendChild(botDiv);
-
-        // الاتصال بالذكاء الاصطناعي
-        try {
-            const res = await fetch('/api/chat', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({message: txt}) });
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder();
-            botDiv.innerText = "";
-            
-            while(true) {
-                const {done, value} = await reader.read();
-                if(done) break;
-                botDiv.innerText += decoder.decode(value, {stream: true});
-                body.scrollTop = body.scrollHeight;
-            }
-        } catch(e) { botDiv.innerText = "حدث خطأ في الاتصال، حاول لاحقاً."; }
-    }
-</script>
-</body>
-</html>
